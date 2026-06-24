@@ -141,19 +141,28 @@ function LoginPage() {
               className="rounded-xl p-8"
               style={{ background: "rgba(15, 23, 42, 0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
-              {/* Pill tab switcher */}
-              <div className="flex rounded-full p-1 mb-6" style={{ background: "rgba(6, 14, 32, 0.8)" }}>
+              {/* Pill tab switcher — sliding indicator */}
+              <div className="relative flex rounded-full p-1 mb-6" style={{ background: "rgba(6, 14, 32, 0.8)" }}>
+                {/* Sliding pill */}
+                <span
+                  className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full pointer-events-none"
+                  style={{
+                    background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)",
+                    transform: tab === "login" ? "translateX(0)" : "translateX(calc(100% + 8px))",
+                    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    left: 4,
+                  }}
+                />
                 {(["login", "signup"] as const).map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => switchTab(t)}
-                    className="flex-1 h-9 rounded-full text-sm font-semibold transition-all"
-                    style={
-                      tab === t
-                        ? { background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)", color: "#ffffff" }
-                        : { color: "#cbc3d7" }
-                    }
+                    className="relative flex-1 h-9 rounded-full text-sm font-semibold z-10"
+                    style={{
+                      color: tab === t ? "#ffffff" : "#cbc3d7",
+                      transition: "color 0.3s ease",
+                    }}
                   >
                     {t === "login" ? "Sign In" : "Sign Up"}
                   </button>
