@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { MapPin, Link as LinkIcon, Bookmark, Award, Calendar, Briefcase, GraduationCap, Heart, Github, Linkedin, Globe, QrCode, Shield, Settings, Edit3 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -36,6 +37,23 @@ const saved = [
 ];
 
 function ProfilePage() {
+  const { user, profile } = useAuth();
+
+  const fullName =
+    profile?.full_name ??
+    user?.user_metadata?.full_name ??
+    user?.email?.split("@")[0] ??
+    "Community Member";
+
+  const initial = fullName.charAt(0).toUpperCase();
+
+  const verifiedHours = profile?.verified_hours ?? 36;
+  const eventsAttended = profile?.events_attended ?? 12;
+  const location = profile?.location ?? "Atlanta, GA";
+  const joinYear = user?.created_at ? new Date(user.created_at).getFullYear() : 2025;
+  const bio = profile?.bio ??
+    "Atlanta-based community member passionate about closing local access gaps to Wi-Fi, mentorship, and first jobs. Always looking for new volunteer opportunities, study spaces, and friendly mentors who've walked the road before.";
+
   return (
     <AppShell>
       {/* Cover + identity */}
@@ -47,18 +65,18 @@ function ProfilePage() {
           <div className="flex flex-col items-start gap-5 md:flex-row md:items-end md:justify-between">
             <div className="flex items-end gap-4">
               <span className="grid h-28 w-28 place-items-center rounded-3xl border-4 border-background bg-gradient-brand font-display text-4xl font-bold text-white shadow-glow-purple md:h-32 md:w-32">
-                J
+                {initial}
               </span>
               <div className="pb-2">
                 <div className="flex items-center gap-2">
-                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">Jayden Wilson</h1>
+                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{fullName}</h1>
                   <span className="inline-flex items-center gap-1 rounded-full bg-brand-teal/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
                     <Shield className="h-3 w-3" /> Verified
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">Student · Community Volunteer · he/him</p>
+                <p className="mt-1 text-sm text-muted-foreground">Community Member</p>
                 <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" /> Atlanta, GA · joined 2025
+                  <MapPin className="h-3 w-3" /> {location} · joined {joinYear}
                 </p>
               </div>
             </div>
@@ -85,18 +103,18 @@ function ProfilePage() {
                 <p className="text-xs font-medium uppercase tracking-wider text-white/80">Community Pass</p>
                 <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold">MyCom Card</span>
               </div>
-              <h2 className="mt-4 font-display text-2xl font-bold">Jayden Wilson</h2>
-              <p className="text-sm text-white/80">Student · Volunteer</p>
+              <h2 className="mt-4 font-display text-2xl font-bold">{fullName}</h2>
+              <p className="text-sm text-white/80">Community Member</p>
 
               <div className="mt-5 flex items-end justify-between gap-4">
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
                     <p className="text-white/60">Verified hours</p>
-                    <p className="font-display text-xl font-bold">36</p>
+                    <p className="font-display text-xl font-bold">{verifiedHours}</p>
                   </div>
                   <div>
                     <p className="text-white/60">Events attended</p>
-                    <p className="font-display text-xl font-bold">12</p>
+                    <p className="font-display text-xl font-bold">{eventsAttended}</p>
                   </div>
                 </div>
                 <div className="grid h-20 w-20 place-items-center rounded-2xl bg-white text-brand-purple">
@@ -111,9 +129,9 @@ function ProfilePage() {
             <h3 className="mb-3 font-display text-base font-semibold">Links</h3>
             <ul className="space-y-2 text-sm">
               {[
-                { icon: Linkedin, label: "linkedin.com/in/jayden-w" },
-                { icon: Github, label: "github.com/jaydenw" },
-                { icon: Globe, label: "jayden.community" },
+                { icon: Linkedin, label: "LinkedIn" },
+                { icon: Github, label: "GitHub" },
+                { icon: Globe, label: "Personal site" },
                 { icon: LinkIcon, label: "Portfolio (PDF)" },
               ].map((l) => {
                 const Icon = l.icon;
@@ -159,17 +177,13 @@ function ProfilePage() {
         <div className="space-y-6">
           <section className="rounded-2xl border border-border/60 bg-surface p-6">
             <h3 className="mb-2 font-display text-lg font-semibold">About</h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Atlanta-based student passionate about closing local access gaps to Wi-Fi, mentorship, and
-              first jobs. Building toward a career in community-focused tech. Always looking for new
-              volunteer opportunities, study spaces, and friendly mentors who've walked the road before.
-            </p>
+            <p className="text-sm leading-relaxed text-muted-foreground">{bio}</p>
           </section>
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: "Verified hours", value: "36", icon: Award },
+              { label: "Verified hours", value: String(verifiedHours), icon: Award },
               { label: "Groups", value: "8", icon: Heart },
               { label: "Connections", value: "142", icon: LinkIcon },
             ].map((s) => {

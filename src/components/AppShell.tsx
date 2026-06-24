@@ -1,7 +1,8 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Map, Users, MessageSquare, User, Search, Bell, Sparkles, Settings, Bookmark } from "lucide-react";
-import type { ReactNode } from "react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { Home, Map, Users, MessageSquare, User, Search, Bell, Sparkles, Settings, Bookmark, LogOut } from "lucide-react";
+import { useEffect, type ReactNode } from "react";
 import logoAsset from "@/assets/MyCommNet.png.asset.json";
+import { useAuth } from "@/hooks/useAuth";
 
 const navItems: { to: string; label: string; icon: typeof Home; badge?: number }[] = [
   { to: "/", label: "Home", icon: Home },
@@ -14,6 +15,37 @@ const navItems: { to: string; label: string; icon: typeof Home; badge?: number }
 export function AppShell({ children }: { children: ReactNode }) {
   const { location } = useRouterState();
   const path = location.pathname;
+  const { user, profile, loading, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate({ to: "/login" });
+    }
+  }, [user, loading, navigate]);
+
+  const displayName =
+    profile?.full_name?.split(" ")[0] ??
+    user?.user_metadata?.full_name?.split(" ")[0] ??
+    user?.email?.split("@")[0] ??
+    "You";
+
+  const initial = displayName.charAt(0).toUpperCase();
+
+  async function handleSignOut() {
+    await signOut();
+    navigate({ to: "/login" });
+  }
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-brand-purple border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -31,7 +63,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
           <div className="ml-2 hidden items-center gap-1 rounded-full bg-surface/70 px-3 py-1.5 text-xs text-muted-foreground md:flex">
             <span className="h-2 w-2 rounded-full bg-brand-teal" />
-            Atlanta, GA
+            {profile?.location ?? "Atlanta, GA"}
           </div>
 
           <nav className="ml-6 hidden items-center gap-1 lg:flex">
@@ -68,9 +100,22 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Bell className="h-5 w-5" />
               <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand-teal" />
             </button>
-            <div className="flex items-center gap-2 rounded-full bg-surface p-1 pr-3">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-brand text-sm font-semibold text-white">J</span>
-              <span className="hidden text-sm font-medium sm:inline">Jayden</span>
+            <div className="group relative">
+              <button className="flex items-center gap-2 rounded-full bg-surface p-1 pr-3">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-brand text-sm font-semibold text-white">
+                  {initial}
+                </span>
+                <span className="hidden text-sm font-medium sm:inline">{displayName}</span>
+              </button>
+              <div className="invisible absolute right-0 top-full mt-1 w-36 origin-top-right scale-95 rounded-xl border border-border/60 bg-surface p-1 opacity-0 shadow-card-soft transition group-hover:visible group-hover:scale-100 group-hover:opacity-100">
+                <button
+                  onClick={handleSignOut}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign out
+                </button>
+              </div>
             </div>
           </div>
         </div>

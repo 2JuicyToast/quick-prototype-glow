@@ -4,6 +4,7 @@ import {
   Search, SlidersHorizontal, ArrowRight, Briefcase, GraduationCap, Calendar, Users,
   Wifi, MonitorSmartphone, Library, School, Bus, Heart, MessageSquare,
 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,6 +48,16 @@ function toneClasses(tone: string) {
 }
 
 function HomePage() {
+  const { profile, user } = useAuth();
+  const firstName =
+    profile?.full_name?.split(" ")[0] ??
+    user?.user_metadata?.full_name?.split(" ")[0] ??
+    user?.email?.split("@")[0] ??
+    "there";
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
   return (
     <AppShell>
       {/* Notify banner */}
@@ -65,7 +76,7 @@ function HomePage() {
 
       {/* Hero */}
       <section className="relative mb-10 overflow-hidden rounded-3xl border border-border/60 bg-surface/40 bg-hero-glow p-6 md:p-10">
-        <p className="text-sm text-muted-foreground">Good morning, Jayden 👋</p>
+        <p className="text-sm text-muted-foreground">{greeting}, {firstName} 👋</p>
         <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
           Your community. <br />
           <span className="text-gradient-brand">Your future.</span>
