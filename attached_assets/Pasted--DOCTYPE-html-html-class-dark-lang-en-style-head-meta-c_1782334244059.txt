@@ -1,0 +1,270 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sign Up | MyCommNet</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed": "#e9ddff",
+                    "primary-container": "#a078ff",
+                    "primary": "#d0bcff",
+                    "on-primary-fixed": "#23005c",
+                    "surface-container-lowest": "#060e20",
+                    "tertiary-container": "#00a392",
+                    "inverse-on-surface": "#283044",
+                    "on-primary-fixed-variant": "#5516be",
+                    "on-primary-container": "#340080",
+                    "background": "#020617",
+                    "on-surface": "#dae2fd",
+                    "tertiary-fixed-dim": "#4fdbc8",
+                    "on-secondary-fixed": "#001a42",
+                    "on-tertiary-fixed": "#00201c",
+                    "inverse-primary": "#6d33f7",
+                    "on-surface-variant": "#cbc3d7",
+                    "on-secondary-fixed-variant": "#004395",
+                    "on-secondary-container": "#e6ecff",
+                    "secondary-fixed": "#d8e2ff",
+                    "outline": "#958ea0",
+                    "inverse-surface": "#dae2fd",
+                    "surface-tint": "#d0bcff",
+                    "surface-container-highest": "#2d3449",
+                    "surface-variant": "#2d3449",
+                    "surface-container-low": "#131b2e",
+                    "error": "#ffb4ab",
+                    "on-secondary": "#002e6a",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-tertiary": "#003731",
+                    "surface-dim": "#0b1326",
+                    "secondary-container": "#0566d9",
+                    "on-tertiary-fixed-variant": "#005048",
+                    "tertiary": "#4fdbc8",
+                    "surface": "#0f172a",
+                    "on-tertiary-container": "#00302a",
+                    "primary-fixed-dim": "#d0bcff",
+                    "surface-bright": "#31394d",
+                    "on-background": "#dae2fd",
+                    "outline-variant": "#1E293B",
+                    "error-container": "#93000a",
+                    "secondary": "#adc6ff",
+                    "on-error": "#690005",
+                    "surface-container": "#171f33",
+                    "on-primary": "#3c0091",
+                    "surface-container-high": "#222a3d",
+                    "tertiary-fixed": "#71f8e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "lg": "24px",
+                    "base": "8px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "tagline": ["Inter"],
+                    "label-md": ["JetBrains Mono"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "tagline": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .gradient-button {
+            background: linear-gradient(135deg, #a078ff 0%, #0566d9 100%);
+        }
+        .gradient-button:hover {
+            filter: brightness(1.1);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body {
+            background-color: #020617;
+            color: #dae2fd;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- TopNavBar (JSON Anchor) -->
+<nav class="flex justify-between items-center px-lg w-full z-50 bg-surface/80 backdrop-blur-md full-width h-[72px] sticky top-0 shadow-sm">
+<div class="flex items-center gap-md">
+<img alt="MyCommNet Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDpFNm_k1TV3bHJ2FRtUrkn_ZZkhSv3IiJNuNA8eOovA_MQgIXz3AUl1oFZmXAVHFqTUH6zgrRZNGBLFVMfB_dnj1XoyOhhl1N0vmQe0SaxM2OLO-54ykxCrFdjZLbngSBCm2uFiFmQgqwVGDGfJBZASfdglN9DU9fon8kkJG6GgVAD0H0gClFQmwErWbNkvZ4QhqqH6Dx3Ts9xwm6PergtYUia0QIQHfQmoyPMyjwSk0f-JYzWZqZP3TfU1-pQXpcXkKpgP8ADw">
+<span class="font-headline-md text-headline-md font-black tracking-tight text-on-surface"><span style="color: rgb(160, 120, 255);" class="">My</span><span style="color: rgb(5, 102, 217);" class="">Comm</span><span style="color: rgb(79, 219, 200);" class="">Net</span></span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a>
+</div>
+
+</nav>
+<main class="flex-grow flex items-center justify-center py-xl px-container-padding relative">
+<!-- Atmospheric Glow Background -->
+<div class="absolute inset-0 pointer-events-none overflow-hidden">
+<div class="absolute -top-48 -right-48 w-96 h-96 bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-48 -left-48 w-96 h-96 bg-secondary-container/10 rounded-full blur-[120px]"></div>
+</div>
+<div class="max-w-7xl w-full grid grid-cols-1 md:grid-cols-12 gap-xl items-center z-10">
+<!-- Left Side: Sign Up Form -->
+<div class="md:col-span-5 flex flex-col gap-lg">
+<div class="flex flex-col gap-sm">
+<h1 class="font-display-lg text-display-lg text-on-surface">Join the Community</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Connect with local resources, build meaningful networks, and create opportunities that move your community forward.</p>
+</div>
+<div class="glass-card rounded-xl p-xl flex flex-col gap-md">
+<form class="flex flex-col gap-md" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Full Name</label>
+<input class="bg-background/50 border border-outline-variant rounded-lg px-md py-sm focus:border-tertiary focus:ring-0 text-on-surface placeholder:text-outline-variant outline-none transition-all h-[44px]" placeholder="Jayden Smith" type="text">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Email</label>
+<input class="bg-background/50 border border-outline-variant rounded-lg px-md py-sm focus:border-tertiary focus:ring-0 text-on-surface placeholder:text-outline-variant outline-none transition-all h-[44px]" placeholder="jayden@example.com" type="email">
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Password</label>
+<div class="relative">
+<input class="w-full bg-background/50 border border-outline-variant rounded-lg px-md py-sm focus:border-tertiary focus:ring-0 text-on-surface placeholder:text-outline-variant outline-none transition-all h-[44px]" placeholder="••••••••" type="password">
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer" data-icon="visibility">visibility</span>
+</div>
+</div>
+<button class="gradient-button text-on-primary-fixed font-semibold h-[44px] rounded-lg mt-sm transition-transform active:scale-[0.98]">
+                            Create Account
+                        </button>
+</form>
+<div class="flex items-center gap-sm mt-md">
+<div class="h-[1px] flex-grow bg-outline-variant"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">OR CONTINUE WITH</span>
+<div class="h-[1px] flex-grow bg-outline-variant"></div>
+</div>
+<div class="grid grid-cols-1 gap-md"><button class="flex items-center justify-center gap-sm border border-outline-variant rounded-lg h-[44px] hover:bg-surface-container-high transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="currentColor"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor"></path></svg><span class="font-label-md text-label-md">Google</span></button></div>
+<div class="text-center mt-md">
+<span class="text-on-surface-variant font-body-md">Already a member? </span>
+<a class="text-primary font-semibold hover:underline" href="#">Log in instead</a>
+</div>
+</div>
+</div>
+<!-- Right Side: Futuristic Asset -->
+<div class="hidden md:flex md:col-span-7 justify-center items-center relative group">
+<!-- Glowing Aura -->
+<div class="absolute w-[120%] h-[120%] bg-primary/5 rounded-full blur-[150px] opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+<div class="relative w-full max-w-2xl transform hover:scale-[1.02] transition-transform duration-700 ease-out">
+<img alt="Celestial Brand Asset" class="w-full h-auto object-contain drop-shadow-[0_0_50px_rgba(160,120,255,0.3)]" data-alt="A high-fidelity, futuristic digital asset for MyCommNet, featuring a glowing celestial comet with trailing purple and teal particles streaking across a deep obsidian night sky. The comet emits a soft, ethereal light illuminating subtle crystalline structures and cosmic dust. The aesthetic is ultra-modern, professional, and visually striking, utilizing a palette of deep navy, vibrant violet, and electric teal to evoke a sense of advanced community growth and digital connectivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDpFNm_k1TV3bHJ2FRtUrkn_ZZkhSv3IiJNuNA8eOovA_MQgIXz3AUl1oFZmXAVHFqTUH6zgrRZNGBLFVMfB_dnj1XoyOhhl1N0vmQe0SaxM2OLO-54ykxCrFdjZLbngSBCm2uFiFmQgqwVGDGfJBZASfdglN9DU9fon8kkJG6GgVAD0H0gClFQmwErWbNkvZ4QhqqH6Dx3Ts9xwm6PergtYUia0QIQHfQmoyPMyjwSk0f-JYzWZqZP3TfU1-pQXpcXkKpgP8ADw">
+<!-- Floating Tech Badges -->
+<div class="absolute top-10 left-0 glass-card px-md py-sm rounded-lg flex items-center gap-sm animate-bounce [animation-duration:4s]">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="groups">groups</span>
+</div>
+<div>
+<p class="font-label-md text-[10px] leading-tight text-on-surface-variant uppercase tracking-widest">Growth</p>
+<p class="font-headline-md text-label-md font-bold">25K+ Active Members</p>
+</div>
+</div>
+<div class="absolute bottom-20 right-0 glass-card px-md py-sm rounded-lg flex items-center gap-sm animate-bounce [animation-duration:5s]">
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="bolt">bolt</span>
+</div>
+<div>
+<p class="font-label-md text-[10px] leading-tight text-on-surface-variant uppercase tracking-widest">Impact</p>
+<p class="font-headline-md text-label-md font-bold">8K+ Resources Shared</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (JSON Anchor) -->
+<footer class="full-width py-xl px-container-padding border-t border-outline-variant bg-surface dark:bg-surface mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-lg">
+<div class="flex flex-col gap-xs">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">MyCommNet</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">Stay Connected</span>
+</div>
+<div class="flex flex-wrap gap-xl md:gap-xl">
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Help Center</a>
+</div>
+</div>
+<div class="mt-xl pt-lg border-t border-outline-variant/30 flex justify-between items-center text-outline-variant font-label-md text-[12px]">
+
+<div class="flex gap-md">
+
+
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for form labels
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.previousElementSibling.classList.remove('text-on-surface-variant');
+                input.previousElementSibling.classList.add('text-tertiary');
+            });
+            input.addEventListener('blur', () => {
+                input.previousElementSibling.classList.add('text-on-surface-variant');
+                input.previousElementSibling.classList.remove('text-tertiary');
+            });
+        });
+
+        // Password visibility toggle
+        const togglePassword = document.querySelector('[data-icon="visibility"]');
+        const passwordInput = document.querySelector('input[type="password"]');
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                togglePassword.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+                togglePassword.setAttribute('data-icon', type === 'password' ? 'visibility' : 'visibility_off');
+            });
+        }
+    </script>
+
+
+</body></html>
