@@ -22,7 +22,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-8">
           <Link to="/" className="flex items-center gap-2">
             <img src={logoAsset.url} alt="MyCommNet Logo" className="h-9 w-9 object-contain" />
-            <span className="font-display text-lg font-bold tracking-tight">MyCommNet</span>
+            <span className="font-display text-lg font-bold tracking-tight">
+              <span className="text-brand-purple">My</span>
+              <span className="text-brand-blue">Comm</span>
+              <span className="text-brand-teal">Net</span>
+            </span>
           </Link>
 
           <div className="ml-2 hidden items-center gap-1 rounded-full bg-surface/70 px-3 py-1.5 text-xs text-muted-foreground md:flex">
