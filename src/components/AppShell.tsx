@@ -2,13 +2,13 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Map, Users, MessageSquare, User, Search, Bell, Sparkles, Settings, Bookmark } from "lucide-react";
 import type { ReactNode } from "react";
 
-const navItems = [
+const navItems: { to: string; label: string; icon: typeof Home; badge?: number }[] = [
   { to: "/", label: "Home", icon: Home },
   { to: "/map", label: "Map", icon: Map },
   { to: "/groups", label: "Groups", icon: Users },
   { to: "/messages", label: "Messages", icon: MessageSquare, badge: 3 },
   { to: "/profile", label: "Profile", icon: User },
-] as const;
+];
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { location } = useRouterState();
