@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import logoAsset from "@/assets/MyCommNet.png.asset.json";
-import { Mail, Lock, Eye, EyeOff, Users, Zap, LogIn } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Users, Zap, LogIn, Check, X } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -31,15 +31,34 @@ const inputFocus: React.CSSProperties = {
   boxShadow: "0 0 0 1px #4fdbc8",
 };
 
+type Requirement = { label: string; met: boolean };
+
+function getPasswordRequirements(pw: string): Requirement[] {
+  return [
+    { label: "At least 8 characters",       met: pw.length >= 8 },
+    { label: "One uppercase letter (A–Z)",   met: /[A-Z]/.test(pw) },
+    { label: "One number (0–9)",             met: /[0-9]/.test(pw) },
+    { label: "One special character (!@#…)", met: /[^A-Za-z0-9]/.test(pw) },
+  ];
+}
+
+function getStrength(reqs: Requirement[]): number {
+  return reqs.filter((r) => r.met).length;
+}
+
+const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"];
+const strengthColors = ["", "#ef4444", "#f97316", "#eab308", "#4fdbc8"];
+
 function LoginPage() {
   const [tab, setTab] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [emailFocused, setEmailFocused] = useState(false);
+  const [email, setEmail]         = useState("");
+  const [password, setPassword]   = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName]   = useState("");
+  const [showPassword, setShowPassword]       = useState(false);
+  const [emailFocused, setEmailFocused]       = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg]   = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,10 +75,26 @@ function LoginPage() {
     setSuccessMsg(null);
   }
 
+  const pwReqs = getPasswordRequirements(password);
+  const strength = getStrength(pwReqs);
+  const showStrength = tab === "signup" && password.length > 0;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg(null);
     setSuccessMsg(null);
+
+    if (tab === "signup") {
+      if (!firstName.trim() || !lastName.trim()) {
+        setErrorMsg("Please enter both your first and last name.");
+        return;
+      }
+      if (strength < 4) {
+        setErrorMsg("Please meet all password requirements before continuing.");
+        return;
+      }
+    }
+
     setSubmitting(true);
 
     if (tab === "login") {
@@ -67,13 +102,15 @@ function LoginPage() {
       if (error) setErrorMsg(error.message);
       else navigate({ to: "/" });
     } else {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`;
       const { error } = await signUp(email, password, fullName);
       if (error) {
         setErrorMsg(error.message);
       } else {
         setSuccessMsg("Check your email to confirm your account, then sign in.");
         setTab("login");
-        setFullName("");
+        setFirstName("");
+        setLastName("");
         setPassword("");
       }
     }
@@ -143,7 +180,6 @@ function LoginPage() {
             >
               {/* Pill tab switcher — sliding indicator */}
               <div className="relative flex rounded-full p-1 mb-6" style={{ background: "rgba(6, 14, 32, 0.8)" }}>
-                {/* Sliding pill */}
                 <span
                   className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full pointer-events-none"
                   style={{
@@ -159,10 +195,7 @@ function LoginPage() {
                     type="button"
                     onClick={() => switchTab(t)}
                     className="relative flex-1 h-9 rounded-full text-sm font-semibold z-10"
-                    style={{
-                      color: tab === t ? "#ffffff" : "#cbc3d7",
-                      transition: "color 0.3s ease",
-                    }}
+                    style={{ color: tab === t ? "#ffffff" : "#cbc3d7", transition: "color 0.3s ease" }}
                   >
                     {t === "login" ? "Sign In" : "Sign Up"}
                   </button>
@@ -170,34 +203,52 @@ function LoginPage() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Full name — signup only */}
+
+                {/* First + Last name — signup only */}
                 {tab === "signup" && (
-                  <div>
-                    <label className="block text-xs uppercase tracking-widest mb-1.5" style={{ color: "#cbc3d7", ...mono }}>
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      placeholder="Jayden Smith"
-                      className="w-full h-11 px-4 rounded-lg text-sm"
-                      style={inputBase}
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest mb-1.5" style={{ color: "#cbc3d7", ...mono }}>
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        placeholder="Jayden"
+                        className="w-full h-11 px-4 rounded-lg text-sm"
+                        style={inputBase}
+                        onFocus={(e) => Object.assign(e.currentTarget.style, inputFocus)}
+                        onBlur={(e) => Object.assign(e.currentTarget.style, { borderColor: "#1e293b", boxShadow: "none" })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs uppercase tracking-widest mb-1.5" style={{ color: "#cbc3d7", ...mono }}>
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        placeholder="Smith"
+                        className="w-full h-11 px-4 rounded-lg text-sm"
+                        style={inputBase}
+                        onFocus={(e) => Object.assign(e.currentTarget.style, inputFocus)}
+                        onBlur={(e) => Object.assign(e.currentTarget.style, { borderColor: "#1e293b", boxShadow: "none" })}
+                      />
+                    </div>
                   </div>
                 )}
 
                 {/* Email */}
                 <div>
-                  <label className="block text-xs uppercase tracking-widest mb-1.5 transition-colors" style={{ color: emailFocused ? "#4fdbc8" : "#cbc3d7", ...mono }}>
+                  <label className="block text-xs uppercase tracking-widest mb-1.5" style={{ color: emailFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s", ...mono }}>
                     Email {tab === "login" ? "Address" : ""}
                   </label>
                   <div className="relative">
-                    <Mail
-                      className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors"
-                      style={{ color: emailFocused ? "#4fdbc8" : "#958ea0" }}
-                    />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors" style={{ color: emailFocused ? "#4fdbc8" : "#958ea0" }} />
                     <input
                       type="email"
                       required
@@ -215,20 +266,15 @@ function LoginPage() {
                 {/* Password */}
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
-                    <label className="block text-xs uppercase tracking-widest transition-colors" style={{ color: passwordFocused ? "#4fdbc8" : "#cbc3d7", ...mono }}>
+                    <label className="block text-xs uppercase tracking-widest" style={{ color: passwordFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s", ...mono }}>
                       Password
                     </label>
                     {tab === "login" && (
-                      <a href="#" className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>
-                        Forgot password?
-                      </a>
+                      <a href="#" className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>Forgot password?</a>
                     )}
                   </div>
                   <div className="relative">
-                    <Lock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors"
-                      style={{ color: passwordFocused ? "#4fdbc8" : "#958ea0" }}
-                    />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors" style={{ color: passwordFocused ? "#4fdbc8" : "#958ea0" }} />
                     <input
                       type={showPassword ? "text" : "password"}
                       required
@@ -237,7 +283,7 @@ function LoginPage() {
                       onFocus={() => setPasswordFocused(true)}
                       onBlur={() => setPasswordFocused(false)}
                       placeholder="••••••••"
-                      minLength={6}
+                      minLength={tab === "signup" ? 8 : 1}
                       className="w-full h-11 pl-12 pr-12 rounded-lg text-sm"
                       style={{ ...inputBase, ...(passwordFocused ? inputFocus : {}) }}
                     />
@@ -250,17 +296,50 @@ function LoginPage() {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+
+                  {/* Password strength — signup only */}
+                  {showStrength && (
+                    <div className="mt-3 space-y-2">
+                      {/* Strength bar */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-1 flex-1">
+                          {[1, 2, 3, 4].map((i) => (
+                            <div
+                              key={i}
+                              className="h-1 flex-1 rounded-full transition-all duration-300"
+                              style={{
+                                background: i <= strength ? strengthColors[strength] : "#1e293b",
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs font-medium w-12 text-right transition-colors" style={{ color: strengthColors[strength], ...mono }}>
+                          {strengthLabels[strength]}
+                        </span>
+                      </div>
+                      {/* Requirements checklist */}
+                      <div className="grid grid-cols-1 gap-1">
+                        {pwReqs.map((req) => (
+                          <div key={req.label} className="flex items-center gap-2">
+                            <span className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center" style={{ background: req.met ? "rgba(79,219,200,0.15)" : "rgba(255,255,255,0.05)" }}>
+                              {req.met
+                                ? <Check className="h-2.5 w-2.5" style={{ color: "#4fdbc8" }} />
+                                : <X className="h-2.5 w-2.5" style={{ color: "#958ea0" }} />}
+                            </span>
+                            <span className="text-xs" style={{ color: req.met ? "#4fdbc8" : "#958ea0", transition: "color 0.2s" }}>
+                              {req.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Remember me — login only */}
                 {tab === "login" && (
                   <div className="flex items-center gap-2 pt-1">
-                    <input
-                      type="checkbox"
-                      id="remember"
-                      className="w-4 h-4 rounded"
-                      style={{ accentColor: "#0566d9" }}
-                    />
+                    <input type="checkbox" id="remember" className="w-4 h-4 rounded" style={{ accentColor: "#0566d9" }} />
                     <label htmlFor="remember" className="text-sm cursor-pointer" style={{ color: "#cbc3d7" }}>
                       Remember me for 30 days
                     </label>
@@ -269,18 +348,12 @@ function LoginPage() {
 
                 {/* Feedback messages */}
                 {errorMsg && (
-                  <div
-                    className="rounded-lg px-4 py-2.5 text-xs"
-                    style={{ background: "rgba(147,0,10,0.2)", color: "#ffb4ab", border: "1px solid rgba(147,0,10,0.4)" }}
-                  >
+                  <div className="rounded-lg px-4 py-2.5 text-xs" style={{ background: "rgba(147,0,10,0.2)", color: "#ffb4ab", border: "1px solid rgba(147,0,10,0.4)" }}>
                     {errorMsg}
                   </div>
                 )}
                 {successMsg && (
-                  <div
-                    className="rounded-lg px-4 py-2.5 text-xs"
-                    style={{ background: "rgba(79,219,200,0.1)", color: "#4fdbc8", border: "1px solid rgba(79,219,200,0.3)" }}
-                  >
+                  <div className="rounded-lg px-4 py-2.5 text-xs" style={{ background: "rgba(79,219,200,0.1)", color: "#4fdbc8", border: "1px solid rgba(79,219,200,0.3)" }}>
                     {successMsg}
                   </div>
                 )}
@@ -293,8 +366,8 @@ function LoginPage() {
                   style={{ background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)", color: "#ffffff" }}
                 >
                   {submitting
-                    ? tab === "login" ? "Signing in…" : "Creating account…"
-                    : tab === "login" ? "Log In" : "Create Account"}
+                    ? (tab === "login" ? "Signing in…" : "Creating account…")
+                    : (tab === "login" ? "Log In" : "Create Account")}
                   {!submitting && <LogIn className="h-4 w-4" />}
                 </button>
               </form>
@@ -342,10 +415,7 @@ function LoginPage() {
         </section>
 
         {/* Right — Brand visual */}
-        <section
-          className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden"
-          style={{ backgroundColor: "#020617" }}
-        >
+        <section className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden" style={{ backgroundColor: "#020617" }}>
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute -top-48 -right-48 w-96 h-96 rounded-full blur-[120px]" style={{ background: "rgba(160,120,255,0.1)" }} />
             <div className="absolute -bottom-48 -left-48 w-96 h-96 rounded-full blur-[120px]" style={{ background: "rgba(5,102,217,0.1)" }} />
@@ -353,20 +423,10 @@ function LoginPage() {
 
           <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-8">
             <div className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50" style={{ background: "rgba(160,120,255,0.05)" }} />
-
             <div className="relative w-full transition-transform duration-700 ease-out hover:scale-[1.02]">
-              <img
-                alt="Celestial Brand Asset"
-                src={COMET_SRC}
-                className="w-full h-auto object-contain"
-                style={{ filter: "drop-shadow(0 0 50px rgba(160,120,255,0.3))" }}
-              />
+              <img alt="Celestial Brand Asset" src={COMET_SRC} className="w-full h-auto object-contain" style={{ filter: "drop-shadow(0 0 50px rgba(160,120,255,0.3))" }} />
 
-              {/* Badge — Members */}
-              <div
-                className="absolute top-10 left-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce"
-                style={{ animationDuration: "4s", background: "rgba(15,23,42,0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
-              >
+              <div className="absolute top-10 left-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce" style={{ animationDuration: "4s", background: "rgba(15,23,42,0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(0,163,146,0.2)" }}>
                   <Users className="h-4 w-4" style={{ color: "#4fdbc8" }} />
                 </div>
@@ -376,11 +436,7 @@ function LoginPage() {
                 </div>
               </div>
 
-              {/* Badge — Resources */}
-              <div
-                className="absolute bottom-20 right-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce"
-                style={{ animationDuration: "5s", background: "rgba(15,23,42,0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}
-              >
+              <div className="absolute bottom-20 right-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce" style={{ animationDuration: "5s", background: "rgba(15,23,42,0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(5,102,217,0.2)" }}>
                   <Zap className="h-4 w-4" style={{ color: "#adc6ff" }} />
                 </div>
@@ -391,20 +447,10 @@ function LoginPage() {
               </div>
             </div>
 
-            {/* Tagline */}
             <div className="mt-8 text-center">
-              <h2
-                className="text-4xl font-bold mb-4 leading-tight"
-                style={{ letterSpacing: "-0.02em", fontFamily: "'Hanken Grotesk', sans-serif" }}
-              >
+              <h2 className="text-4xl font-bold mb-4 leading-tight" style={{ letterSpacing: "-0.02em", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                 Connect. Access. <br />
-                <span
-                  style={{
-                    background: "linear-gradient(90deg, #a078ff 0%, #0566d9 50%, #4fdbc8 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
+                <span style={{ background: "linear-gradient(90deg, #a078ff 0%, #0566d9 50%, #4fdbc8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                   Grow—Together.
                 </span>
               </h2>
@@ -418,10 +464,7 @@ function LoginPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer
-        className="py-8 px-6 mt-auto"
-        style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a" }}
-      >
+      <footer className="py-8 px-6 mt-auto" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a" }}>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div>
             <p className="font-bold text-base" style={{ color: "#dae2fd", fontFamily: "'Hanken Grotesk', sans-serif" }}>MyCommNet</p>
