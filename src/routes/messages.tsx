@@ -37,7 +37,7 @@ const conversations: Convo[] = [
 ];
 
 const thread = [
-  { from: "them", time: "9:14 AM", body: "Hey Jayden — checked your reflection notes from the resource fair. Really thoughtful work." },
+  { from: "them", time: "9:14 AM", body: "Hey Jayden! — checked your reflection notes from the resource fair. Really thoughtful work." },
   { from: "them", time: "9:15 AM", body: "I'd love to hear how the conversation with Bright Futures went." },
   { from: "me", time: "9:22 AM", body: "Thanks! It went well — they're interested in the outreach role and want a follow-up." },
   { from: "them", time: "9:30 AM", body: "Great job on your progress! Let's schedule a time to talk about your next steps." },
@@ -62,7 +62,7 @@ function MessagesPage() {
         <Shield className="h-5 w-5 text-brand-teal" />
         <div className="flex-1 text-sm">
           <span className="font-semibold">Your conversations are private and secure.</span>{" "}
-          <span className="text-muted-foreground">We protect your messages and data.</span>
+          <span className="text-muted-foreground">We are committed to protecting your messages and data.</span>
         </div>
         <button className="text-xs text-brand-teal hover:underline">Learn more</button>
       </div>
