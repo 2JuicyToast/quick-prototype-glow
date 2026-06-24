@@ -7,9 +7,9 @@ export const Route = createFileRoute("/messages")({
   head: () => ({
     meta: [
       { title: "Messages — MyCommNet" },
-      { name: "description", content: "Direct message inbox for mentors, organizations, and group members." },
+      { name: "description", content: "Direct message inbox from mentors, organizations, and group members." },
       { property: "og:title", content: "Messages — MyCommNet" },
-      { property: "og:description", content: "Direct message inbox for mentors, organizations, and group members." },
+      { property: "og:description", content: "Direct message inbox from mentors, organizations, and group members." },
     ],
   }),
   component: MessagesPage,
