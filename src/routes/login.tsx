@@ -6,6 +6,9 @@ import { Mail, Lock, Eye, EyeOff, Users, Zap, LogIn, Check, X } from "lucide-rea
 const logoSrc = "/logo.png";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tab: search.tab === "signup" ? ("signup" as const) : ("signin" as const),
+  }),
   head: () => ({
     meta: [
       { title: "Sign In — MyCommNet" },
@@ -51,7 +54,8 @@ const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"];
 const strengthColors = ["", "#ef4444", "#f97316", "#eab308", "#4fdbc8"];
 
 function LoginPage() {
-  const [tab, setTab] = useState<"login" | "signup">("login");
+  const { tab: initialTab } = Route.useSearch();
+  const [tab, setTab] = useState<"login" | "signup">(initialTab === "signup" ? "signup" : "login");
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [firstName, setFirstName] = useState("");

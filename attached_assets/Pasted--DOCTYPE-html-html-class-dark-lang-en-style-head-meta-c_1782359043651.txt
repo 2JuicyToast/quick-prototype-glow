@@ -1,0 +1,448 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Features | MyCommNet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Hanken+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#adc6ff",
+                        "on-primary": "#3c0091",
+                        "surface-container-lowest": "#060e20",
+                        "surface": "#0b1326",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface-container": "#171f33",
+                        "tertiary-fixed-dim": "#4fdbc8",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-primary-container": "#340080",
+                        "on-tertiary": "#003731",
+                        "surface-container-low": "#131b2e",
+                        "on-surface-variant": "#cbc3d7",
+                        "inverse-primary": "#6d3bd7",
+                        "on-secondary-fixed": "#001a42",
+                        "on-tertiary-container": "#00302a",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#0566d9",
+                        "primary-fixed": "#e9ddff",
+                        "surface-variant": "#2d3449",
+                        "error-container": "#93000a",
+                        "surface-tint": "#d0bcff",
+                        "on-secondary-container": "#e6ecff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "error": "#ffb4ab",
+                        "outline": "#958ea0",
+                        "primary": "#d0bcff",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed": "#23005c",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-background": "#dae2fd",
+                        "tertiary": "#4fdbc8",
+                        "outline-variant": "#494454",
+                        "tertiary-fixed": "#71f8e4",
+                        "tertiary-container": "#00a392",
+                        "background": "#0b1326",
+                        "surface-bright": "#31394d",
+                        "primary-container": "#a078ff",
+                        "on-primary-fixed-variant": "#5516be",
+                        "on-error": "#690005",
+                        "on-secondary": "#002e6a",
+                        "surface-dim": "#0b1326",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "md": "16px",
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "tagline": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "tagline": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617;
+            overflow-x: hidden;
+        }
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0b1326 0%, #020617 100%);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(208, 188, 255, 0.2);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(208, 188, 255, 0.4);
+        }
+        .gradient-border-btn {
+            position: relative;
+            background: linear-gradient(to right, #d0bcff, #4fdbc8);
+            padding: 1px;
+            border-radius: 0.5rem;
+        }
+        .gradient-border-btn > div {
+            background: #0b1326;
+            border-radius: 0.5rem;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #d0bcff, #4fdbc8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Star Field Background -->
+<div class="star-field" id="starField"><div class="star" style="width: 2.15856px; height: 2.15856px; left: 37.4877%; top: 62.9783%; --duration: 2.7281485804638956s; opacity: 0.100794;"></div><div class="star" style="width: 2.80301px; height: 2.80301px; left: 45.6172%; top: 59.9267%; --duration: 2.9141051134271416s; opacity: 0.983511;"></div><div class="star" style="width: 2.53756px; height: 2.53756px; left: 55.4589%; top: 54.2509%; --duration: 4.3722698564552385s; opacity: 0.683133;"></div><div class="star" style="width: 2.35311px; height: 2.35311px; left: 26.7319%; top: 39.2078%; --duration: 3.4202870359808095s; opacity: 0.360081;"></div><div class="star" style="width: 2.80729px; height: 2.80729px; left: 65.8132%; top: 60.8781%; --duration: 4.456245380737952s; opacity: 0.964204;"></div><div class="star" style="width: 1.82806px; height: 1.82806px; left: 89.6504%; top: 35.5923%; --duration: 2.2023593207269547s; opacity: 0.582395;"></div><div class="star" style="width: 1.10884px; height: 1.10884px; left: 13.7058%; top: 92.8088%; --duration: 2.2834944015203056s; opacity: 0.140076;"></div><div class="star" style="width: 1.78562px; height: 1.78562px; left: 61.9537%; top: 97.0163%; --duration: 2.3232234413392283s; opacity: 0.687121;"></div><div class="star" style="width: 2.06026px; height: 2.06026px; left: 10.9989%; top: 73.1878%; --duration: 2.1138717736700903s; opacity: 0.323179;"></div><div class="star" style="width: 2.9031px; height: 2.9031px; left: 62.6514%; top: 55.4336%; --duration: 3.2736914763699105s; opacity: 0.962406;"></div><div class="star" style="width: 2.65795px; height: 2.65795px; left: 99.2627%; top: 45.2351%; --duration: 4.105610153624591s; opacity: 0.221617;"></div><div class="star" style="width: 2.48937px; height: 2.48937px; left: 48.2493%; top: 82.3271%; --duration: 4.213658717441072s; opacity: 0.172394;"></div><div class="star" style="width: 2.32612px; height: 2.32612px; left: 79.2729%; top: 45.2427%; --duration: 3.731803986634726s; opacity: 0.879988;"></div><div class="star" style="width: 2.39584px; height: 2.39584px; left: 7.73476%; top: 49.2216%; --duration: 3.9262329663841466s; opacity: 0.414636;"></div><div class="star" style="width: 2.12152px; height: 2.12152px; left: 97.5649%; top: 23.1849%; --duration: 2.035980492109621s; opacity: 0.745637;"></div><div class="star" style="width: 2.37983px; height: 2.37983px; left: 87.2843%; top: 42.0029%; --duration: 4.361797575084944s; opacity: 0.672107;"></div><div class="star" style="width: 2.4316px; height: 2.4316px; left: 69.3933%; top: 9.75464%; --duration: 3.7378983791337563s; opacity: 0.660763;"></div><div class="star" style="width: 1.10771px; height: 1.10771px; left: 96.491%; top: 51.0483%; --duration: 4.984464090796383s; opacity: 0.769174;"></div><div class="star" style="width: 1.56551px; height: 1.56551px; left: 59.7641%; top: 6.292%; --duration: 4.8836864123857096s; opacity: 0.171338;"></div><div class="star" style="width: 2.61395px; height: 2.61395px; left: 17.0076%; top: 40.553%; --duration: 4.212083399999288s; opacity: 0.134758;"></div><div class="star" style="width: 1.77679px; height: 1.77679px; left: 66.0506%; top: 51.168%; --duration: 2.2759277322461475s; opacity: 0.420381;"></div><div class="star" style="width: 2.56956px; height: 2.56956px; left: 2.04837%; top: 41.5101%; --duration: 2.379470789347609s; opacity: 0.865851;"></div><div class="star" style="width: 1.00193px; height: 1.00193px; left: 46.0137%; top: 73.799%; --duration: 3.6682507786845933s; opacity: 0.863368;"></div><div class="star" style="width: 1.37599px; height: 1.37599px; left: 39.5395%; top: 62.486%; --duration: 4.231701428256917s; opacity: 0.272112;"></div><div class="star" style="width: 1.19222px; height: 1.19222px; left: 25.7842%; top: 1.55221%; --duration: 2.503877135502437s; opacity: 0.604495;"></div><div class="star" style="width: 1.84741px; height: 1.84741px; left: 59.954%; top: 81.1541%; --duration: 3.55415941959816s; opacity: 0.427876;"></div><div class="star" style="width: 2.4748px; height: 2.4748px; left: 99.6293%; top: 5.98296%; --duration: 2.5578096666974974s; opacity: 0.055763;"></div><div class="star" style="width: 2.68864px; height: 2.68864px; left: 77.2901%; top: 40.5211%; --duration: 4.265985653470189s; opacity: 0.558639;"></div><div class="star" style="width: 2.67643px; height: 2.67643px; left: 44.7523%; top: 42.0063%; --duration: 2.45428061853582s; opacity: 0.726417;"></div><div class="star" style="width: 2.55977px; height: 2.55977px; left: 49.098%; top: 88.3659%; --duration: 4.299449875691924s; opacity: 0.907425;"></div><div class="star" style="width: 1.57535px; height: 1.57535px; left: 20.4261%; top: 41.5397%; --duration: 2.994849512745609s; opacity: 0.824856;"></div><div class="star" style="width: 2.99252px; height: 2.99252px; left: 22.5838%; top: 1.31818%; --duration: 2.718992753241783s; opacity: 0.536848;"></div><div class="star" style="width: 1.19316px; height: 1.19316px; left: 69.3635%; top: 81.5746%; --duration: 3.83517152817147s; opacity: 0.605013;"></div><div class="star" style="width: 2.57674px; height: 2.57674px; left: 28.4591%; top: 11.2323%; --duration: 4.197372028594032s; opacity: 0.0206568;"></div><div class="star" style="width: 1.56848px; height: 1.56848px; left: 60.4853%; top: 70.0279%; --duration: 4.006861167807312s; opacity: 0.780427;"></div><div class="star" style="width: 1.46618px; height: 1.46618px; left: 29.1569%; top: 28.498%; --duration: 2.8305640054467425s; opacity: 0.0590697;"></div><div class="star" style="width: 1.10592px; height: 1.10592px; left: 51.4594%; top: 6.64115%; --duration: 2.8381926944631224s; opacity: 0.818102;"></div><div class="star" style="width: 1.90663px; height: 1.90663px; left: 90.418%; top: 20.1294%; --duration: 2.6427548870036075s; opacity: 0.808874;"></div><div class="star" style="width: 1.96196px; height: 1.96196px; left: 86.6244%; top: 19.706%; --duration: 4.350042520188529s; opacity: 0.227945;"></div><div class="star" style="width: 2.13774px; height: 2.13774px; left: 78.0726%; top: 13.4849%; --duration: 4.069716000643053s; opacity: 0.263852;"></div><div class="star" style="width: 1.62026px; height: 1.62026px; left: 31.9819%; top: 19.1073%; --duration: 4.4050956768154s; opacity: 0.112542;"></div><div class="star" style="width: 2.52275px; height: 2.52275px; left: 2.58088%; top: 79.909%; --duration: 2.5021369355120853s; opacity: 0.891085;"></div><div class="star" style="width: 2.77073px; height: 2.77073px; left: 14.5179%; top: 11.3574%; --duration: 2.378647479630333s; opacity: 0.281384;"></div><div class="star" style="width: 1.71787px; height: 1.71787px; left: 68.3917%; top: 34.8112%; --duration: 4.727329401444213s; opacity: 0.57719;"></div><div class="star" style="width: 2.44337px; height: 2.44337px; left: 31.4487%; top: 51.8839%; --duration: 2.4954801826272477s; opacity: 0.926496;"></div><div class="star" style="width: 1.25026px; height: 1.25026px; left: 86.8334%; top: 17.9305%; --duration: 3.8589706899991985s; opacity: 0.862059;"></div><div class="star" style="width: 2.8575px; height: 2.8575px; left: 29.7542%; top: 79.0568%; --duration: 2.1371571697953065s; opacity: 0.241395;"></div><div class="star" style="width: 1.62589px; height: 1.62589px; left: 55.7363%; top: 0.53378%; --duration: 3.5967579932737137s; opacity: 0.531683;"></div><div class="star" style="width: 2.52148px; height: 2.52148px; left: 68.4787%; top: 11.9859%; --duration: 3.2309665807946697s; opacity: 0.229409;"></div><div class="star" style="width: 2.30562px; height: 2.30562px; left: 50.0914%; top: 56.8921%; --duration: 3.6616293723450735s; opacity: 0.0443279;"></div><div class="star" style="width: 2.18375px; height: 2.18375px; left: 16.1003%; top: 47.1981%; --duration: 3.8984769545093587s; opacity: 0.226901;"></div><div class="star" style="width: 1.89381px; height: 1.89381px; left: 31.1881%; top: 86.9338%; --duration: 4.095787683329412s; opacity: 0.756228;"></div><div class="star" style="width: 1.6839px; height: 1.6839px; left: 90.5645%; top: 48.2107%; --duration: 4.222500520692964s; opacity: 0.660147;"></div><div class="star" style="width: 2.42922px; height: 2.42922px; left: 81.0129%; top: 18.8713%; --duration: 4.792447654012464s; opacity: 0.103822;"></div><div class="star" style="width: 1.38865px; height: 1.38865px; left: 74.1128%; top: 43.2125%; --duration: 3.9243572691003874s; opacity: 0.593214;"></div><div class="star" style="width: 2.09512px; height: 2.09512px; left: 69.0694%; top: 17.4973%; --duration: 4.717424401906744s; opacity: 0.779673;"></div><div class="star" style="width: 2.88975px; height: 2.88975px; left: 10.1165%; top: 45.5089%; --duration: 3.6286876703956294s; opacity: 0.516526;"></div><div class="star" style="width: 2.60775px; height: 2.60775px; left: 32.3084%; top: 98.3037%; --duration: 4.01809547688357s; opacity: 0.227269;"></div><div class="star" style="width: 2.75386px; height: 2.75386px; left: 36.8146%; top: 37.1719%; --duration: 3.200429222346046s; opacity: 0.353115;"></div><div class="star" style="width: 1.74363px; height: 1.74363px; left: 18.3212%; top: 39.9505%; --duration: 2.387603490327277s; opacity: 0.346708;"></div><div class="star" style="width: 2.47863px; height: 2.47863px; left: 12.0683%; top: 38.5694%; --duration: 2.3731045331736897s; opacity: 0.944209;"></div><div class="star" style="width: 2.30049px; height: 2.30049px; left: 57.1711%; top: 84.8039%; --duration: 2.945795549959442s; opacity: 0.258158;"></div><div class="star" style="width: 1.11655px; height: 1.11655px; left: 79.6755%; top: 42.2667%; --duration: 2.1367885191907146s; opacity: 0.0287131;"></div><div class="star" style="width: 2.01828px; height: 2.01828px; left: 12.1599%; top: 40.2337%; --duration: 2.4250653389732495s; opacity: 0.263474;"></div><div class="star" style="width: 1.06541px; height: 1.06541px; left: 11.9091%; top: 85.0387%; --duration: 2.0340081858828896s; opacity: 0.167933;"></div><div class="star" style="width: 1.36813px; height: 1.36813px; left: 10.1016%; top: 25.7705%; --duration: 3.58878367273264s; opacity: 0.07355;"></div><div class="star" style="width: 1.46436px; height: 1.46436px; left: 66.1378%; top: 54.7677%; --duration: 4.719663419730208s; opacity: 0.311672;"></div><div class="star" style="width: 2.15447px; height: 2.15447px; left: 99.9978%; top: 39.7545%; --duration: 4.050915242036055s; opacity: 0.378345;"></div><div class="star" style="width: 2.87297px; height: 2.87297px; left: 35.3961%; top: 10.9191%; --duration: 2.530983814923352s; opacity: 0.177993;"></div><div class="star" style="width: 2.01974px; height: 2.01974px; left: 30.4689%; top: 21.1193%; --duration: 3.5456145018740224s; opacity: 0.224831;"></div><div class="star" style="width: 2.47006px; height: 2.47006px; left: 74.753%; top: 30.6963%; --duration: 3.461438574577418s; opacity: 0.222679;"></div><div class="star" style="width: 1.12337px; height: 1.12337px; left: 91.439%; top: 95.5489%; --duration: 2.3840354481944175s; opacity: 0.00391828;"></div><div class="star" style="width: 2.51382px; height: 2.51382px; left: 48.9066%; top: 73.423%; --duration: 3.51934703780811s; opacity: 0.12222;"></div><div class="star" style="width: 2.72115px; height: 2.72115px; left: 92.0996%; top: 25.2362%; --duration: 2.3881421809251187s; opacity: 0.770171;"></div><div class="star" style="width: 2.72675px; height: 2.72675px; left: 35.2342%; top: 55.5386%; --duration: 3.300732530164242s; opacity: 0.530689;"></div><div class="star" style="width: 1.70388px; height: 1.70388px; left: 97.1448%; top: 15.6856%; --duration: 4.2032288952813035s; opacity: 0.0128567;"></div><div class="star" style="width: 2.05588px; height: 2.05588px; left: 81.4919%; top: 43.693%; --duration: 4.284937287824126s; opacity: 0.251264;"></div><div class="star" style="width: 2.1208px; height: 2.1208px; left: 85.1327%; top: 27.0993%; --duration: 3.8350806177089893s; opacity: 0.277531;"></div><div class="star" style="width: 1.8194px; height: 1.8194px; left: 90.0576%; top: 46.7184%; --duration: 2.1756669919997558s; opacity: 0.473162;"></div><div class="star" style="width: 2.89951px; height: 2.89951px; left: 73.0631%; top: 27.3558%; --duration: 4.282507043548194s; opacity: 0.0430419;"></div><div class="star" style="width: 1.37568px; height: 1.37568px; left: 5.84556%; top: 41.6691%; --duration: 2.9865325653823196s; opacity: 0.317671;"></div><div class="star" style="width: 1.38479px; height: 1.38479px; left: 29.3168%; top: 64.5463%; --duration: 3.0149221813567455s; opacity: 0.359691;"></div><div class="star" style="width: 1.30322px; height: 1.30322px; left: 77.2752%; top: 9.66377%; --duration: 4.06500423075772s; opacity: 0.450173;"></div><div class="star" style="width: 2.10982px; height: 2.10982px; left: 56.1867%; top: 58.2866%; --duration: 3.774998890966794s; opacity: 0.362554;"></div><div class="star" style="width: 1.12119px; height: 1.12119px; left: 17.4032%; top: 15.4123%; --duration: 2.302153397674476s; opacity: 0.144669;"></div><div class="star" style="width: 1.18774px; height: 1.18774px; left: 99.7195%; top: 7.24078%; --duration: 4.043461360322722s; opacity: 0.715145;"></div><div class="star" style="width: 2.72242px; height: 2.72242px; left: 49.6566%; top: 46.1533%; --duration: 3.2777773598236672s; opacity: 0.777063;"></div><div class="star" style="width: 2.10712px; height: 2.10712px; left: 94.6226%; top: 46.0198%; --duration: 3.389280525552927s; opacity: 0.187431;"></div><div class="star" style="width: 2.6836px; height: 2.6836px; left: 76.0958%; top: 1.05666%; --duration: 3.7448551799097407s; opacity: 0.867862;"></div><div class="star" style="width: 1.58268px; height: 1.58268px; left: 64.2097%; top: 43.961%; --duration: 3.6867093801429225s; opacity: 0.984141;"></div><div class="star" style="width: 2.48876px; height: 2.48876px; left: 64.8368%; top: 0.871648%; --duration: 2.8698386261153033s; opacity: 0.450556;"></div><div class="star" style="width: 2.46902px; height: 2.46902px; left: 62.1916%; top: 48.6469%; --duration: 4.048662737285046s; opacity: 0.898703;"></div><div class="star" style="width: 1.7497px; height: 1.7497px; left: 35.9849%; top: 88.397%; --duration: 3.9111879799343434s; opacity: 0.23487;"></div><div class="star" style="width: 2.03379px; height: 2.03379px; left: 3.62588%; top: 53.8711%; --duration: 2.531523222324585s; opacity: 0.412498;"></div><div class="star" style="width: 1.01896px; height: 1.01896px; left: 30.8495%; top: 52.0405%; --duration: 4.55624153286582s; opacity: 0.830934;"></div><div class="star" style="width: 2.91034px; height: 2.91034px; left: 93.0045%; top: 40.4196%; --duration: 4.859974901701282s; opacity: 0.280552;"></div><div class="star" style="width: 1.98693px; height: 1.98693px; left: 32.7824%; top: 49.0875%; --duration: 2.550275213684759s; opacity: 0.293056;"></div><div class="star" style="width: 1.52537px; height: 1.52537px; left: 71.7065%; top: 42.5367%; --duration: 4.807719632906596s; opacity: 0.572926;"></div><div class="star" style="width: 1.81529px; height: 1.81529px; left: 15.0425%; top: 74.6964%; --duration: 2.65215404183282s; opacity: 0.304557;"></div><div class="star" style="width: 2.52916px; height: 2.52916px; left: 11.9051%; top: 75.8886%; --duration: 3.3174936185200115s; opacity: 0.416512;"></div><div class="star" style="width: 1.19084px; height: 1.19084px; left: 10.326%; top: 41.2795%; --duration: 2.9559600106390476s; opacity: 0.674289;"></div><div class="star" style="width: 1.38702px; height: 1.38702px; left: 16.6114%; top: 14.0539%; --duration: 4.777114449642929s; opacity: 0.624986;"></div><div class="star" style="width: 2.99121px; height: 2.99121px; left: 24.3%; top: 39.6582%; --duration: 2.9034037188280335s; opacity: 0.490301;"></div><div class="star" style="width: 1.20433px; height: 1.20433px; left: 78.932%; top: 64.3801%; --duration: 2.474728657685747s; opacity: 0.441247;"></div><div class="star" style="width: 2.66634px; height: 2.66634px; left: 51.9983%; top: 11.7477%; --duration: 2.8775082183321796s; opacity: 0.804044;"></div><div class="star" style="width: 2.36419px; height: 2.36419px; left: 37.2111%; top: 73.603%; --duration: 2.4885299343693963s; opacity: 0.832186;"></div><div class="star" style="width: 1.20087px; height: 1.20087px; left: 26.1468%; top: 38.8651%; --duration: 2.1647788418943397s; opacity: 0.556884;"></div><div class="star" style="width: 1.12933px; height: 1.12933px; left: 52.2166%; top: 6.98686%; --duration: 3.2875428981108805s; opacity: 0.850433;"></div><div class="star" style="width: 1.87968px; height: 1.87968px; left: 90.941%; top: 90.061%; --duration: 3.9830575113334197s; opacity: 0.0731365;"></div><div class="star" style="width: 2.19293px; height: 2.19293px; left: 25.701%; top: 18.5296%; --duration: 2.525855391057084s; opacity: 0.782915;"></div><div class="star" style="width: 2.03468px; height: 2.03468px; left: 13.5927%; top: 86.4309%; --duration: 4.69219607110334s; opacity: 0.208885;"></div><div class="star" style="width: 1.85103px; height: 1.85103px; left: 15.0854%; top: 92.4506%; --duration: 4.931843711627419s; opacity: 0.0871944;"></div><div class="star" style="width: 1.97902px; height: 1.97902px; left: 62.1089%; top: 99.627%; --duration: 4.917192123555039s; opacity: 0.300111;"></div><div class="star" style="width: 1.97394px; height: 1.97394px; left: 23.9558%; top: 18.0834%; --duration: 4.812037225343936s; opacity: 0.85369;"></div><div class="star" style="width: 2.34276px; height: 2.34276px; left: 24.2815%; top: 23.956%; --duration: 3.368222872150545s; opacity: 0.62549;"></div><div class="star" style="width: 1.38868px; height: 1.38868px; left: 15.3197%; top: 90.3915%; --duration: 3.1748451610131507s; opacity: 0.341095;"></div><div class="star" style="width: 2.16237px; height: 2.16237px; left: 91.9576%; top: 69.6666%; --duration: 3.7717868315702683s; opacity: 0.0705917;"></div><div class="star" style="width: 2.25279px; height: 2.25279px; left: 10.4589%; top: 2.18116%; --duration: 2.179960529194772s; opacity: 0.286097;"></div><div class="star" style="width: 2.87284px; height: 2.87284px; left: 50.2198%; top: 60.8048%; --duration: 4.129436376012981s; opacity: 0.064281;"></div><div class="star" style="width: 2.28818px; height: 2.28818px; left: 99.3069%; top: 77.6853%; --duration: 3.3103165625384428s; opacity: 0.140444;"></div><div class="star" style="width: 1.79847px; height: 1.79847px; left: 44.7784%; top: 85.0499%; --duration: 4.487490970299663s; opacity: 0.951077;"></div><div class="star" style="width: 1.53259px; height: 1.53259px; left: 1.94749%; top: 45.8829%; --duration: 4.228186216316978s; opacity: 0.177335;"></div><div class="star" style="width: 2.61498px; height: 2.61498px; left: 2.30074%; top: 44.3595%; --duration: 4.8909511449419405s; opacity: 0.881887;"></div><div class="star" style="width: 2.38797px; height: 2.38797px; left: 76.2817%; top: 49.4822%; --duration: 2.9125423769784677s; opacity: 0.203193;"></div><div class="star" style="width: 1.12961px; height: 1.12961px; left: 81.7963%; top: 27.8207%; --duration: 2.874676531225613s; opacity: 0.146756;"></div><div class="star" style="width: 2.01659px; height: 2.01659px; left: 86.1879%; top: 25.7596%; --duration: 3.1032490830208426s; opacity: 0.0568225;"></div><div class="star" style="width: 1.41187px; height: 1.41187px; left: 56.4028%; top: 20.1907%; --duration: 2.8203865578375575s; opacity: 0.919763;"></div><div class="star" style="width: 2.01965px; height: 2.01965px; left: 97.1105%; top: 85.732%; --duration: 2.3126466984623937s; opacity: 0.685571;"></div><div class="star" style="width: 1.9851px; height: 1.9851px; left: 89.0082%; top: 99.4835%; --duration: 4.936003968585922s; opacity: 0.58019;"></div><div class="star" style="width: 2.13715px; height: 2.13715px; left: 30.8503%; top: 85.2017%; --duration: 2.0142123238228336s; opacity: 0.804538;"></div><div class="star" style="width: 1.0543px; height: 1.0543px; left: 92.0408%; top: 36.5599%; --duration: 3.56137033188651s; opacity: 0.129167;"></div><div class="star" style="width: 1.07277px; height: 1.07277px; left: 65.0624%; top: 5.17078%; --duration: 2.856903869524083s; opacity: 0.34599;"></div><div class="star" style="width: 1.40789px; height: 1.40789px; left: 98.6698%; top: 41.6087%; --duration: 4.288669862262223s; opacity: 0.864555;"></div><div class="star" style="width: 1.18461px; height: 1.18461px; left: 4.63581%; top: 44.9464%; --duration: 2.6670059409020466s; opacity: 0.201555;"></div><div class="star" style="width: 2.12343px; height: 2.12343px; left: 57.2894%; top: 15.6899%; --duration: 3.428002686394868s; opacity: 0.41001;"></div><div class="star" style="width: 1.8193px; height: 1.8193px; left: 11.2783%; top: 92.1284%; --duration: 3.5201316393103106s; opacity: 0.862127;"></div><div class="star" style="width: 1.1835px; height: 1.1835px; left: 9.09558%; top: 12.9572%; --duration: 2.952716875033502s; opacity: 0.36522;"></div><div class="star" style="width: 1.55343px; height: 1.55343px; left: 59.671%; top: 51.4393%; --duration: 4.488180536954685s; opacity: 0.253909;"></div><div class="star" style="width: 2.30285px; height: 2.30285px; left: 62.6316%; top: 63.9456%; --duration: 4.617814490549174s; opacity: 0.424895;"></div><div class="star" style="width: 2.95803px; height: 2.95803px; left: 33.3752%; top: 67.6913%; --duration: 3.842995956731567s; opacity: 0.718757;"></div><div class="star" style="width: 1.51772px; height: 1.51772px; left: 31.5444%; top: 86.7556%; --duration: 4.135836907051727s; opacity: 0.959331;"></div><div class="star" style="width: 1.66301px; height: 1.66301px; left: 34.5942%; top: 75.607%; --duration: 4.416216340638275s; opacity: 0.13506;"></div><div class="star" style="width: 1.41266px; height: 1.41266px; left: 92.3655%; top: 63.5237%; --duration: 3.046089996324962s; opacity: 0.787426;"></div><div class="star" style="width: 1.74564px; height: 1.74564px; left: 68.3579%; top: 53.4598%; --duration: 3.277253777457278s; opacity: 0.900793;"></div><div class="star" style="width: 1.88925px; height: 1.88925px; left: 70.3638%; top: 11.5741%; --duration: 4.273137505432417s; opacity: 0.310307;"></div><div class="star" style="width: 2.75924px; height: 2.75924px; left: 95.7828%; top: 37.9895%; --duration: 2.2481338505755906s; opacity: 0.543301;"></div><div class="star" style="width: 1.73877px; height: 1.73877px; left: 67.2375%; top: 38.0773%; --duration: 4.355107123081493s; opacity: 0.942115;"></div><div class="star" style="width: 2.36326px; height: 2.36326px; left: 43.0204%; top: 57.7653%; --duration: 3.5217764465658785s; opacity: 0.160442;"></div><div class="star" style="width: 1.5524px; height: 1.5524px; left: 73.3153%; top: 30.0998%; --duration: 4.727418662929995s; opacity: 0.100614;"></div><div class="star" style="width: 1.80842px; height: 1.80842px; left: 74.9639%; top: 82.2114%; --duration: 4.16166185676019s; opacity: 0.918965;"></div></div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-surface-variant">
+<div class="flex justify-between items-center px-lg h-16 max-w-7xl mx-auto">
+<div class="flex items-center gap-2">
+<img alt="Logo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMHArCs-UlH9F1zaDrX0tV_hk0yjzLKeOHxAuwtL5aqOT6M8Nvj_v2FDVG_sQIXHUMYuwXvtJ7E6rlzxXzf2TJECXI5d_Zuy4EmgEXMSaIzAcIObjQIXMuKHp5pi5Nri-evkCMSi8QjzBjtopcOzWopiVAHLxlG4kCzPzbKfkmTrmrVwNhW7m8-aPnJDKmSkECwoegROAl_iFNECCNSpg4dLRTiFrwKCtOhD6Dc2hzNPaU-lLqKg2fKd_t-ccJ9eBOYnEcJjQ5Pg">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">MyCommNet</span>
+</div>
+<nav class="hidden md:flex items-center gap-xl">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Home</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">About</a>
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary pb-1" href="#">Features</a>
+
+</nav>
+<div class="flex items-center gap-md">
+<button class="font-body-md text-body-md text-on-surface hover:text-primary transition-all duration-200 active:scale-95 px-md py-xs">Sign In</button>
+<button class="bg-primary text-on-primary font-body-md text-body-md px-md py-xs rounded-lg active:scale-95 transition-transform font-bold">Sign Up</button>
+</div>
+</div>
+</header>
+<main class="mt-16">
+<!-- Hero Section -->
+<section class="relative min-h-[70vh] flex items-center justify-center overflow-hidden py-xl px-container-padding">
+<div class="absolute inset-0 z-0">
+
+</div>
+<div class="relative z-10 text-center max-w-4xl mx-auto">
+<span class="font-label-md text-label-md text-tertiary uppercase tracking-widest mb-md block">Platform Capabilities</span>
+<h1 class="font-display-lg text-display-lg text-glow mb-md leading-tight">Features</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl leading-relaxed">
+                    MyCommNet is built for discovery, connection, and growth. We provide the digital infrastructure to bridge community gaps and empower every individual through meaningful local opportunities.
+                </p>
+<div class="flex flex-col sm:flex-row gap-md justify-center">
+<button class="bg-primary text-on-primary font-body-md text-body-md px-xl py-md rounded-xl font-bold shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">Get Started</button>
+
+</div>
+</div>
+</section>
+<!-- Feature Bento Grid (Personalized Discovery) -->
+<section class="py-xl px-container-padding max-w-7xl mx-auto">
+<div class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg mb-xs">Personalized Discovery</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Tailored results based on your unique lifestyle and immediate needs.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-8 glass-card p-lg rounded-xl min-h-[300px] flex flex-col justify-end relative overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="A sophisticated digital interface displaying a dynamic neighborhood map in deep navy and vibrant purple. High-tech glowing pin points mark community centers and local resources. The map is viewed from a perspective angle, illuminated by soft cyan accent lighting, reflecting a professional dark corporate aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCkXjgCWA5Fk_jK_cHXYxsNcpYF45QENFmJ8WSis0vejKn6vsRf9rn_V0P4xQ6A3oDQ9vjda9lrkoTvVw31RyMbnnd1C7nD4l4yVPgDHzj9sm0K2IDvaNDalJdzL0RosQNBIpajHHDm3XCda3tBmNabqqKLGpkhwl3ReZjkmSqVOglS6MQXok-782okcm8ehn2t_7fZzeT3TvpXDW9kIsALVS3Ao1_YYSQzXMceHaB4evhZqwxuciO2FBhFNTFbXHga8lvQNjXJeA')"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-md">map</span>
+<h3 class="font-headline-md text-headline-md mb-xs">Map-based Exploration</h3>
+<p class="text-on-surface-variant max-w-md">Find resources near you with our real-time interactive community map.</p>
+</div>
+</div>
+<div class="md:col-span-4 glass-card p-lg rounded-xl flex flex-col items-center text-center justify-center gap-md">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">assignment</span>
+</div>
+<h3 class="font-headline-md text-headline-md">Personalized Survey</h3>
+<p class="text-on-surface-variant">Take a quick assessment to get recommendations that match your goals.</p>
+</div>
+<div class="md:col-span-6 glass-card p-lg rounded-xl flex items-start gap-md">
+<div class="bg-surface-container p-md rounded-lg">
+<span class="material-symbols-outlined text-secondary">search</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">Smart Search</h3>
+<p class="text-on-surface-variant">AI-powered search that understands intent, not just keywords.</p>
+</div>
+</div>
+<div class="md:col-span-6 glass-card p-lg rounded-xl flex items-start gap-md">
+<div class="bg-surface-container p-md rounded-lg">
+<span class="material-symbols-outlined text-tertiary">category</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md mb-xs">Resource Categories</h3>
+<p class="text-on-surface-variant">Browse through intuitive tags from food security to tech education.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Community & Connection Section (Alternating Layout) -->
+<section class="py-xl bg-surface-container-low/50 border-y border-surface-variant/30">
+<div class="max-w-7xl mx-auto px-container-padding grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
+<div class="space-y-md">
+<span class="font-label-md text-label-md text-secondary">Intentional Spaces</span>
+<h2 class="font-headline-lg text-headline-lg">Community &amp; Connection</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Experience a platform that prioritizes intentional connection. It’s social, but not a feed—focused on action and shared goals rather than mindless scrolling.</p>
+<ul class="space-y-md">
+<li class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="">Direct messages for 1-on-1 collaboration</span>
+</li>
+<li class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="">Group chats for neighborhood projects</span>
+</li>
+<li class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="">Verified updates from community leaders</span>
+</li>
+</ul>
+</div>
+<div class="relative">
+<div class="absolute -inset-4 bg-primary/10 blur-3xl rounded-full"></div>
+<div class="glass-card p-xl rounded-2xl relative border border-primary/20">
+<div class="space-y-lg">
+<div class="flex items-center gap-md p-md rounded-xl bg-surface-container">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="flex-1">
+<div class="h-2 w-24 bg-surface-variant rounded-full mb-2"></div>
+<div class="h-2 w-48 bg-outline/20 rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center gap-md p-md rounded-xl bg-primary/5 border border-primary/10 ml-8">
+<div class="flex-1">
+<p class="text-sm font-medium text-primary mb-1">Group Project Alpha</p>
+<div class="h-2 w-32 bg-primary/20 rounded-full"></div>
+</div>
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div class="flex items-center gap-md p-md rounded-xl bg-surface-container">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="flex-1">
+<div class="h-2 w-24 bg-surface-variant rounded-full mb-2"></div>
+<div class="h-2 w-36 bg-outline/20 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Growth & Opportunities Section -->
+<section class="py-xl px-container-padding max-w-7xl mx-auto">
+<div class="text-center mb-xl">
+<h2 class="font-headline-lg text-headline-lg">Growth &amp; Opportunities</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">Focus on your long-term success with tools designed to help you level up your career and life skills.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="glass-card p-xl rounded-xl border-t-4 border-t-tertiary">
+<span class="material-symbols-outlined text-tertiary text-4xl mb-md">work</span>
+<h3 class="font-headline-md text-headline-md mb-sm">Hiring Resources</h3>
+<p class="text-on-surface-variant">Direct access to local companies looking for talent in your community.</p>
+</div>
+<div class="glass-card p-xl rounded-xl border-t-4 border-t-secondary">
+<span class="material-symbols-outlined text-secondary text-4xl mb-md">description</span>
+<h3 class="font-headline-md text-headline-md mb-sm">Resume Help</h3>
+<p class="text-on-surface-variant">Guided tools and peer reviews to make your professional profile stand out.</p>
+</div>
+<div class="glass-card p-xl rounded-xl border-t-4 border-t-primary">
+<span class="material-symbols-outlined text-primary text-4xl mb-md">psychology</span>
+<h3 class="font-headline-md text-headline-md mb-sm">Mentoring</h3>
+<p class="text-on-surface-variant">Connect with experienced professionals willing to guide your journey.</p>
+</div>
+</div>
+</section>
+<!-- Personal Hub & Trust/Safety (Two Column) -->
+<section class="py-xl px-container-padding max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl">
+<!-- Personal Hub -->
+<div class="space-y-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-xs">Personal Hub</h2>
+<p class="text-on-surface-variant">Track your local impact and stay organized.</p>
+</div>
+<div class="space-y-md">
+<div class="flex items-center gap-md p-lg glass-card rounded-xl">
+<span class="material-symbols-outlined text-primary">bookmark</span>
+<div>
+<h4 class="font-bold">Saved Resources</h4>
+<p class="text-sm text-on-surface-variant">Keep your most-used services just one click away.</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-lg glass-card rounded-xl">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<div>
+<h4 class="font-bold">Experience Tracking</h4>
+<p class="text-sm text-on-surface-variant">Visualize your growth through completed training and workshops.</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-lg glass-card rounded-xl">
+<span class="material-symbols-outlined text-primary">badge</span>
+<div>
+<h4 class="font-bold">Digital Community Pass</h4>
+<p class="text-sm text-on-surface-variant">A unified digital ID for accessing community events and spaces.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust & Safety -->
+<div class="space-y-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-xs">Trust &amp; Safety</h2>
+<p class="text-on-surface-variant">Built on a foundation of security and verification.</p>
+</div>
+<div class="bg-surface-container-high/40 p-lg rounded-2xl border border-surface-variant">
+<div class="grid grid-cols-1 gap-md">
+<div class="p-md bg-surface/50 rounded-lg flex items-start gap-md">
+<span class="material-symbols-outlined text-tertiary">verified</span>
+<div>
+<h4 class="font-bold">Verified Listings</h4>
+<p class="text-sm text-on-surface-variant">Every organization is manually vetted for community safety.</p>
+</div>
+</div>
+<div class="p-md bg-surface/50 rounded-lg flex items-start gap-md">
+<span class="material-symbols-outlined text-tertiary">reviews</span>
+<div>
+<h4 class="font-bold">Review Categories</h4>
+<p class="text-sm text-on-surface-variant">Community-driven feedback to ensure high quality support.</p>
+</div>
+</div>
+<div class="p-md bg-surface/50 rounded-lg flex items-start gap-md">
+<span class="material-symbols-outlined text-tertiary">lock</span>
+<div>
+<h4 class="font-bold">Privacy Controls</h4>
+<p class="text-sm text-on-surface-variant">You decide what to share and who you connect with.</p>
+</div>
+</div>
+</div>
+<div class="mt-lg pt-lg border-t border-surface-variant text-center">
+<span class="font-label-md text-label-md bg-tertiary/10 text-tertiary px-md py-xs rounded-full">Secure &amp; Encrypted</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-xl px-container-padding text-center relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 radial-gradient(circle at center, rgba(208,188,255,0.1), transparent 70%)"></div>
+<div class="max-w-3xl mx-auto relative z-10 space-y-md">
+<h2 class="font-display-lg text-display-lg leading-tight">Explore what your community has to offer</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl">Join thousands of community members already growing together on MyCommNet.</p>
+<div class="flex flex-col sm:flex-row gap-md justify-center items-center">
+<button class="bg-primary text-on-primary font-body-md text-body-md px-xl py-md rounded-xl font-bold hover:shadow-2xl hover:shadow-primary/30 active:scale-95 transition-all w-full sm:w-auto">Sign Up</button>
+<button class="font-body-md text-body-md px-xl py-md rounded-xl font-bold text-on-surface hover:text-primary transition-colors flex items-center gap-xs">
+                        Start Exploring
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bottom-0 bg-surface border-t border-surface-variant">
+<div class="flex flex-col md:flex-row justify-between items-center px-lg py-xl max-w-7xl mx-auto gap-md">
+<div class="text-center md:text-left">
+<div class="font-headline-md text-headline-md font-bold text-on-surface">MyCommNet</div>
+<div class="text-sm text-on-surface-variant font-body-md">Stay Connected</div>
+</div>
+<div class="flex flex-wrap justify-center gap-xl">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+
+</div>
+</footer>
+<script>
+        // Atmospheric Star Field Effect
+        const starField = document.getElementById('starField');
+        const starCount = 150;
+
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1 + 'px';
+            star.style.width = size;
+            star.style.height = size;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', Math.random() * 3 + 2 + 's');
+            star.style.opacity = Math.random();
+            starField.appendChild(star);
+        }
+
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+
+
+</body></html>

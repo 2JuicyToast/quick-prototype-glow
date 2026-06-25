@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Calendar, Users, TrendingUp, Map, Star, ArrowRight } from "lucide-react";
+import { PublicNav } from "@/components/PublicNav";
+import { PublicStars, PublicFooter } from "@/components/PublicStars";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -12,9 +14,8 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const logoSrc = "/logo.png";
-const mono = { fontFamily: "'JetBrains Mono', monospace" };
 const hanken = { fontFamily: "'Hanken Grotesk', sans-serif" };
+const mono = { fontFamily: "'JetBrains Mono', monospace" };
 
 const glassCardStyle: React.CSSProperties = {
   background: "rgba(15, 23, 42, 0.6)",
@@ -22,39 +23,6 @@ const glassCardStyle: React.CSSProperties = {
   border: "1px solid rgba(30, 41, 59, 0.5)",
   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
 };
-
-function StarBackground() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = ref.current;
-    if (!container) return;
-    const colors = ["#d0bcff", "#adc6ff", "#4fdbc8"];
-    const count = Math.floor(Math.random() * 21) + 40;
-    const nodes: HTMLDivElement[] = [];
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement("div");
-      const size = Math.random() * 6 + 4;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const dur = (Math.random() * 2.5 + 1.5).toFixed(2);
-      const delay = (Math.random() * 5).toFixed(2);
-      Object.assign(el.style, {
-        position: "absolute", borderRadius: "50%", pointerEvents: "none",
-        width: `${size}px`, height: `${size}px`,
-        left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-        backgroundColor: color,
-        boxShadow: `0 0 ${size * 3}px ${color}, 0 0 ${size * 5}px ${color}88`,
-        animation: `mcn-twinkle ${dur}s ease-in-out infinite`,
-        animationDelay: `${delay}s`,
-      });
-      container.appendChild(el);
-      nodes.push(el);
-    }
-    return () => nodes.forEach((n) => n.remove());
-  }, []);
-
-  return <div ref={ref} className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }} />;
-}
 
 const features = [
   {
@@ -64,6 +32,8 @@ const features = [
     title: "Events & Resources",
     desc: "Stay updated with local workshops, festivals, and emergency resources. Find exactly what's happening near you with curated neighborhood guides.",
     action: "Learn More",
+    actionTo: "/about" as const,
+    actionSearch: undefined,
   },
   {
     icon: Users,
@@ -72,6 +42,8 @@ const features = [
     title: "Mentorship",
     desc: "Connect with community leaders and subject matter experts. Bridge the gap between potential and experience through local mentorship programs.",
     action: "Find a Mentor",
+    actionTo: "/login" as const,
+    actionSearch: { tab: "signup" } as any,
   },
   {
     icon: TrendingUp,
@@ -80,6 +52,8 @@ const features = [
     title: "Community Growth",
     desc: "Learn and build lasting connections that matter. Participate in local initiatives that drive infrastructure, education, and shared prosperity.",
     action: "Start Growing",
+    actionTo: "/login" as const,
+    actionSearch: { tab: "signup" } as any,
   },
 ];
 
@@ -87,10 +61,6 @@ function HomePage() {
   return (
     <div style={{ backgroundColor: "#0b1326", color: "#dae2fd", fontFamily: "'Inter', sans-serif", overflowX: "hidden" }}>
       <style>{`
-        @keyframes mcn-twinkle {
-          0%,100% { opacity:0.2; transform:scale(0.8); filter:blur(1px) brightness(0.8); }
-          50% { opacity:1; transform:scale(1.5); filter:blur(0px) brightness(2); }
-        }
         .mcn-glass:hover {
           background: rgba(15,23,42,0.85) !important;
           border-color: rgba(139,92,246,0.45) !important;
@@ -98,46 +68,8 @@ function HomePage() {
         }
       `}</style>
 
-      <StarBackground />
-
-      {/* ── Nav ── */}
-      <nav
-        className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-[72px] backdrop-blur-lg"
-        style={{ backgroundColor: "rgba(11,19,38,0.85)", borderBottom: "1px solid rgba(30,41,59,0.8)" }}
-      >
-        <div className="flex items-center gap-3">
-          <img src={logoSrc} alt="MyCommNet Logo" className="h-10 w-10 rounded-full object-cover" style={{ boxShadow: "0 0 12px rgba(160,120,255,0.5)" }} />
-          <span className="text-xl font-black tracking-tight" style={hanken}>
-            <span style={{ color: "#a078ff" }}>My</span>
-            <span style={{ color: "#0566d9" }}>Comm</span>
-            <span style={{ color: "#4fdbc8" }}>Net</span>
-          </span>
-        </div>
-
-        <div className="hidden md:flex items-center gap-8">
-          <a className="text-sm font-bold" style={{ color: "#d0bcff", borderBottom: "2px solid #d0bcff", paddingBottom: 4 }} href="#">Home</a>
-          {["About", "Features"].map((l) => (
-            <a key={l} className="text-sm transition-colors hover:text-white" style={{ color: "#cbc3d7" }} href="#">{l}</a>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link
-            to="/login"
-            className="px-4 py-2 rounded-lg text-sm transition-all hover:text-white"
-            style={{ color: "#cbc3d7", border: "1px solid transparent" }}
-          >
-            Log In
-          </Link>
-          <Link
-            to="/login"
-            className="px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
-            style={{ background: "#a078ff", color: "#23005c", boxShadow: "0 4px 12px rgba(160,120,255,0.3)" }}
-          >
-            Sign Up
-          </Link>
-        </div>
-      </nav>
+      <PublicStars />
+      <PublicNav activePage="home" />
 
       <main className="pt-[72px]" style={{ position: "relative", zIndex: 10 }}>
 
@@ -175,18 +107,20 @@ function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 to="/login"
+                search={{ tab: "signup" } as any}
                 className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base transition-transform hover:scale-[1.02]"
                 style={{ background: "linear-gradient(90deg,#a078ff,#0566d9)", color: "#ffffff", boxShadow: "0 8px 20px rgba(160,120,255,0.3)" }}
               >
                 Join the Community
               </Link>
-              <button
+              <Link
+                to="/map"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all hover:bg-white/10"
                 style={{ border: "1px solid rgba(73,68,84,0.8)", color: "#dae2fd" }}
               >
                 <Map className="h-5 w-5" />
                 Explore the Map
-              </button>
+              </Link>
             </div>
           </div>
         </section>
@@ -195,12 +129,8 @@ function HomePage() {
         <section className="py-16 px-6" style={{ backgroundColor: "#0b1326" }}>
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4" style={{ color: "#dae2fd", ...hanken }}>
-                Explore Your Local Community
-              </h2>
-              <p className="text-base max-w-xl mx-auto" style={{ color: "#cbc3d7" }}>
-                Explore a dynamic landscape of opportunities, from local workshops to collaborative networks, all designed to strengthen your neighborhood's heartbeat.
-              </p>
+              <h2 className="text-3xl font-bold mb-4" style={{ color: "#dae2fd", ...hanken }}>Explore Your Local Community</h2>
+              <p className="text-base max-w-xl mx-auto" style={{ color: "#cbc3d7" }}>Explore a dynamic landscape of opportunities, from local workshops to collaborative networks, all designed to strengthen your neighborhood's heartbeat.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -213,10 +143,15 @@ function HomePage() {
                     </div>
                     <h3 className="text-2xl font-semibold mb-4" style={{ color: "#dae2fd", ...hanken }}>{f.title}</h3>
                     <p className="text-base flex-grow leading-relaxed" style={{ color: "#cbc3d7" }}>{f.desc}</p>
-                    <div className="mt-6 flex items-center gap-2 font-bold cursor-pointer group" style={{ color: f.color }}>
+                    <Link
+                      to={f.actionTo}
+                      search={f.actionSearch}
+                      className="mt-6 flex items-center gap-2 font-bold group w-fit"
+                      style={{ color: f.color }}
+                    >
                       <span>{f.action}</span>
                       <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                    </div>
+                    </Link>
                   </div>
                 );
               })}
@@ -241,14 +176,20 @@ function HomePage() {
               <div className="flex items-center gap-6 flex-wrap">
                 <Link
                   to="/login"
+                  search={{ tab: "signup" } as any}
                   className="px-8 py-4 rounded-xl font-bold text-base transition-all hover:brightness-110"
                   style={{ backgroundColor: "#dae2fd", color: "#0b1326" }}
                 >
                   Get Started Free
                 </Link>
-                <button className="font-bold text-base transition-all hover:text-white pb-1" style={{ color: "#dae2fd", borderBottom: "1px solid rgba(218,226,253,0.3)" }}>
+                {/* Explore Local Groups — not yet built, intentionally 404 */}
+                <a
+                  href="/explore-local-groups"
+                  className="font-bold text-base transition-all hover:text-white pb-1"
+                  style={{ color: "#dae2fd", borderBottom: "1px solid rgba(218,226,253,0.3)" }}
+                >
                   Explore Local Groups
-                </button>
+                </a>
               </div>
             </div>
 
@@ -272,9 +213,14 @@ function HomePage() {
                       <p className="text-xs" style={{ color: "#cbc3d7" }}>42 Active Local Events</p>
                     </div>
                   </div>
-                  <button className="text-sm font-bold px-4 py-2 rounded-lg transition-all hover:bg-white/10" style={{ color: "#d0bcff", border: "1px solid rgba(160,120,255,0.3)" }}>
+                  <Link
+                    to="/login"
+                    search={{ tab: "signup" } as any}
+                    className="text-sm font-bold px-4 py-2 rounded-lg transition-all hover:bg-white/10"
+                    style={{ color: "#d0bcff", border: "1px solid rgba(160,120,255,0.3)" }}
+                  >
                     Join Room
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -282,20 +228,7 @@ function HomePage() {
         </section>
       </main>
 
-      {/* ── Footer ── */}
-      <footer className="py-8 px-6" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a", position: "relative", zIndex: 10 }}>
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <p className="font-bold text-base" style={{ color: "#dae2fd", ...hanken }}>MyCommNet</p>
-            <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>Stay Connected</p>
-          </div>
-          <div className="flex flex-wrap gap-8">
-            {["Privacy Policy", "Terms of Service", "Help Center"].map((l) => (
-              <a key={l} href="#" className="text-xs transition-colors hover:text-white" style={{ color: "#cbc3d7", ...mono }}>{l}</a>
-            ))}
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
