@@ -131,7 +131,7 @@ function LoginPage() {
           <img
             src={logoAsset.url}
             alt="MyCommNet Logo"
-            className="h-10 w-10 object-contain"
+            className="h-10 w-10 object-cover rounded-full"
             style={{ filter: "drop-shadow(0 0 10px rgba(160,120,255,0.4))" }}
           />
           <span className="text-xl font-black tracking-tight">
@@ -431,8 +431,8 @@ function LoginPage() {
                   <Users className="h-4 w-4" style={{ color: "#4fdbc8" }} />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest" style={{ color: "#cbc3d7", ...mono }}>Growth</p>
-                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>25K+ Active Members</p>
+                  <p className="text-[10px] uppercase tracking-widest" style={{ color: "#cbc3d7", ...mono }}>Community</p>
+                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>Growing Every Day</p>
                 </div>
               </div>
 
@@ -441,13 +441,13 @@ function LoginPage() {
                   <Zap className="h-4 w-4" style={{ color: "#adc6ff" }} />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest" style={{ color: "#cbc3d7", ...mono }}>Impact</p>
-                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>8K+ Resources Shared</p>
+                  <p className="text-[10px] uppercase tracking-widest" style={{ color: "#cbc3d7", ...mono }}>Opportunities</p>
+                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>Personalized for You</p>
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 text-center">
+            <div className="mt-8 mb-12 text-center">
               <h2 className="text-4xl font-bold mb-4 leading-tight" style={{ letterSpacing: "-0.02em", fontFamily: "'Hanken Grotesk', sans-serif" }}>
                 Connect. Access. <br />
                 <span style={{ background: "linear-gradient(90deg, #a078ff 0%, #0566d9 50%, #4fdbc8 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
