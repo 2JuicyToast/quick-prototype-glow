@@ -1,0 +1,349 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MyCommNet | Keeping Communities Connected</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            background: rgba(15, 23, 42, 0.8);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-4px);
+        }
+        .celestial-gradient {
+            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0b1326 100%);
+        }
+        .hero-glow {
+            background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(5, 102, 217, 0.1) 0%, transparent 50%);
+        }
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Updated Star Effect Styles */
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.2; 
+                transform: scale(0.8);
+                filter: blur(1px) brightness(0.8);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.5);
+                filter: blur(0px) brightness(2);
+            }
+        }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: twinkle var(--duration, 3s) ease-in-out infinite;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#00302a",
+                      "on-tertiary": "#003731",
+                      "on-error": "#690005",
+                      "surface-variant": "#2d3449",
+                      "inverse-primary": "#6d3bd7",
+                      "primary": "#d0bcff",
+                      "surface-container-lowest": "#060e20",
+                      "surface-container-highest": "#2d3449",
+                      "secondary-container": "#0566d9",
+                      "on-primary-fixed": "#23005c",
+                      "tertiary-fixed": "#71f8e4",
+                      "surface": "#0b1326",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "outline-variant": "#494454",
+                      "on-tertiary-fixed-variant": "#005048",
+                      "on-secondary-fixed-variant": "#004395",
+                      "error-container": "#93000a",
+                      "outline": "#958ea0",
+                      "on-tertiary-fixed": "#00201c",
+                      "primary-container": "#a078ff",
+                      "surface-container": "#171f33",
+                      "on-primary-fixed-variant": "#5516be",
+                      "error": "#ffb4ab",
+                      "tertiary": "#4fdbc8",
+                      "primary-fixed-dim": "#d0bcff",
+                      "tertiary-fixed-dim": "#4fdbc8",
+                      "on-secondary-container": "#e6ecff",
+                      "tertiary-container": "#00a392",
+                      "on-primary": "#3c0091",
+                      "on-secondary": "#002e6a",
+                      "on-error-container": "#ffdad6",
+                      "on-surface-variant": "#cbc3d7",
+                      "background": "#0b1326",
+                      "on-secondary-fixed": "#001a42",
+                      "on-background": "#dae2fd",
+                      "surface-container-low": "#131b2e",
+                      "secondary-fixed": "#d8e2ff",
+                      "secondary": "#adc6ff",
+                      "on-primary-container": "#340080",
+                      "surface-container-high": "#222a3d",
+                      "on-surface": "#dae2fd",
+                      "surface-tint": "#d0bcff",
+                      "inverse-surface": "#dae2fd",
+                      "surface-dim": "#0b1326",
+                      "inverse-on-surface": "#283044",
+                      "surface-bright": "#31394d",
+                      "primary-fixed": "#e9ddff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "lg": "24px",
+                      "container-padding": "24px",
+                      "xl": "32px",
+                      "gutter": "16px",
+                      "sm": "8px",
+                      "base": "8px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Hanken Grotesk"],
+                      "body-md": ["Inter"],
+                      "display-lg": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["JetBrains Mono"],
+                      "tagline": ["Inter"],
+                      "headline-md": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "tagline": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container relative">
+<!-- Star Background Container -->
+<div class="fixed inset-0 pointer-events-none z-[1] overflow-hidden" id="star-container"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-lg h-[72px] bg-surface/80 dark:bg-surface/80 backdrop-blur-lg border-b border-outline-variant transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-sm">
+<img alt="MyCommNet Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUZmIMdcBJholDVHnaERyya6pUMp6n4AGmgNgdrGsRdwyuukXcyJSizSKQnidjaDwL09Th5kzca_wnkCnCzJGCue2VtE4LF5jIYPkOcVgHY8I6WRoql4f7rfnBpJ8DhzNGUn1RmrtEuM56CAKftT8MW5Hmy-D5vM0FNEu2VQn5GhLXAZtEsBmakDpnprubKESEwGfCV_lTNK_TcEME82k1UFLwg3E0kD9JaeCNFedyGyzZsKDa5p-UANaFtecxtcpSlv19XKLojg">
+<span class="font-headline-md text-headline-md font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-container to-tertiary">MyCommNet</span>
+</div>
+<div class="hidden md:flex items-center gap-xl">
+<a class="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1 transition-all duration-200 ease-in-out" href="#">Home</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">About</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Features</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="px-md py-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 transition-all border border-transparent">Log In</button>
+<button class="px-lg py-sm rounded-lg font-body-md text-body-md bg-primary-container text-on-primary-container font-semibold hover:brightness-110 transition-all shadow-lg shadow-primary-container/20">Sign Up</button>
+</div>
+</nav>
+<main class="pt-[72px] relative z-10">
+<!-- Hero Section -->
+<section class="relative min-h-[85vh] flex items-center justify-center celestial-gradient hero-glow px-container-padding overflow-hidden">
+<!-- Animated Background (Atmospheric Shader) -->
+<div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+<div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
+<div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-secondary-container/10 blur-[150px] rounded-full animate-pulse" style="animation-delay: 2s"></div>
+</div>
+<div class="relative z-10 max-w-5xl text-center mx-auto">
+<div class="inline-flex items-center gap-2 px-md py-xs rounded-full bg-surface-container-high/60 border border-outline-variant mb-xl">
+<span class="material-symbols-outlined text-[16px] text-tertiary">star</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">EXPLORE &amp; CONNECT TOGETHER</span>
+</div>
+<h1 class="font-display-lg text-display-lg md:text-[64px] md:leading-[72px] mb-lg text-on-surface bg-clip-text text-transparent bg-gradient-to-b from-white to-on-surface-variant">
+                    Keeping Communities <br class="hidden md:block"> <span class="text-primary-container">Connected.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-xl leading-relaxed">Discover a collaborative space where local expertise, shared resources, and meaningful connections empower your neighborhood to thrive together.</p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-md">
+<button class="w-full sm:w-auto px-xl py-lg rounded-xl font-headline-md text-headline-md bg-gradient-to-r from-primary-container to-secondary-container text-on-primary-container hover:scale-[1.02] transition-transform shadow-xl shadow-primary/20">
+                        Join the Community
+                    </button>
+<button class="w-full sm:w-auto px-xl py-lg rounded-xl font-headline-md text-headline-md border border-outline-variant hover:bg-surface-container-high/40 transition-all flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined">map</span>
+                        Explore the Map
+                    </button>
+</div>
+</div>
+</section>
+<!-- Feature Pillars Section -->
+<section class="py-xl px-container-padding bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-sm">Explore Your Local Community</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl mx-auto">Explore a dynamic landscape of opportunities, from local workshops to collaborative networks, all designed to strengthen your neighborhood's heartbeat.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Feature 1 -->
+<div class="glass-card p-xl rounded-xl flex flex-col group">
+<div class="w-14 h-14 rounded-lg bg-surface-container-highest flex items-center justify-center mb-lg group-hover:bg-primary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-[32px] text-primary group-hover:text-on-primary-container">calendar_month</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Events &amp; Resources</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Stay updated with local workshops, festivals, and emergency resources. Find exactly what's happening near you with curated neighborhood guides.
+                        </p>
+<div class="mt-lg flex items-center gap-sm text-primary font-bold group-hover:gap-md transition-all cursor-pointer">
+<span class="">Learn More</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="glass-card p-xl rounded-xl flex flex-col group">
+<div class="w-14 h-14 rounded-lg bg-surface-container-highest flex items-center justify-center mb-lg group-hover:bg-tertiary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-[32px] text-tertiary group-hover:text-on-tertiary-container">diversity_3</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Mentorship</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Connect with community leaders and subject matter experts. Bridge the gap between potential and experience through local mentorship programs.
+                        </p>
+<div class="mt-lg flex items-center gap-sm text-tertiary font-bold group-hover:gap-md transition-all cursor-pointer">
+<span class="">Find a Mentor</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="glass-card p-xl rounded-xl flex flex-col group">
+<div class="w-14 h-14 rounded-lg bg-surface-container-highest flex items-center justify-center mb-lg group-hover:bg-secondary-container transition-colors duration-300">
+<span class="material-symbols-outlined text-[32px] text-secondary group-hover:text-on-secondary-container">trending_up</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-md">Community Growth</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex-grow">
+                            Learn and build lasting connections that matter. Participate in local initiatives that drive infrastructure, education, and shared prosperity.
+                        </p>
+<div class="mt-lg flex items-center gap-sm text-secondary font-bold group-hover:gap-md transition-all cursor-pointer">
+<span class="">Start Growing</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section (Asymmetric) -->
+<section class="py-xl px-container-padding bg-surface-container-low overflow-hidden relative">
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-xl relative z-10">
+<div class="flex-1 text-left">
+<h2 class="font-display-lg text-[40px] leading-[48px] text-on-surface mb-lg">Ready to make your neighborhood <span class="text-tertiary">stronger</span>?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-xl">Join our growing community and help us build a more connected world, one block at a time.</p>
+<div class="flex items-center gap-lg">
+<button class="px-xl py-lg rounded-xl font-headline-md bg-on-surface text-surface hover:bg-primary transition-all">Get Started Free</button>
+<button class="font-headline-md text-on-surface border-b border-on-surface/30 hover:border-primary transition-all pb-1">Explore Local Groups</button>
+</div>
+</div>
+<div class="flex-1 w-full relative">
+<div class="aspect-video glass-card rounded-2xl overflow-hidden relative border-outline-variant shadow-2xl">
+<div class="w-full h-full bg-cover bg-center opacity-60" data-alt="A professional and modern digital rendering of a vibrant community center interior at twilight." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCdhAMJzZlC9IMT2naY2kmjIMvzBgmzmpy8tSrqzotYeXssLnDzIRy9s4TeMEYoSp1lzhPtFQaBzZfbSrUEUQh8novmnibblIfLHBolNBVUUVzOnp96MtnirHVPNgUa6NazFMSBx33dR8FXhPl0AtWZkzsozFREn8OVP7FFopZVyMicM4ZT8qld6pj4cOun2V2Kq-SNaVLOyDVCXN7OaLWD3qLXGKHxIXUQCse91SoWKeNDrNNjqRcTQiMtO0bxIU3GsK2bn5ULGw')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+<div class="absolute bottom-md left-md right-md p-md bg-surface/80 backdrop-blur-md rounded-lg border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Community Hub</p>
+<p class="text-[12px] text-on-surface-variant">42 Active Local Events</p>
+</div>
+</div>
+<button class="text-primary font-bold text-sm px-md py-sm rounded-lg border border-primary/20 hover:bg-primary/10 transition-all">Join Room</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-lg py-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md bg-surface border-t border-outline-variant mt-xl relative z-10">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">MyCommNet</span>
+<span class="font-body-md text-body-md text-on-surface-variant font-normal">Stay Connected</span>
+</div>
+<div class="flex flex-col md:flex-row gap-lg md:gap-xl">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:underline transition-opacity duration-150" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:underline transition-opacity duration-150" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:underline transition-opacity duration-150" href="#">Help Center</a>
+</div>
+</footer>
+<script>
+        // Generate Significantly Bigger and Brighter Sparkling Stars
+        function createStars() {
+            const container = document.getElementById('star-container');
+            const starCount = Math.floor(Math.random() * 21) + 40; // Slightly fewer stars to accommodate larger size
+            const colors = ['#d0bcff', '#adc6ff', '#4fdbc8']; // Brand primary, secondary, tertiary
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Significantly increased base size (4px to 10px instead of 1-3px)
+                const size = Math.random() * 6 + 4; 
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const duration = Math.random() * 2.5 + 1.5; // Faster twinkle for "sparkle" feel
+                const delay = Math.random() * 5;
+
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.backgroundColor = color;
+                // Amplified glow intensity
+                star.style.boxShadow = `0 0 ${size * 3}px ${color}, 0 0 ${size * 5}px ${color}88`;
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.animationDelay = `${delay}s`;
+
+                container.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Micro-interactions for hover effects
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Simple scroll effect for TopNavBar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('bg-surface/95', 'shadow-lg');
+                nav.classList.remove('bg-surface/80');
+            } else {
+                nav.classList.add('bg-surface/80');
+                nav.classList.remove('bg-surface/95', 'shadow-lg');
+            }
+        });
+    </script>
+</body></html>
