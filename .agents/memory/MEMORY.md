@@ -1,0 +1,1 @@
+- [TanStack Start Lovable Migration](tanstack-lovable-migration.md) — critical fixes needed when migrating a Lovable TanStack Start project to Replit.
