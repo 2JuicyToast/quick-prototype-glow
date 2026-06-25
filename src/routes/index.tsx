@@ -1,237 +1,301 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AppShell, PageHeader, SectionHeader } from "@/components/AppShell";
-import {
-  Search, SlidersHorizontal, ArrowRight, Briefcase, GraduationCap, Calendar, Users,
-  Wifi, MonitorSmartphone, Library, School, Bus, Heart, MessageSquare,
-} from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useRef } from "react";
+import { Calendar, Users, TrendingUp, Map, Star, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MyCommNet — Home" },
-      { name: "description", content: "Personalized feed of opportunities, resources, and community nearby." },
-      { property: "og:title", content: "MyCommNet — Home" },
-      { property: "og:description", content: "Personalized feed of opportunities, resources, and community nearby." },
+      { title: "MyCommNet | Keeping Communities Connected" },
+      { name: "description", content: "Discover a collaborative space where local expertise, shared resources, and meaningful connections empower your neighborhood to thrive together." },
     ],
   }),
   component: HomePage,
 });
 
-const opportunities = [
-  { tag: "JOB", title: "Community Outreach Coordinator", org: "Bright Futures Org", meta: "2.4 mi away", chip: "Full-time", tone: "purple" },
-  { tag: "MENTORING", title: "Career Mentorship in Tech", org: "Tech Forward", meta: "Online", chip: "Mentor Match", tone: "blue" },
-  { tag: "TRAINING", title: "Digital Skills Bootcamp", org: "Code for Tomorrow", meta: "1.1 mi away", chip: "Free", tone: "teal" },
-  { tag: "EVENT", title: "Community Resource Fair", org: "Unity Collective", meta: "0.8 mi away", chip: "May 24", tone: "purple" },
-] as const;
+const logoSrc = "/logo.png";
+const mono = { fontFamily: "'JetBrains Mono', monospace" };
+const hanken = { fontFamily: "'Hanken Grotesk', sans-serif" };
 
-const resources = [
-  { icon: Wifi, label: "Free Wi-Fi", count: "3 locations near you" },
-  { icon: MonitorSmartphone, label: "Working Computers", count: "5 locations near you" },
-  { icon: Library, label: "Libraries", count: "2 locations near you" },
-  { icon: School, label: "Schools & Education", count: "4 locations near you" },
-  { icon: Bus, label: "Transportation Help", count: "4 locations near you" },
-];
+const glassCardStyle: React.CSSProperties = {
+  background: "rgba(15, 23, 42, 0.6)",
+  backdropFilter: "blur(12px)",
+  border: "1px solid rgba(30, 41, 59, 0.5)",
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+};
 
-const highlights = [
-  { type: "group", name: "Greenfield Neighbors", members: "1.2K members", body: "Local updates, events, and ways to get involved." },
-  { type: "post", name: "Maya J.", time: "3h ago", body: "Great turnout for the job workshop today! Thank you to everyone who joined.", likes: 24, comments: 6 },
-  { type: "group", name: "Youth Future", members: "876 members", body: "Empowering youth through resources and mentorship." },
-];
+function StarBackground() {
+  const ref = useRef<HTMLDivElement>(null);
 
-function toneClasses(tone: string) {
-  switch (tone) {
-    case "blue": return "bg-brand-blue/15 text-brand-blue ring-1 ring-brand-blue/30";
-    case "teal": return "bg-brand-teal/15 text-brand-teal ring-1 ring-brand-teal/30";
-    default: return "bg-brand-purple/15 text-brand-purple ring-1 ring-brand-purple/40";
-  }
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
+    const colors = ["#d0bcff", "#adc6ff", "#4fdbc8"];
+    const count = Math.floor(Math.random() * 21) + 40;
+    const nodes: HTMLDivElement[] = [];
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement("div");
+      const size = Math.random() * 6 + 4;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const dur = (Math.random() * 2.5 + 1.5).toFixed(2);
+      const delay = (Math.random() * 5).toFixed(2);
+      Object.assign(el.style, {
+        position: "absolute", borderRadius: "50%", pointerEvents: "none",
+        width: `${size}px`, height: `${size}px`,
+        left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+        backgroundColor: color,
+        boxShadow: `0 0 ${size * 3}px ${color}, 0 0 ${size * 5}px ${color}88`,
+        animation: `mcn-twinkle ${dur}s ease-in-out infinite`,
+        animationDelay: `${delay}s`,
+      });
+      container.appendChild(el);
+      nodes.push(el);
+    }
+    return () => nodes.forEach((n) => n.remove());
+  }, []);
+
+  return <div ref={ref} className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }} />;
 }
+
+const features = [
+  {
+    icon: Calendar,
+    color: "#d0bcff",
+    bg: "rgba(160,120,255,0.15)",
+    title: "Events & Resources",
+    desc: "Stay updated with local workshops, festivals, and emergency resources. Find exactly what's happening near you with curated neighborhood guides.",
+    action: "Learn More",
+  },
+  {
+    icon: Users,
+    color: "#4fdbc8",
+    bg: "rgba(79,219,200,0.15)",
+    title: "Mentorship",
+    desc: "Connect with community leaders and subject matter experts. Bridge the gap between potential and experience through local mentorship programs.",
+    action: "Find a Mentor",
+  },
+  {
+    icon: TrendingUp,
+    color: "#adc6ff",
+    bg: "rgba(173,198,255,0.15)",
+    title: "Community Growth",
+    desc: "Learn and build lasting connections that matter. Participate in local initiatives that drive infrastructure, education, and shared prosperity.",
+    action: "Start Growing",
+  },
+];
 
 function HomePage() {
-  const { profile, user } = useAuth();
-  const firstName =
-    profile?.full_name?.split(" ")[0] ??
-    user?.user_metadata?.full_name?.split(" ")[0] ??
-    user?.email?.split("@")[0] ??
-    "there";
-
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-
   return (
-    <AppShell>
-      {/* Notify banner */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-surface/60 px-4 py-3 text-sm">
+    <div style={{ backgroundColor: "#0b1326", color: "#dae2fd", fontFamily: "'Inter', sans-serif", overflowX: "hidden" }}>
+      <style>{`
+        @keyframes mcn-twinkle {
+          0%,100% { opacity:0.2; transform:scale(0.8); filter:blur(1px) brightness(0.8); }
+          50% { opacity:1; transform:scale(1.5); filter:blur(0px) brightness(2); }
+        }
+        .mcn-glass:hover {
+          background: rgba(15,23,42,0.85) !important;
+          border-color: rgba(139,92,246,0.45) !important;
+          transform: translateY(-4px);
+        }
+      `}</style>
+
+      <StarBackground />
+
+      {/* ── Nav ── */}
+      <nav
+        className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-[72px] backdrop-blur-lg"
+        style={{ backgroundColor: "rgba(11,19,38,0.85)", borderBottom: "1px solid rgba(30,41,59,0.8)" }}
+      >
         <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-brand-soft text-brand-teal">✦</span>
-          <div>
-            <p className="font-semibold">New opportunities are landing daily</p>
-            <p className="text-xs text-muted-foreground">Turn on notifications so you never miss out.</p>
-          </div>
-        </div>
-        <button className="rounded-lg bg-gradient-brand px-4 py-2 text-xs font-semibold text-white shadow-glow-purple hover:opacity-95">
-          Turn On Notifications
-        </button>
-      </div>
-
-      {/* Hero */}
-      <section className="relative mb-10 overflow-hidden rounded-3xl border border-border/60 bg-surface/40 bg-hero-glow p-6 md:p-10">
-        <p className="text-sm text-muted-foreground">{greeting}, {firstName} 👋</p>
-        <h1 className="mt-3 font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-          Your community. <br />
-          <span className="text-gradient-brand">Your future.</span>
-        </h1>
-        <p className="mt-4 max-w-xl text-sm text-muted-foreground md:text-base">
-          Discover resources, opportunities, and people ready to help you grow and thrive.
-        </p>
-
-        <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-          <div className="flex flex-1 items-center gap-3 rounded-2xl border border-border bg-background/80 px-4 py-3 shadow-card-soft">
-            <Search className="h-5 w-5 text-muted-foreground" />
-            <input
-              placeholder="Search opportunities, resources, groups..."
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-            />
-          </div>
-          <button className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-background/80 px-4 py-3 text-sm font-medium hover:bg-surface">
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters
-          </button>
+          <img src={logoSrc} alt="MyCommNet Logo" className="h-10 w-10 rounded-full object-cover" style={{ boxShadow: "0 0 12px rgba(160,120,255,0.5)" }} />
+          <span className="text-xl font-black tracking-tight" style={hanken}>
+            <span style={{ color: "#a078ff" }}>My</span>
+            <span style={{ color: "#0566d9" }}>Comm</span>
+            <span style={{ color: "#4fdbc8" }}>Net</span>
+          </span>
         </div>
 
-        <div className="mt-5 flex flex-wrap gap-2">
-          {["Wi-Fi near me", "Free meals", "Weekend events", "Resume help", "Tutoring"].map((p) => (
-            <button key={p} className="rounded-full bg-surface/70 px-3 py-1.5 text-xs text-muted-foreground ring-1 ring-border hover:text-foreground">
-              {p}
-            </button>
+        <div className="hidden md:flex items-center gap-8">
+          <a className="text-sm font-bold" style={{ color: "#d0bcff", borderBottom: "2px solid #d0bcff", paddingBottom: 4 }} href="#">Home</a>
+          {["About", "Features"].map((l) => (
+            <a key={l} className="text-sm transition-colors hover:text-white" style={{ color: "#cbc3d7" }} href="#">{l}</a>
           ))}
         </div>
-      </section>
 
-      {/* Opportunities */}
-      <section className="mb-12">
-        <SectionHeader
-          title="Opportunities for You"
-          action={
-            <Link to="/" className="flex items-center gap-1 text-sm text-brand-teal hover:underline">
-              View all <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          }
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {opportunities.map((o) => {
-            const Icon = o.tag === "JOB" ? Briefcase : o.tag === "TRAINING" ? GraduationCap : o.tag === "EVENT" ? Calendar : Users;
-            return (
-              <article key={o.title} className="group flex flex-col rounded-2xl border border-border/60 bg-surface p-5 shadow-card-soft transition hover:-translate-y-0.5 hover:border-brand-purple/40">
-                <div className="flex items-center justify-between">
-                  <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold tracking-wider ${toneClasses(o.tone)}`}>{o.tag}</span>
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                </div>
-                <h3 className="mt-4 font-display text-base font-semibold leading-snug">{o.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{o.org}</p>
-                <div className="mt-auto flex items-center justify-between pt-5 text-xs">
-                  <span className="text-muted-foreground">📍 {o.meta}</span>
-                  <span className="rounded-full bg-surface-2 px-2 py-1 font-medium">{o.chip}</span>
-                </div>
-              </article>
-            );
-          })}
+        <div className="flex items-center gap-3">
+          <Link
+            to="/login"
+            className="px-4 py-2 rounded-lg text-sm transition-all hover:text-white"
+            style={{ color: "#cbc3d7", border: "1px solid transparent" }}
+          >
+            Log In
+          </Link>
+          <Link
+            to="/login"
+            className="px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
+            style={{ background: "#a078ff", color: "#23005c", boxShadow: "0 4px 12px rgba(160,120,255,0.3)" }}
+          >
+            Sign Up
+          </Link>
         </div>
-      </section>
+      </nav>
 
-      {/* Resources */}
-      <section className="mb-12">
-        <SectionHeader
-          title="Resources Near You"
-          action={<Link to="/map" className="flex items-center gap-1 text-sm text-brand-teal hover:underline">View on map <ArrowRight className="h-3.5 w-3.5" /></Link>}
-        />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {resources.map((r) => {
-            const Icon = r.icon;
-            return (
+      <main className="pt-[72px]" style={{ position: "relative", zIndex: 10 }}>
+
+        {/* ── Hero ── */}
+        <section
+          className="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden"
+          style={{ background: "radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0b1326 100%)" }}
+        >
+          <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
+            <div className="absolute rounded-full animate-pulse" style={{ top: "25%", left: "25%", width: 500, height: 500, background: "rgba(160,120,255,0.2)", filter: "blur(120px)" }} />
+            <div className="absolute rounded-full animate-pulse" style={{ bottom: "25%", right: "25%", width: 600, height: 600, background: "rgba(5,102,217,0.1)", filter: "blur(150px)", animationDelay: "2s" }} />
+          </div>
+
+          <div className="relative z-10 max-w-5xl text-center mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8" style={{ background: "rgba(34,42,61,0.6)", border: "1px solid rgba(73,68,84,1)" }}>
+              <Star className="h-4 w-4" style={{ color: "#4fdbc8" }} />
+              <span className="text-xs uppercase tracking-wider" style={{ color: "#cbc3d7", ...mono }}>Explore &amp; Connect Together</span>
+            </div>
+
+            <h1
+              className="font-black mb-6"
+              style={{ ...hanken, fontSize: "clamp(40px,8vw,64px)", lineHeight: 1.1, letterSpacing: "-0.02em", background: "linear-gradient(180deg,#ffffff 0%,#dae2fd 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+            >
+              Keeping Communities{" "}
+              <br className="hidden md:block" />
+              <span style={{ background: "linear-gradient(90deg,#a078ff,#0566d9)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                Connected.
+              </span>
+            </h1>
+
+            <p className="text-lg leading-relaxed max-w-2xl mx-auto mb-10" style={{ color: "#cbc3d7" }}>
+              Discover a collaborative space where local expertise, shared resources, and meaningful connections empower your neighborhood to thrive together.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                to="/map"
-                key={r.label}
-                className="group flex items-center gap-4 rounded-2xl border border-border/60 bg-surface p-4 transition hover:border-brand-teal/40 hover:bg-surface-2 lg:flex-col lg:items-start"
+                to="/login"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base transition-transform hover:scale-[1.02]"
+                style={{ background: "linear-gradient(90deg,#a078ff,#0566d9)", color: "#ffffff", boxShadow: "0 8px 20px rgba(160,120,255,0.3)" }}
               >
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-brand-soft text-brand-teal">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <div className="flex-1">
-                  <p className="font-semibold">{r.label}</p>
-                  <p className="text-xs text-muted-foreground">{r.count}</p>
-                </div>
+                Join the Community
               </Link>
-            );
-          })}
-        </div>
-      </section>
+              <button
+                className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-base flex items-center justify-center gap-2 transition-all hover:bg-white/10"
+                style={{ border: "1px solid rgba(73,68,84,0.8)", color: "#dae2fd" }}
+              >
+                <Map className="h-5 w-5" />
+                Explore the Map
+              </button>
+            </div>
+          </div>
+        </section>
 
-      {/* Community */}
-      <section className="mb-12">
-        <SectionHeader
-          title="Community Highlights"
-          action={<Link to="/groups" className="flex items-center gap-1 text-sm text-brand-teal hover:underline">View all <ArrowRight className="h-3.5 w-3.5" /></Link>}
-        />
-        <div className="grid gap-4 md:grid-cols-3">
-          {highlights.map((h, i) => (
-            <article key={i} className="rounded-2xl border border-border/60 bg-surface p-5">
-              {h.type === "group" ? (
-                <>
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-brand text-sm font-bold text-white">
-                      {h.name.charAt(0)}
-                    </span>
-                    <button className="rounded-lg bg-gradient-brand px-3 py-1.5 text-xs font-semibold text-white">Join</button>
-                  </div>
-                  <h3 className="mt-3 font-display text-base font-semibold">{h.name}</h3>
-                  <p className="text-xs text-muted-foreground">{h.members}</p>
-                  <p className="mt-3 text-sm text-muted-foreground">{h.body}</p>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-brand-blue/20 text-sm font-bold text-brand-blue">{h.name.charAt(0)}</span>
-                    <div>
-                      <p className="text-sm font-semibold">{h.name}</p>
-                      <p className="text-xs text-muted-foreground">{h.time}</p>
+        {/* ── Features ── */}
+        <section className="py-16 px-6" style={{ backgroundColor: "#0b1326" }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4" style={{ color: "#dae2fd", ...hanken }}>
+                Explore Your Local Community
+              </h2>
+              <p className="text-base max-w-xl mx-auto" style={{ color: "#cbc3d7" }}>
+                Explore a dynamic landscape of opportunities, from local workshops to collaborative networks, all designed to strengthen your neighborhood's heartbeat.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {features.map((f) => {
+                const Icon = f.icon;
+                return (
+                  <div key={f.title} className="mcn-glass p-8 rounded-xl flex flex-col" style={glassCardStyle}>
+                    <div className="w-14 h-14 rounded-lg flex items-center justify-center mb-6" style={{ background: f.bg }}>
+                      <Icon className="h-8 w-8" style={{ color: f.color }} />
+                    </div>
+                    <h3 className="text-2xl font-semibold mb-4" style={{ color: "#dae2fd", ...hanken }}>{f.title}</h3>
+                    <p className="text-base flex-grow leading-relaxed" style={{ color: "#cbc3d7" }}>{f.desc}</p>
+                    <div className="mt-6 flex items-center gap-2 font-bold cursor-pointer group" style={{ color: f.color }}>
+                      <span>{f.action}</span>
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>
-                  <p className="mt-3 text-sm">{h.body}</p>
-                  <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Heart className="h-3.5 w-3.5" /> {h.likes}</span>
-                    <span className="flex items-center gap-1"><MessageSquare className="h-3.5 w-3.5" /> {h.comments}</span>
-                  </div>
-                </>
-              )}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-brand-soft p-6 md:p-10">
-        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-purple/30 blur-3xl" />
-        <div className="relative grid items-center gap-6 md:grid-cols-[1.4fr_1fr]">
-          <div>
-            <h3 className="font-display text-2xl font-bold md:text-3xl">Stay in the loop</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Get personalized updates on new opportunities and community news.
-            </p>
+                );
+              })}
+            </div>
           </div>
-          <form className="flex flex-col gap-2 sm:flex-row">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 rounded-xl border border-border bg-background/80 px-4 py-3 text-sm outline-none placeholder:text-muted-foreground focus:border-brand-purple"
-            />
-            <button className="rounded-xl bg-gradient-brand px-5 py-3 text-sm font-semibold text-white shadow-glow-purple">
-              Subscribe
-            </button>
-          </form>
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="py-16 px-6 overflow-hidden relative" style={{ backgroundColor: "#131b2e" }}>
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
+            <div className="flex-1 text-left">
+              <h2
+                className="font-bold mb-6"
+                style={{ ...hanken, fontSize: "clamp(28px,5vw,40px)", lineHeight: 1.2, color: "#dae2fd" }}
+              >
+                Ready to make your neighborhood{" "}
+                <span style={{ color: "#4fdbc8" }}>stronger</span>?
+              </h2>
+              <p className="text-lg mb-10 max-w-xl leading-relaxed" style={{ color: "#cbc3d7" }}>
+                Join our growing community and help us build a more connected world, one block at a time.
+              </p>
+              <div className="flex items-center gap-6 flex-wrap">
+                <Link
+                  to="/login"
+                  className="px-8 py-4 rounded-xl font-bold text-base transition-all hover:brightness-110"
+                  style={{ backgroundColor: "#dae2fd", color: "#0b1326" }}
+                >
+                  Get Started Free
+                </Link>
+                <button className="font-bold text-base transition-all hover:text-white pb-1" style={{ color: "#dae2fd", borderBottom: "1px solid rgba(218,226,253,0.3)" }}>
+                  Explore Local Groups
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full">
+              <div className="rounded-2xl overflow-hidden relative" style={{ aspectRatio: "16/9", ...glassCardStyle, border: "1px solid rgba(73,68,84,0.5)", boxShadow: "0 25px 50px rgba(0,0,0,0.5)" }}>
+                <div
+                  className="w-full h-full bg-cover bg-center opacity-60"
+                  style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCdhAMJzZlC9IMT2naY2kmjIMvzBgmzmpy8tSrqzotYeXssLnDzIRy9s4TeMEYoSp1lzhPtFQaBzZfbSrUEUQh8novmnibblIfLHBolNBVUUVzOnp96MtnirHVPNgUa6NazFMSBx33dR8FXhPl0AtWZkzsozFREn8OVP7FFopZVyMicM4ZT8qld6pj4cOun2V2Kq-SNaVLOyDVCXN7OaLWD3qLXGKHxIXUQCse91SoWKeNDrNNjqRcTQiMtO0bxIU3GsK2bn5ULGw')" }}
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #0b1326, transparent)" }} />
+                <div
+                  className="absolute bottom-4 left-4 right-4 p-4 rounded-lg flex items-center justify-between"
+                  style={{ background: "rgba(11,19,38,0.85)", backdropFilter: "blur(8px)", border: "1px solid rgba(73,68,84,0.5)" }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(160,120,255,0.2)" }}>
+                      <Users className="h-5 w-5" style={{ color: "#d0bcff" }} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: "#dae2fd", ...mono }}>Community Hub</p>
+                      <p className="text-xs" style={{ color: "#cbc3d7" }}>42 Active Local Events</p>
+                    </div>
+                  </div>
+                  <button className="text-sm font-bold px-4 py-2 rounded-lg transition-all hover:bg-white/10" style={{ color: "#d0bcff", border: "1px solid rgba(160,120,255,0.3)" }}>
+                    Join Room
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* ── Footer ── */}
+      <footer className="py-8 px-6" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a", position: "relative", zIndex: 10 }}>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <p className="font-bold text-base" style={{ color: "#dae2fd", ...hanken }}>MyCommNet</p>
+            <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>Stay Connected</p>
+          </div>
+          <div className="flex flex-wrap gap-8">
+            {["Privacy Policy", "Terms of Service", "Help Center"].map((l) => (
+              <a key={l} href="#" className="text-xs transition-colors hover:text-white" style={{ color: "#cbc3d7", ...mono }}>{l}</a>
+            ))}
+          </div>
         </div>
-      </section>
-    </AppShell>
+      </footer>
+    </div>
   );
 }
-

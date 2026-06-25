@@ -425,7 +425,9 @@ function LoginPage() {
           <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-8">
             <div className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50" style={{ background: "rgba(160,120,255,0.05)" }} />
             <div className="relative w-full transition-transform duration-700 ease-out hover:scale-[1.02]">
-              <img alt="Celestial Brand Asset" src={COMET_SRC} className="w-full h-auto object-contain" style={{ filter: "drop-shadow(0 0 50px rgba(160,120,255,0.3))" }} />
+              <div className="rounded-full overflow-hidden aspect-square" style={{ boxShadow: "0 0 80px rgba(160,120,255,0.3)" }}>
+                <img alt="Celestial Brand Asset" src={COMET_SRC} className="w-full h-full object-cover" />
+              </div>
 
               <div className="absolute top-10 left-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce" style={{ animationDuration: "4s", background: "rgba(15,23,42,0.7)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)" }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(0,163,146,0.2)" }}>

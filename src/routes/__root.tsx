@@ -44,8 +44,9 @@ function NotFoundComponent() {
         className="flex justify-between items-center px-6 w-full z-50 h-[72px] sticky top-0"
         style={{ backgroundColor: "rgba(15,23,42,0.8)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(30,41,59,0.3)" }}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-black tracking-tight">
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="MyCommNet Logo" className="h-10 w-10 rounded-full object-cover" style={{ boxShadow: "0 0 12px rgba(160,120,255,0.5)" }} />
+          <span className="text-xl font-black tracking-tight" style={{ fontFamily: "'Hanken Grotesk', sans-serif" }}>
             <span style={{ color: "#a078ff" }}>My</span>
             <span style={{ color: "#0566d9" }}>Comm</span>
             <span style={{ color: "#4fdbc8" }}>Net</span>
