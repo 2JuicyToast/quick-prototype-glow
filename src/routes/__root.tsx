@@ -7,30 +7,164 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { Rocket, Search } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../hooks/useAuth";
 
 function NotFoundComponent() {
+  const starFieldRef = useRef<HTMLDivElement>(null);
+  const nebula1Ref = useRef<HTMLDivElement>(null);
+  const nebula2Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      const intensity = 15;
+      if (starFieldRef.current)
+        starFieldRef.current.style.transform = `translate(${x * intensity}px, ${y * intensity}px)`;
+      if (nebula1Ref.current)
+        nebula1Ref.current.style.transform = `translate(${x * intensity * 0.6}px, ${y * intensity * 0.6}px)`;
+      if (nebula2Ref.current)
+        nebula2Ref.current.style.transform = `translate(${x * intensity * 1.2}px, ${y * intensity * 1.2}px)`;
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  const mono = { fontFamily: "'JetBrains Mono', monospace" };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: "#020617", color: "#dae2fd", overflowX: "hidden" }}>
+      {/* Nav */}
+      <header
+        className="flex justify-between items-center px-6 w-full z-50 h-[72px] sticky top-0"
+        style={{ backgroundColor: "rgba(15,23,42,0.8)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(30,41,59,0.3)" }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-xl font-black tracking-tight">
+            <span style={{ color: "#a078ff" }}>My</span>
+            <span style={{ color: "#0566d9" }}>Comm</span>
+            <span style={{ color: "#4fdbc8" }}>Net</span>
+          </span>
         </div>
-      </div>
+        <nav className="hidden md:flex items-center gap-8">
+          {["Home", "About", "Features"].map((l) => (
+            <Link key={l} to={l === "Home" ? "/" : (`/${l.toLowerCase()}` as any)} className="text-sm transition-colors hover:text-white" style={{ color: "#cbc3d7" }}>
+              {l}
+            </Link>
+          ))}
+        </nav>
+      </header>
+
+      {/* Main */}
+      <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden px-6 py-24">
+        {/* Background */}
+        <div
+          ref={starFieldRef}
+          className="fixed inset-0 pointer-events-none"
+          style={{ zIndex: -1, background: "radial-gradient(circle at 50% 50%, #0b1326 0%, #020617 100%)", transition: "transform 0.1s ease-out" }}
+        />
+        <div
+          ref={nebula1Ref}
+          className="absolute pointer-events-none"
+          style={{ top: -200, right: -200, width: 800, height: 800, borderRadius: "50%", filter: "blur(120px)", opacity: 0.15, background: "radial-gradient(circle, #a078ff, transparent)", zIndex: 0, transition: "transform 0.1s ease-out" }}
+        />
+        <div
+          ref={nebula2Ref}
+          className="absolute pointer-events-none"
+          style={{ bottom: -200, left: -200, width: 800, height: 800, borderRadius: "50%", filter: "blur(120px)", opacity: 0.15, background: "radial-gradient(circle, #0566d9, transparent)", zIndex: 0, transition: "transform 0.1s ease-out" }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10 text-center max-w-2xl mx-auto flex flex-col items-center">
+          {/* 404 */}
+          <div className="relative mb-8">
+            <h1
+              className="font-black select-none leading-none tracking-tighter"
+              style={{
+                fontSize: "clamp(100px,18vw,180px)",
+                background: "linear-gradient(135deg, #d0bcff 0%, #adc6ff 50%, #4fdbc8 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 0 15px rgba(208,188,255,0.3))",
+              }}
+            >
+              404
+            </h1>
+          </div>
+
+          {/* Glass card */}
+          <div
+            className="p-8 rounded-xl max-w-lg w-full"
+            style={{ background: "rgba(15,23,42,0.6)", backdropFilter: "blur(16px)", border: "1px solid #1e293b" }}
+          >
+            <h2 className="text-2xl font-bold mb-4" style={{ color: "#dae2fd", fontFamily: "'Hanken Grotesk', sans-serif" }}>
+              Lost in the Cosmos?
+            </h2>
+            <p className="text-base mb-8 leading-relaxed" style={{ color: "#cbc3d7" }}>
+              The page you're looking for is too far out, or has drifted out of orbit. Let's get you back to the community.
+            </p>
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center gap-2 px-8 h-11 rounded-lg font-bold text-sm transition-all"
+              style={{
+                background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)",
+                boxShadow: "0 4px 15px rgba(160,120,255,0.3)",
+                color: "#fff",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.filter = "brightness(1.1)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.filter = ""; (e.currentTarget as HTMLAnchorElement).style.transform = ""; }}
+            >
+              <Rocket size={18} />
+              Return to Base
+            </Link>
+          </div>
+
+          {/* Search */}
+          <div className="mt-12 flex flex-col items-center gap-4 w-full max-w-md">
+            <p className="text-xs uppercase tracking-widest" style={{ color: "#cbc3d7", ...mono }}>
+              Or try searching
+            </p>
+            <div className="relative w-full">
+              <input
+                className="w-full h-11 rounded-lg px-12 outline-none text-sm transition-all"
+                placeholder="Find groups or discussions..."
+                type="text"
+                style={{ background: "#060e20", border: "1px solid #1e293b", color: "#dae2fd" }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = "#4fdbc8"; e.currentTarget.style.boxShadow = "0 0 0 1px #4fdbc8"; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = "#1e293b"; e.currentTarget.style.boxShadow = ""; }}
+              />
+              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: "#958ea0" }} />
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 mt-auto" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a" }}>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 max-w-7xl mx-auto">
+          <div>
+            <p className="font-bold text-base" style={{ color: "#dae2fd", fontFamily: "'Hanken Grotesk', sans-serif" }}>MyCommNet</p>
+            <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>Stay Connected</p>
+          </div>
+          <div className="flex flex-wrap gap-8">
+            {["Privacy Policy", "Terms of Service", "Help Center"].map((l) => (
+              <Link
+                key={l}
+                to={`/${l.toLowerCase().replace(/ /g, "-")}` as any}
+                className="text-xs transition-colors hover:text-white"
+                style={{ color: "#cbc3d7", ...mono }}
+              >
+                {l}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

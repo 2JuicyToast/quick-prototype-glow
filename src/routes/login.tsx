@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import logoAsset from "@/assets/MyCommNet.png.asset.json";
@@ -142,9 +142,9 @@ function LoginPage() {
         </div>
         <nav className="hidden md:flex items-center gap-8">
           {["Home", "About", "Features"].map((l) => (
-            <a key={l} href="#" className="text-sm transition-colors hover:text-white" style={{ color: "#cbc3d7" }}>
+            <Link key={l} to={l === "Home" ? "/" : (`/${l.toLowerCase()}` as any)} className="text-sm transition-colors hover:text-white" style={{ color: "#cbc3d7" }}>
               {l}
-            </a>
+            </Link>
           ))}
         </nav>
       </header>
@@ -270,7 +270,7 @@ function LoginPage() {
                       Password
                     </label>
                     {tab === "login" && (
-                      <a href="#" className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>Forgot password?</a>
+                      <Link to={"/forgot-password" as any} className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>Forgot password?</Link>
                     )}
                   </div>
                   <div className="relative">
@@ -472,9 +472,9 @@ function LoginPage() {
           </div>
           <div className="flex flex-wrap gap-8">
             {["Privacy Policy", "Terms of Service", "Help Center"].map((l) => (
-              <a key={l} href="#" className="text-xs transition-colors hover:text-white" style={{ color: "#cbc3d7", ...mono }}>
+              <Link key={l} to={`/${l.toLowerCase().replace(/ /g, "-")}` as any} className="text-xs transition-colors hover:text-white" style={{ color: "#cbc3d7", ...mono }}>
                 {l}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,0 +1,245 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>404 - Lost in the Cosmos | MyCommNet</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@600;700;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#d0bcff",
+                        "tertiary-container": "#00a392",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-fixed": "#e9ddff",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#131b2e",
+                        "outline-variant": "#1e293b",
+                        "surface-container-high": "#222a3d",
+                        "primary-container": "#a078ff",
+                        "on-tertiary-container": "#00302a",
+                        "inverse-on-surface": "#283044",
+                        "surface-container-lowest": "#060e20",
+                        "on-error": "#690005",
+                        "inverse-primary": "#6d3bd7",
+                        "on-secondary": "#002e6a",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#71f8e4",
+                        "tertiary-fixed-dim": "#4fdbc8",
+                        "surface-bright": "#31394d",
+                        "outline": "#958ea0",
+                        "on-primary-fixed": "#23005c",
+                        "inverse-surface": "#dae2fd",
+                        "on-primary": "#3c0091",
+                        "on-primary-fixed-variant": "#5516be",
+                        "on-primary-container": "#340080",
+                        "on-tertiary": "#003731",
+                        "surface-container": "#171f33",
+                        "on-tertiary-fixed": "#00201c",
+                        "background": "#020617",
+                        "tertiary": "#4fdbc8",
+                        "on-tertiary-fixed-variant": "#005048",
+                        "on-secondary-container": "#e6ecff",
+                        "primary": "#d0bcff",
+                        "surface-variant": "#2d3449",
+                        "surface-dim": "#0b1326",
+                        "on-surface": "#dae2fd",
+                        "on-secondary-fixed-variant": "#004395",
+                        "on-background": "#dae2fd",
+                        "on-surface-variant": "#cbc3d7",
+                        "secondary-fixed": "#d8e2ff",
+                        "secondary-container": "#0566d9",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary": "#adc6ff",
+                        "surface": "#0f172a",
+                        "surface-tint": "#d0bcff",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-md": ["JetBrains Mono"],
+                        "tagline": ["Inter"],
+                        "display-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "tagline": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #020617;
+            overflow-x: hidden;
+            color: #dae2fd;
+        }
+        .celestial-gradient-text {
+            background: linear-gradient(135deg, #d0bcff 0%, #adc6ff 50%, #4fdbc8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(208, 188, 255, 0.3));
+        }
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #0b1326 0%, #020617 100%);
+        }
+        .nebula-glow {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .primary-glow-btn {
+            background: linear-gradient(135deg, #a078ff 0%, #0566d9 100%);
+            box-shadow: 0 4px 15px rgba(160, 120, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .primary-glow-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(160, 120, 255, 0.5);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid #1e293b;
+        }
+        .comet-glow {
+            filter: drop-shadow(0 0 15px rgba(160, 120, 255, 0.4));
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen font-body-md">
+<!-- TopNavBar - Matched with Sign Up/Log In pages -->
+<header class="flex justify-between items-center px-lg w-full z-50 bg-surface/80 backdrop-blur-md full-width h-[72px] sticky top-0 shadow-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<img alt="MyCommNet Logo" class="h-10 w-10 object-contain comet-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuQToDiKuK2eO-eNdj_vBD5Y2iqywqaRX-EiTv0ZStIBTHU6lLB3oLNbdF-HnxlKyFVi1nOsDN00ArY2mc5uvSDiopsi3IzSwaanLCg8QZPgxANJ91sbqq7v_o0OC7vGwqZzHfMRNjK60aoiZYolKo4EJSlMRSnuPqPmd8IShFK5KXXGp7kaLrZNChuH83hpAeM7yOxS0yV7BLxs9RNK1VA8Y8zPjyP54wpaNs1HVe_zZ_Co91lkqSLyIKqUyLi-QPuxcahFJbIw">
+<span class="font-headline-md text-headline-md font-black tracking-tight">
+<span style="color: #a078ff;" class="">My</span><span style="color: #0566d9;" class="">Comm</span><span style="color: #4fdbc8;" class="">Net</span>
+</span>
+</div>
+<div class="hidden md:flex gap-md items-center">
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Home</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Features</a>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center relative overflow-hidden px-container-padding py-24">
+<!-- Immersive Background Assets -->
+<div class="star-field" style="transform: translate(14.9531px, 12.2685px);"></div>
+<div class="nebula-glow top-[-200px] right-[-200px]" style="background: radial-gradient(circle, rgb(160, 120, 255), transparent); transform: translate(14.9062px, 9.53704px);"></div>
+<div class="nebula-glow bottom-[-200px] left-[-200px]" style="background: radial-gradient(circle, rgb(5, 102, 217), transparent); transform: translate(29.8125px, 19.0741px);"></div>
+<!-- 404 Content (Maintained from Source) -->
+<div class="relative z-10 text-center max-w-2xl mx-auto flex flex-col items-center">
+<!-- Animated 404 Display -->
+<div class="relative mb-8 group">
+<h1 class="font-headline-lg text-[120px] md:text-[180px] leading-none celestial-gradient-text font-extrabold tracking-tighter select-none">
+                404
+            </h1>
+<!-- Orbiting element micro-interaction -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none">
+<div class="absolute top-0 left-1/2 w-3 h-3 bg-tertiary rounded-full blur-[2px] animate-[spin_8s_linear_infinite]" style="transform-origin: 0 100px;"></div>
+</div>
+</div>
+<!-- Message Area -->
+<div class="glass-panel p-lg rounded-xl max-w-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">Lost in the Cosmos?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8 leading-relaxed">
+                The page you're looking for is too far out, or has drifted out of orbit. Let's get you back to the community.
+            </p>
+<!-- CTA Button -->
+<a class="primary-glow-btn inline-flex items-center justify-center px-xl h-[44px] rounded-lg text-on-primary font-bold text-body-md transition-all group" href="/">
+<span class="material-symbols-outlined mr-2" data-icon="rocket_launch">rocket_launch</span>
+                Return to Base
+            </a>
+</div>
+<!-- Search Suggestion -->
+<div class="mt-12 flex flex-col items-center gap-4">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Or try searching</p>
+<div class="relative w-full max-w-md">
+<input class="w-full h-11 bg-surface-container-lowest border border-outline-variant rounded-lg px-12 focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-all outline-none text-on-surface font-body-md" placeholder="Find groups or discussions..." type="text">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer - Matched with Sign Up/Log In pages -->
+<footer class="full-width py-xl px-container-padding border-t border-outline-variant bg-surface dark:bg-surface mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full max-w-7xl mx-auto gap-lg">
+<div class="flex flex-col gap-xs">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">MyCommNet</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">Stay Connected</span>
+</div>
+<div class="flex flex-wrap gap-xl md:gap-xl">
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Help Center</a>
+</div>
+</div>
+<div class="mt-xl pt-lg border-t border-outline-variant/30 flex justify-between items-center text-outline-variant font-label-md text-[12px] max-w-7xl mx-auto">
+
+<div class="flex gap-md"></div>
+</div>
+</footer>
+<script>
+    // Subtle Mouse parallax for the background star field and nebula
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        const starField = document.querySelector('.star-field');
+        const intensity = 15;
+        
+        starField.style.transform = `translate(${x * intensity}px, ${y * intensity}px)`;
+        
+        const glows = document.querySelectorAll('.nebula-glow');
+        glows.forEach((glow, index) => {
+            const move = (index + 1) * 30;
+            glow.style.transform = `translate(${(x - 0.5) * move}px, ${(y - 0.5) * move}px)`;
+        });
+    });
+</script>
+
+
+</body></html>
