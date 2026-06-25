@@ -71,7 +71,7 @@ function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/" });
+    if (!loading && user) navigate({ to: "/main" });
   }, [user, loading, navigate]);
 
   function switchTab(next: "login" | "signup") {
@@ -105,7 +105,7 @@ function LoginPage() {
     if (tab === "login") {
       const { error } = await signIn(email, password);
       if (error) setErrorMsg(error.message);
-      else navigate({ to: "/" });
+      else navigate({ to: "/main" });
     } else {
       const fullName = `${firstName.trim()} ${lastName.trim()}`;
       const { error } = await signUp(email, password, fullName);
