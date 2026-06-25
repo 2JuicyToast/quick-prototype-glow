@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import logoAsset from "@/assets/MyCommNet.png.asset.json";
 import { Mail, Lock, Eye, EyeOff, Users, Zap, LogIn, Check, X } from "lucide-react";
+
+const logoSrc = "/logo.png";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -129,10 +130,10 @@ function LoginPage() {
       >
         <div className="flex items-center gap-3">
           <img
-            src={logoAsset.url}
+            src={logoSrc}
             alt="MyCommNet Logo"
-            className="h-10 w-10 object-cover rounded-full"
-            style={{ filter: "drop-shadow(0 0 10px rgba(160,120,255,0.4))" }}
+            className="h-10 w-10 rounded-full object-cover"
+            style={{ boxShadow: "0 0 12px rgba(160,120,255,0.5)" }}
           />
           <span className="text-xl font-black tracking-tight">
             <span style={{ color: "#a078ff" }}>My</span>

@@ -1,8 +1,9 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import { Home, Map, Users, MessageSquare, User, Search, Bell, Sparkles, Settings, Bookmark, LogOut } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
-import logoAsset from "@/assets/MyCommNet.png.asset.json";
 import { useAuth } from "@/hooks/useAuth";
+
+const logoSrc = "/logo.png";
 
 const navItems: { to: string; label: string; icon: typeof Home; badge?: number }[] = [
   { to: "/", label: "Home", icon: Home },
@@ -53,7 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-8">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt="MyCommNet Logo" className="h-9 w-9 object-contain" />
+            <img src={logoSrc} alt="MyCommNet Logo" className="h-9 w-9 rounded-full object-cover" style={{ boxShadow: "0 0 10px rgba(160,120,255,0.45)" }} />
             <span className="font-display text-lg font-bold tracking-tight">
               <span className="text-brand-purple">My</span>
               <span className="text-brand-blue">Comm</span>
