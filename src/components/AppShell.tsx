@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 const logoSrc = "/logo.png";
 
 const navItems: { to: string; label: string; icon: typeof Home; badge?: number }[] = [
-  { to: "/", label: "Home", icon: Home },
+  { to: "/main", label: "Home", icon: Home },
   { to: "/map", label: "Map", icon: Map },
   { to: "/groups", label: "Groups", icon: Users },
   { to: "/messages", label: "Messages", icon: MessageSquare, badge: 3 },
