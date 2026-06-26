@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "App"
+title = "MyCommNet"
 version = "1.0.0"
 id = "artifacts/app"
 router = "path"
@@ -12,10 +12,10 @@ version = "1.0.0"
 [[services]]
 name = "web"
 paths = [ "/" ]
-localPort = 23863
+localPort = 3000
 
 [services.development]
-run = "pnpm --filter @workspace/app run dev"
+run = "PORT=3000 pnpm --filter @workspace/app run dev"
 
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/app", "run", "build" ]
@@ -27,5 +27,5 @@ from = "/*"
 to = "/index.html"
 
 [services.env]
-PORT = "23863"
+PORT = "3000"
 BASE_PATH = "/"
