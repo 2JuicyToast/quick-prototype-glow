@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Link } from "@tanstack/react-router";
 
 export function PublicStars() {
   const ref = useRef<HTMLDivElement>(null);
@@ -55,7 +56,7 @@ export function PublicFooter() {
     <footer className="py-8 px-6" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a", position: "relative", zIndex: 10 }}>
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <p className="font-bold text-base" style={{ color: "#dae2fd", ...hanken }}>MyCommNet</p>
+          <Link to="/" className="font-bold text-base hover:underline" style={{ color: "#dae2fd", ...hanken }}>MyCommNet</Link>
           <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>Stay Connected</p>
         </div>
         <div className="flex flex-wrap gap-8">

@@ -13,7 +13,7 @@ const navItems: { to: string; label: string; icon: typeof Home; badge?: number }
   { to: "/profile", label: "Profile", icon: User },
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
   const { location } = useRouterState();
   const path = location.pathname;
   const { user, profile, loading, signOut } = useAuth();
@@ -53,7 +53,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-8">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/main" className="flex items-center gap-2">
             <img src={logoSrc} alt="MyCommNet Logo" className="h-9 w-9 rounded-full object-cover" style={{ boxShadow: "0 0 10px rgba(160,120,255,0.45)" }} />
             <span className="font-display text-lg font-bold tracking-tight">
               <span className="text-brand-purple">My</span>
@@ -123,6 +123,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:px-8 md:pb-12 md:pt-10">{children}</main>
+
+      {footer}
 
       {/* Mobile bottom nav */}
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border/70 bg-background/95 backdrop-blur-xl lg:hidden">
