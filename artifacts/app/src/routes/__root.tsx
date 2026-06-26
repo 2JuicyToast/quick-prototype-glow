@@ -82,12 +82,32 @@ function NotFoundComponent() {
 
         {/* Content */}
         <div className="relative z-10 text-center max-w-2xl mx-auto flex flex-col items-center">
-          {/* 404 */}
-          <div className="relative mb-8">
+          {/* 404 with orbiting dot */}
+          <div className="relative mb-8 flex items-center justify-center" style={{ padding: "24px 0" }}>
+            <style>{`
+              @keyframes orbit404 {
+                from { transform: rotate(0deg) translateX(130px) rotate(0deg); }
+                to   { transform: rotate(360deg) translateX(130px) rotate(-360deg); }
+              }
+              .orbit-dot-404 {
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 11px; height: 11px;
+                margin-top: -5.5px; margin-left: -5.5px;
+                border-radius: 50%;
+                background: #4fdbc8;
+                box-shadow: 0 0 8px #4fdbc8, 0 0 18px rgba(79,219,200,0.7), 0 0 3px #fff;
+                animation: orbit404 3.5s linear infinite;
+                pointer-events: none;
+              }
+            `}</style>
+            <div className="orbit-dot-404" />
             <h1
-              className="font-black select-none leading-none tracking-tighter"
+              className="font-black select-none leading-none"
               style={{
                 fontSize: "clamp(100px,18vw,180px)",
+                fontVariantNumeric: "tabular-nums",
+                letterSpacing: "0.02em",
                 background: "linear-gradient(135deg, #d0bcff 0%, #adc6ff 50%, #4fdbc8 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",

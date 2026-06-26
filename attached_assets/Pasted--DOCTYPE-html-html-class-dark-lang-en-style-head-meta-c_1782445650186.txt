@@ -1,0 +1,264 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Restricted Orbit | MyCommNet</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "tertiary-fixed-dim": "#4fdbc8",
+                  "surface-container": "#171f33",
+                  "primary-container": "#a078ff",
+                  "on-background": "#dae2fd",
+                  "primary-fixed-dim": "#d0bcff",
+                  "on-secondary-container": "#e6ecff",
+                  "on-primary-fixed-variant": "#5516be",
+                  "surface-bright": "#31394d",
+                  "on-tertiary": "#003731",
+                  "outline-variant": "#494454",
+                  "secondary-fixed-dim": "#adc6ff",
+                  "tertiary-fixed": "#71f8e4",
+                  "on-tertiary-fixed-variant": "#005048",
+                  "inverse-surface": "#dae2fd",
+                  "secondary-container": "#0566d9",
+                  "surface": "#0b1326",
+                  "surface-container-high": "#222a3d",
+                  "on-error": "#690005",
+                  "primary-fixed": "#e9ddff",
+                  "on-surface": "#dae2fd",
+                  "surface-container-highest": "#2d3449",
+                  "surface-container-low": "#131b2e",
+                  "outline": "#958ea0",
+                  "on-tertiary-container": "#00302a",
+                  "tertiary-container": "#00a392",
+                  "error": "#ffb4ab",
+                  "error-container": "#93000a",
+                  "surface-tint": "#d0bcff",
+                  "surface-container-lowest": "#060e20",
+                  "tertiary": "#4fdbc8",
+                  "surface-dim": "#0b1326",
+                  "on-error-container": "#ffdad6",
+                  "inverse-primary": "#6d3bd7",
+                  "background": "#0b1326",
+                  "on-primary-container": "#340080",
+                  "secondary": "#adc6ff",
+                  "on-secondary-fixed": "#001a42",
+                  "on-primary": "#3c0091",
+                  "surface-variant": "#2d3449",
+                  "on-surface-variant": "#cbc3d7",
+                  "on-tertiary-fixed": "#00201c",
+                  "inverse-on-surface": "#283044",
+                  "secondary-fixed": "#d8e2ff",
+                  "primary": "#d0bcff",
+                  "on-secondary-fixed-variant": "#004395",
+                  "on-secondary": "#002e6a",
+                  "on-primary-fixed": "#23005c"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "gutter": "16px",
+                  "xs": "4px",
+                  "lg": "24px",
+                  "xl": "32px",
+                  "base": "8px",
+                  "md": "16px",
+                  "sm": "8px",
+                  "container-padding": "24px"
+          },
+          "fontFamily": {
+                  "headline-md": ["Hanken Grotesk"],
+                  "tagline": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "label-md": ["JetBrains Mono"],
+                  "headline-lg": ["Hanken Grotesk"],
+                  "display-lg": ["Hanken Grotesk"],
+                  "body-md": ["Inter"]
+          },
+          "fontSize": {
+                  "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                  "tagline": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                  "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                  "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                  "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                  "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #0b1326;
+      color: #dae2fd;
+      overflow-x: hidden;
+    }
+
+    .nebula-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(160, 120, 255, 0.15) 0%, rgba(5, 102, 217, 0.05) 50%, rgba(11, 19, 38, 0) 100%);
+      filter: blur(80px);
+      z-index: -1;
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(30, 41, 59, 0.5);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #d0bcff 0%, #4fdbc8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .primary-btn {
+      background: linear-gradient(90deg, #6d3bd7 0%, #0566d9 100%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(109, 59, 215, 0.3);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .star-field {
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 50px 160px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 80px 120px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 110px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 150px 150px, #fff, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.2;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md">
+<!-- Header -->
+<nav class="fixed top-0 w-full z-50 bg-surface-container/80 dark:bg-surface-container-high/80 backdrop-blur-md border-b border-outline-variant shadow-sm h-16 flex justify-between items-center px-container-padding">
+<div class="flex items-center gap-2">
+
+<img alt="MyCommNet Logo" class="h-10 w-10 object-contain comet-glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuQToDiKuK2eO-eNdj_vBD5Y2iqywqaRX-EiTv0ZStIBTHU6lLB3oLNbdF-HnxlKyFVi1nOsDN00ArY2mc5uvSDiopsi3IzSwaanLCg8QZPgxANJ91sbqq7v_o0OC7vGwqZzHfMRNjK60aoiZYolKo4EJSlMRSnuPqPmd8IShFK5KXXGp7kaLrZNChuH83hpAeM7yOxS0yV7BLxs9RNK1VA8Y8zPjyP54wpaNs1HVe_zZ_Co91lkqSLyIKqUyLi-QPuxcahFJbIw"><span class="font-headline-md text-headline-md font-black tracking-tight"><span style="color: #a078ff;" class="">My</span><span style="color: #0566d9;" class="">Comm</span><span style="color: #4fdbc8;" class="">Net</span></span>
+</div>
+<div class="hidden md:flex gap-xl">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" href="#">About</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" href="#">Features</a>
+
+</div>
+<div class="flex items-center gap-md">
+<a class="px-md py-xs border border-outline text-on-surface font-label-md text-label-md rounded-lg hover:bg-white/5 transition-all" href="#">Log In</a>
+<a class="px-lg py-xs primary-btn text-white font-label-md text-label-md rounded-lg" href="#">Sign Up</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center justify-center pt-24 pb-xl relative overflow-hidden pb-24">
+<div class="star-field absolute inset-0 pointer-events-none"></div>
+<div class="nebula-glow top-1/4 -left-1/4" style="transform: translate(10.4px, -17.65px);"></div>
+<div class="nebula-glow bottom-1/4 -right-1/4"></div>
+<!-- Visual Anchor -->
+<div class="relative w-full max-w-2xl flex justify-center mb-xl floating">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-64 h-64 rounded-full border border-primary/20 animate-ping opacity-20"></div>
+</div>
+<div class="z-10 w-48 h-48 rounded-full bg-surface-container-high glass-card flex items-center justify-center border-2 border-primary/30 relative">
+<span class="material-symbols-outlined text-8xl text-primary drop-shadow-[0_0_15px_rgba(160,120,255,0.6)]" style="font-variation-settings: &quot;FILL&quot; 1;">lock</span>
+<!-- Orbiting particles -->
+<div class="absolute -top-4 -right-4 w-12 h-12 rounded-full glass-card border border-tertiary/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-xl">security</span>
+</div>
+<div class="absolute -bottom-8 -left-4 w-16 h-16 rounded-full glass-card border border-secondary/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-2xl">key</span>
+</div>
+</div>
+</div>
+<!-- Textual Content -->
+<div class="text-center px-container-padding max-w-3xl z-20">
+<h1 class="text-display-lg font-display-lg gradient-text mb-md leading-tight">Restricted Orbit</h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-xl max-w-xl mx-auto">
+        You need to be logged in to access this corner of the community. Authenticate your credentials to continue your journey through the MyCommNet ecosystem.
+      </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-md">
+<a class="w-full sm:w-auto h-11 px-xl primary-btn text-white rounded-lg font-label-md text-label-md flex items-center justify-center gap-2" href="#">
+<span class="material-symbols-outlined text-md">login</span>
+          Log In
+        </a>
+<a class="w-full sm:w-auto h-11 px-xl border border-outline-variant glass-card text-on-surface rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-surface-bright transition-colors" href="#">
+<span class="material-symbols-outlined text-md">rocket_launch</span>
+          Join the Community
+        </a>
+</div>
+<!-- Subtle Info Row -->
+<div class="mt-xl pt-lg border-t border-outline-variant/30 flex flex-wrap justify-center gap-xl text-on-surface-variant/60">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span class="text-tagline font-tagline">SECURE ACCESS</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">public</span>
+<span class="text-tagline font-tagline">GLOBAL NETWORK</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">group</span>
+<span class="text-tagline font-tagline">GROUP CONNECTIONS</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="full-width py-xl px-container-padding border-t border-outline-variant bg-surface dark:bg-surface mt-auto"><div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full max-w-7xl mx-auto gap-lg">
+<div class="flex flex-col gap-xs">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">MyCommNet</span>
+<span class="font-body-md text-[14px] text-on-surface-variant">Stay Connected</span>
+</div>
+<div class="flex flex-wrap gap-xl md:gap-xl">
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer font-label-md text-label-md" href="#">Help Center</a>
+</div>
+</div>
+<div class="mt-xl pt-lg border-t border-outline-variant/30 flex justify-between items-center text-outline-variant font-label-md text-[12px] max-w-7xl mx-auto">
+<div class="flex gap-md"></div>
+</div></footer>
+<script>
+    // Micro-interaction: Mouse tracking glow effect
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      const glow = document.querySelector('.nebula-glow');
+      if (glow) {
+        const moveX = (x - window.innerWidth / 2) / 20;
+        const moveY = (y - window.innerHeight / 2) / 20;
+        glow.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      }
+    });
+  </script>
+
+
+</body></html>

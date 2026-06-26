@@ -21,7 +21,7 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate({ to: "/login" });
+      navigate({ to: "/restricted" });
     }
   }, [user, loading, navigate]);
 

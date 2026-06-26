@@ -42,8 +42,8 @@ const features = [
     title: "Mentorship",
     desc: "Connect with community leaders and subject matter experts. Bridge the gap between potential and experience through local mentorship programs.",
     action: "Find a Mentor",
-    actionTo: "/login" as const,
-    actionSearch: { tab: "signup" } as any,
+    actionTo: "/restricted" as const,
+    actionSearch: undefined,
   },
   {
     icon: TrendingUp,
@@ -52,8 +52,8 @@ const features = [
     title: "Community Growth",
     desc: "Learn and build lasting connections that matter. Participate in local initiatives that drive infrastructure, education, and shared prosperity.",
     action: "Start Growing",
-    actionTo: "/login" as const,
-    actionSearch: { tab: "signup" } as any,
+    actionTo: "/restricted" as const,
+    actionSearch: undefined,
   },
 ];
 
