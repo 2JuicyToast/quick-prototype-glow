@@ -44,7 +44,10 @@ export function PublicNav({ activePage }: { activePage: ActivePage }) {
   return (
     <nav
       className="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-[72px] backdrop-blur-lg"
-      style={{ backgroundColor: "rgba(11,19,38,0.85)", borderBottom: "1px solid rgba(30,41,59,0.8)" }}
+      style={{
+        backgroundColor: "rgba(11,19,38,0.85)",
+        borderBottom: "1px solid rgba(30,41,59,0.8)",
+      }}
     >
       {/* Logo — links to /main if logged in, / if logged out */}
       <Link to={isLoggedIn ? "/main" : "/"} className="flex items-center gap-3">
@@ -71,14 +74,19 @@ export function PublicNav({ activePage }: { activePage: ActivePage }) {
       <div className="flex items-center gap-3">
         {isLoggedIn ? (
           <div className="group relative">
-            <button className="flex items-center gap-2 rounded-full px-3 py-1.5 transition hover:bg-white/10" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+            <button
+              className="flex items-center gap-2 rounded-full px-3 py-1.5 transition hover:bg-white/10"
+              style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+            >
               <span
                 className="grid h-8 w-8 place-items-center rounded-full text-sm font-semibold text-white"
                 style={{ background: "linear-gradient(135deg,#8b5cf6,#3b82f6)" }}
               >
                 {initial}
               </span>
-              <span className="hidden sm:inline text-sm font-medium" style={{ color: "#dae2fd" }}>{displayName}</span>
+              <span className="hidden sm:inline text-sm font-medium" style={{ color: "#dae2fd" }}>
+                {displayName}
+              </span>
             </button>
             <div
               className="invisible absolute right-0 top-full mt-1 w-40 origin-top-right scale-95 rounded-xl p-1 opacity-0 shadow-lg transition group-hover:visible group-hover:scale-100 group-hover:opacity-100"
@@ -104,6 +112,7 @@ export function PublicNav({ activePage }: { activePage: ActivePage }) {
           <>
             <Link
               to="/login"
+              search={{ tab: "signin" }}
               className="px-4 py-2 rounded-lg text-sm transition-all hover:text-white"
               style={{ color: "#cbc3d7", border: "1px solid transparent" }}
             >
@@ -113,7 +122,11 @@ export function PublicNav({ activePage }: { activePage: ActivePage }) {
               to="/login"
               search={{ tab: "signup" } as any}
               className="px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
-              style={{ background: "#a078ff", color: "#23005c", boxShadow: "0 4px 12px rgba(160,120,255,0.3)" }}
+              style={{
+                background: "#a078ff",
+                color: "#23005c",
+                boxShadow: "0 4px 12px rgba(160,120,255,0.3)",
+              }}
             >
               Sign Up
             </Link>

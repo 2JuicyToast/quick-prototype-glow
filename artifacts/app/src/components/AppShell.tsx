@@ -1,5 +1,17 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { Home, Map, Users, MessageSquare, User, Search, Bell, Sparkles, Settings, Bookmark, LogOut } from "lucide-react";
+import {
+  Home,
+  Map,
+  Users,
+  MessageSquare,
+  User,
+  Search,
+  Bell,
+  Sparkles,
+  Settings,
+  Bookmark,
+  LogOut,
+} from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -35,7 +47,7 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
 
   async function handleSignOut() {
     await signOut();
-    navigate({ to: "/login" });
+    navigate({ to: "/login", search: { tab: "signin" } });
   }
 
   if (loading) {
@@ -54,7 +66,12 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 md:px-8">
           <Link to="/main" className="flex items-center gap-2">
-            <img src={logoSrc} alt="MyCommNet Logo" className="h-9 w-9 rounded-full object-cover" style={{ boxShadow: "0 0 10px rgba(160,120,255,0.45)" }} />
+            <img
+              src={logoSrc}
+              alt="MyCommNet Logo"
+              className="h-9 w-9 rounded-full object-cover"
+              style={{ boxShadow: "0 0 10px rgba(160,120,255,0.45)" }}
+            />
             <span className="font-display text-lg font-bold tracking-tight">
               <span className="text-brand-purple">My</span>
               <span className="text-brand-blue">Comm</span>
@@ -122,7 +139,9 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:px-8 md:pb-12 md:pt-10">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 md:px-8 md:pb-12 md:pt-10">
+        {children}
+      </main>
 
       {footer}
 
@@ -140,7 +159,9 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
                   active ? "text-foreground" : "text-muted-foreground"
                 }`}
               >
-                <span className={`relative grid h-8 w-12 place-items-center rounded-lg ${active ? "bg-gradient-brand-soft" : ""}`}>
+                <span
+                  className={`relative grid h-8 w-12 place-items-center rounded-lg ${active ? "bg-gradient-brand-soft" : ""}`}
+                >
                   <Icon className={`h-5 w-5 ${active ? "text-brand-teal" : ""}`} />
                   {it.badge && (
                     <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-brand-purple px-1 text-[9px] font-semibold text-white">
@@ -179,7 +200,9 @@ export function PageHeader({
           </div>
         )}
         <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{title}</h1>
-        {subtitle && <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">{subtitle}</p>}
+        {subtitle && (
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">{subtitle}</p>
+        )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>

@@ -1,21 +1,50 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { MapPin, Link as LinkIcon, Bookmark, Award, Calendar, Briefcase, GraduationCap, Heart, Github, Linkedin, Globe, QrCode, Shield, Settings, Edit3 } from "lucide-react";
+import {
+  MapPin,
+  Link as LinkIcon,
+  Bookmark,
+  Award,
+  Calendar,
+  Briefcase,
+  GraduationCap,
+  Heart,
+  Github,
+  Linkedin,
+  Globe,
+  QrCode,
+  Shield,
+  Settings,
+  Edit3,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "Profile — MyCommNet" },
-      { name: "description", content: "Your community pass, mini portfolio, saved items, and growth timeline." },
+      {
+        name: "description",
+        content: "Your community pass, mini portfolio, saved items, and growth timeline.",
+      },
       { property: "og:title", content: "Profile — MyCommNet" },
-      { property: "og:description", content: "Your community pass, mini portfolio, saved items, and growth timeline." },
+      {
+        property: "og:description",
+        content: "Your community pass, mini portfolio, saved items, and growth timeline.",
+      },
     ],
   }),
   component: ProfilePage,
 });
 
-const skills = ["Community Outreach", "Public Speaking", "Tutoring", "Event Planning", "JavaScript", "Design"];
+const skills = [
+  "Community Outreach",
+  "Public Speaking",
+  "Tutoring",
+  "Event Planning",
+  "JavaScript",
+  "Design",
+];
 
 const goals = [
   { label: "Earn 50 verified volunteer hours", progress: 72 },
@@ -24,9 +53,27 @@ const goals = [
 ];
 
 const timeline = [
-  { icon: Briefcase, title: "Volunteer Coordinator", org: "Bright Futures Org", date: "Mar 2026 — Present", body: "Coordinating outreach for weekly resource fairs across Atlanta." },
-  { icon: GraduationCap, title: "Digital Skills Bootcamp", org: "Code for Tomorrow", date: "Jan 2026 — Apr 2026", body: "Hands-on intro to HTML/CSS, JavaScript, and Git workflows." },
-  { icon: Calendar, title: "Community Resource Fair", org: "Unity Collective", date: "Nov 2025", body: "Helped onboard 60+ residents to local services. Verified 8 hours." },
+  {
+    icon: Briefcase,
+    title: "Volunteer Coordinator",
+    org: "Bright Futures Org",
+    date: "Mar 2026 — Present",
+    body: "Coordinating outreach for weekly resource fairs across Atlanta.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Digital Skills Bootcamp",
+    org: "Code for Tomorrow",
+    date: "Jan 2026 — Apr 2026",
+    body: "Hands-on intro to HTML/CSS, JavaScript, and Git workflows.",
+  },
+  {
+    icon: Calendar,
+    title: "Community Resource Fair",
+    org: "Unity Collective",
+    date: "Nov 2025",
+    body: "Helped onboard 60+ residents to local services. Verified 8 hours.",
+  },
 ];
 
 const saved = [
@@ -51,7 +98,8 @@ function ProfilePage() {
   const eventsAttended = profile?.events_attended ?? 12;
   const location = profile?.location ?? "Atlanta, GA";
   const joinYear = user?.created_at ? new Date(user.created_at).getFullYear() : 2025;
-  const bio = profile?.bio ??
+  const bio =
+    profile?.bio ??
     "Atlanta-based community member passionate about closing local access gaps to Wi-Fi, mentorship, and first jobs. Always looking for new volunteer opportunities, study spaces, and friendly mentors who've walked the road before.";
 
   return (
@@ -69,7 +117,9 @@ function ProfilePage() {
               </span>
               <div className="pb-2">
                 <div className="flex items-center gap-2">
-                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">{fullName}</h1>
+                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+                    {fullName}
+                  </h1>
                   <span className="inline-flex items-center gap-1 rounded-full bg-brand-teal/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
                     <Shield className="h-3 w-3" /> Verified
                   </span>
@@ -100,8 +150,12 @@ function ProfilePage() {
             <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
             <div className="relative">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium uppercase tracking-wider text-white/80">Community Pass</p>
-                <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold">MyCom Card</span>
+                <p className="text-xs font-medium uppercase tracking-wider text-white/80">
+                  Community Pass
+                </p>
+                <span className="rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-semibold">
+                  MyCom Card
+                </span>
               </div>
               <h2 className="mt-4 font-display text-2xl font-bold">{fullName}</h2>
               <p className="text-sm text-white/80">Community Member</p>
@@ -136,7 +190,10 @@ function ProfilePage() {
               ].map((l) => {
                 const Icon = l.icon;
                 return (
-                  <li key={l.label} className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-muted-foreground hover:bg-surface-2 hover:text-foreground">
+                  <li
+                    key={l.label}
+                    className="flex items-center gap-3 rounded-lg px-2 py-1.5 text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                  >
                     <Icon className="h-4 w-4" />
                     {l.label}
                   </li>
@@ -150,7 +207,10 @@ function ProfilePage() {
             <h3 className="mb-3 font-display text-base font-semibold">Skills & Interests</h3>
             <div className="flex flex-wrap gap-2">
               {skills.map((s) => (
-                <span key={s} className="rounded-full bg-gradient-brand-soft px-3 py-1 text-xs font-medium text-foreground ring-1 ring-brand-purple/30">
+                <span
+                  key={s}
+                  className="rounded-full bg-gradient-brand-soft px-3 py-1 text-xs font-medium text-foreground ring-1 ring-brand-purple/30"
+                >
                   {s}
                 </span>
               ))}
@@ -164,9 +224,14 @@ function ProfilePage() {
             </h3>
             <ul className="space-y-2">
               {saved.map((s) => (
-                <li key={s.label} className="flex items-center justify-between rounded-lg bg-surface-2/60 px-3 py-2 text-sm">
+                <li
+                  key={s.label}
+                  className="flex items-center justify-between rounded-lg bg-surface-2/60 px-3 py-2 text-sm"
+                >
                   <span>{s.label}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.type}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {s.type}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -189,7 +254,10 @@ function ProfilePage() {
             ].map((s) => {
               const Icon = s.icon;
               return (
-                <div key={s.label} className="rounded-2xl border border-border/60 bg-surface p-4 text-center">
+                <div
+                  key={s.label}
+                  className="rounded-2xl border border-border/60 bg-surface p-4 text-center"
+                >
                   <Icon className="mx-auto mb-2 h-5 w-5 text-brand-teal" />
                   <p className="font-display text-2xl font-bold">{s.value}</p>
                   <p className="text-[11px] text-muted-foreground">{s.label}</p>
@@ -209,7 +277,10 @@ function ProfilePage() {
                     <span className="font-semibold text-brand-teal">{g.progress}%</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-surface-2">
-                    <div className="h-full rounded-full bg-gradient-brand" style={{ width: `${g.progress}%` }} />
+                    <div
+                      className="h-full rounded-full bg-gradient-brand"
+                      style={{ width: `${g.progress}%` }}
+                    />
                   </div>
                 </div>
               ))}
@@ -220,7 +291,9 @@ function ProfilePage() {
           <section className="rounded-2xl border border-border/60 bg-surface p-6">
             <div className="mb-5 flex items-center justify-between">
               <h3 className="font-display text-lg font-semibold">My Timeline</h3>
-              <button className="text-xs text-brand-teal hover:underline">Export for resume →</button>
+              <button className="text-xs text-brand-teal hover:underline">
+                Export for resume →
+              </button>
             </div>
             <div className="relative space-y-6 border-l border-border/60 pl-6">
               {timeline.map((t, i) => {
@@ -231,7 +304,9 @@ function ProfilePage() {
                       <Icon className="h-3.5 w-3.5 text-white" />
                     </span>
                     <p className="font-display text-base font-semibold">{t.title}</p>
-                    <p className="text-xs text-muted-foreground">{t.org} · {t.date}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {t.org} · {t.date}
+                    </p>
                     <p className="mt-1 text-sm text-muted-foreground">{t.body}</p>
                   </div>
                 );

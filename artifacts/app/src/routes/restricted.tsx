@@ -84,11 +84,30 @@ function RestrictedPage() {
         {/* Nebula glows */}
         <div
           className="absolute pointer-events-none"
-          style={{ top: "10%", left: "-15%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(160,120,255,0.12) 0%, rgba(5,102,217,0.04) 50%, transparent 100%)", filter: "blur(80px)", zIndex: 0 }}
+          style={{
+            top: "10%",
+            left: "-15%",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(160,120,255,0.12) 0%, rgba(5,102,217,0.04) 50%, transparent 100%)",
+            filter: "blur(80px)",
+            zIndex: 0,
+          }}
         />
         <div
           className="absolute pointer-events-none"
-          style={{ bottom: "10%", right: "-15%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(79,219,200,0.08) 0%, transparent 60%)", filter: "blur(80px)", zIndex: 0 }}
+          style={{
+            bottom: "10%",
+            right: "-15%",
+            width: 600,
+            height: 600,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(79,219,200,0.08) 0%, transparent 60%)",
+            filter: "blur(80px)",
+            zIndex: 0,
+          }}
         />
 
         {/* Lock icon visual */}
@@ -96,7 +115,12 @@ function RestrictedPage() {
           {/* Ping ring */}
           <div
             className="restricted-ping absolute inset-0 rounded-full"
-            style={{ margin: "auto", width: 192, height: 192, border: "1px solid rgba(208,188,255,0.25)" }}
+            style={{
+              margin: "auto",
+              width: 192,
+              height: 192,
+              border: "1px solid rgba(208,188,255,0.25)",
+            }}
           />
 
           {/* Main icon circle */}
@@ -118,7 +142,11 @@ function RestrictedPage() {
             {/* Orbiting particle 1 — Shield */}
             <div
               className="absolute -top-4 -right-4 w-11 h-11 rounded-full flex items-center justify-center"
-              style={{ background: "rgba(15,23,42,0.7)", backdropFilter: "blur(8px)", border: "1px solid rgba(79,219,200,0.35)" }}
+              style={{
+                background: "rgba(15,23,42,0.7)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(79,219,200,0.35)",
+              }}
             >
               <Shield size={18} style={{ color: "#4fdbc8" }} />
             </div>
@@ -126,7 +154,11 @@ function RestrictedPage() {
             {/* Orbiting particle 2 — Key */}
             <div
               className="absolute -bottom-6 -left-4 w-14 h-14 rounded-full flex items-center justify-center"
-              style={{ background: "rgba(15,23,42,0.7)", backdropFilter: "blur(8px)", border: "1px solid rgba(173,198,255,0.35)" }}
+              style={{
+                background: "rgba(15,23,42,0.7)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid rgba(173,198,255,0.35)",
+              }}
             >
               <Key size={22} style={{ color: "#adc6ff" }} />
             </div>
@@ -148,18 +180,16 @@ function RestrictedPage() {
             Restricted Orbit
           </h1>
 
-          <p
-            className="text-lg leading-relaxed mb-8 max-w-lg mx-auto"
-            style={{ color: "#cbc3d7" }}
-          >
-            You need to be logged in to access this corner of the community.
-            Authenticate your credentials to continue your journey through the MyCommNet ecosystem.
+          <p className="text-lg leading-relaxed mb-8 max-w-lg mx-auto" style={{ color: "#cbc3d7" }}>
+            You need to be logged in to access this corner of the community. Authenticate your
+            credentials to continue your journey through the MyCommNet ecosystem.
           </p>
 
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
             <Link
               to="/login"
+              search={{ tab: "signin" }}
               className="restricted-primary-btn w-full sm:w-auto h-11 px-8 text-white rounded-lg font-semibold text-sm flex items-center justify-center gap-2"
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
@@ -180,7 +210,11 @@ function RestrictedPage() {
           {/* Info row */}
           <div
             className="flex flex-wrap justify-center gap-8 pt-6 text-xs uppercase tracking-widest"
-            style={{ borderTop: "1px solid rgba(73,68,84,0.3)", color: "rgba(203,195,215,0.5)", fontFamily: "'JetBrains Mono', monospace" }}
+            style={{
+              borderTop: "1px solid rgba(73,68,84,0.3)",
+              color: "rgba(203,195,215,0.5)",
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
           >
             {[
               { Icon: VerifiedIcon, label: "Secure Access" },

@@ -1,14 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, PageHeader } from "@/components/AppShell";
-import { MapPin, Star, Wifi, Accessibility, MonitorSmartphone, Volume2, Footprints, Bus, Car, Bike, ChevronDown, List, Search } from "lucide-react";
+import {
+  MapPin,
+  Star,
+  Wifi,
+  Accessibility,
+  MonitorSmartphone,
+  Volume2,
+  Footprints,
+  Bus,
+  Car,
+  Bike,
+  ChevronDown,
+  List,
+  Search,
+} from "lucide-react";
 
 export const Route = createFileRoute("/map")({
   head: () => ({
     meta: [
       { title: "Map — MyCommNet" },
-      { name: "description", content: "Find resources, explore routes, and get where you need to go." },
+      {
+        name: "description",
+        content: "Find resources, explore routes, and get where you need to go.",
+      },
       { property: "og:title", content: "Map — MyCommNet" },
-      { property: "og:description", content: "Find resources, explore routes, and get where you need to go." },
+      {
+        property: "og:description",
+        content: "Find resources, explore routes, and get where you need to go.",
+      },
     ],
   }),
   component: MapPage,
@@ -57,14 +77,19 @@ function MapPage() {
       <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="flex flex-1 items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5">
           <Search className="h-4 w-4 text-muted-foreground" />
-          <input placeholder="Search resources or places..." className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground" />
+          <input
+            placeholder="Search resources or places..."
+            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
         </div>
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {filters.map((f, i) => (
             <button
               key={f}
               className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-medium ${
-                i === 0 ? "bg-gradient-brand text-white shadow-glow-purple" : "bg-surface text-muted-foreground ring-1 ring-border hover:text-foreground"
+                i === 0
+                  ? "bg-gradient-brand text-white shadow-glow-purple"
+                  : "bg-surface text-muted-foreground ring-1 ring-border hover:text-foreground"
               }`}
             >
               {f}
@@ -81,18 +106,46 @@ function MapPage() {
         <div className="relative h-[460px] overflow-hidden rounded-3xl border border-border/60 bg-surface shadow-card-soft lg:h-[640px]">
           {/* Stylized map */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,oklch(0.58_0.24_295/0.18),transparent_50%),radial-gradient(circle_at_80%_70%,oklch(0.55_0.22_265/0.15),transparent_55%)]" />
-          <svg className="absolute inset-0 h-full w-full opacity-40" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            className="absolute inset-0 h-full w-full opacity-40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <defs>
               <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="oklch(0.96 0.005 250 / 0.06)" strokeWidth="1" />
+                <path
+                  d="M 40 0 L 0 0 0 40"
+                  fill="none"
+                  stroke="oklch(0.96 0.005 250 / 0.06)"
+                  strokeWidth="1"
+                />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
             {/* Streets */}
-            <path d="M0,180 C200,100 400,260 800,140" stroke="oklch(0.96 0.005 250 / 0.18)" strokeWidth="3" fill="none" />
-            <path d="M0,360 C300,420 500,260 800,400" stroke="oklch(0.96 0.005 250 / 0.18)" strokeWidth="3" fill="none" />
-            <path d="M120,0 C180,300 90,500 240,800" stroke="oklch(0.96 0.005 250 / 0.14)" strokeWidth="2.5" fill="none" />
-            <path d="M520,0 C480,300 600,460 540,800" stroke="oklch(0.96 0.005 250 / 0.14)" strokeWidth="2.5" fill="none" />
+            <path
+              d="M0,180 C200,100 400,260 800,140"
+              stroke="oklch(0.96 0.005 250 / 0.18)"
+              strokeWidth="3"
+              fill="none"
+            />
+            <path
+              d="M0,360 C300,420 500,260 800,400"
+              stroke="oklch(0.96 0.005 250 / 0.18)"
+              strokeWidth="3"
+              fill="none"
+            />
+            <path
+              d="M120,0 C180,300 90,500 240,800"
+              stroke="oklch(0.96 0.005 250 / 0.14)"
+              strokeWidth="2.5"
+              fill="none"
+            />
+            <path
+              d="M520,0 C480,300 600,460 540,800"
+              stroke="oklch(0.96 0.005 250 / 0.14)"
+              strokeWidth="2.5"
+              fill="none"
+            />
           </svg>
 
           {pins.map((p, i) => (
@@ -101,7 +154,9 @@ function MapPage() {
               style={{ left: `${p.x}%`, top: `${p.y}%` }}
               className="absolute -translate-x-1/2 -translate-y-full"
             >
-              <div className={`relative grid h-10 w-10 place-items-center rounded-full text-white shadow-glow-purple ${p.color === "teal" ? "bg-brand-teal" : p.color === "blue" ? "bg-brand-blue" : "bg-brand-purple"} ${p.active ? "ring-4 ring-white/20 scale-110" : ""}`}>
+              <div
+                className={`relative grid h-10 w-10 place-items-center rounded-full text-white shadow-glow-purple ${p.color === "teal" ? "bg-brand-teal" : p.color === "blue" ? "bg-brand-blue" : "bg-brand-purple"} ${p.active ? "ring-4 ring-white/20 scale-110" : ""}`}
+              >
                 <MapPin className="h-5 w-5" />
               </div>
               {p.active && (
@@ -144,9 +199,13 @@ function MapPage() {
             </div>
 
             <p className="mt-3 text-sm text-muted-foreground">
-              456 Peachtree St NE<br />Atlanta, GA 30308
+              456 Peachtree St NE
+              <br />
+              Atlanta, GA 30308
             </p>
-            <p className="mt-2 text-xs"><span className="font-semibold text-brand-teal">Open now</span> · Closes 8:00 PM</p>
+            <p className="mt-2 text-xs">
+              <span className="font-semibold text-brand-teal">Open now</span> · Closes 8:00 PM
+            </p>
 
             <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
               {[
@@ -157,7 +216,10 @@ function MapPage() {
               ].map((a) => {
                 const Icon = a.icon;
                 return (
-                  <div key={a.label} className="flex items-center gap-2 rounded-xl bg-surface-2 px-3 py-2">
+                  <div
+                    key={a.label}
+                    className="flex items-center gap-2 rounded-xl bg-surface-2 px-3 py-2"
+                  >
                     <Icon className="h-4 w-4 text-brand-teal" />
                     <div>
                       <p className="font-medium">{a.label}</p>
@@ -182,7 +244,10 @@ function MapPage() {
                     <span className="font-semibold">{r.score}</span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-surface-2">
-                    <div className="h-full rounded-full bg-gradient-brand" style={{ width: `${(r.score / 5) * 100}%` }} />
+                    <div
+                      className="h-full rounded-full bg-gradient-brand"
+                      style={{ width: `${(r.score / 5) * 100}%` }}
+                    />
                   </div>
                 </div>
               ))}
@@ -200,22 +265,35 @@ function MapPage() {
               {routes.map((r) => {
                 const Icon = r.icon;
                 return (
-                  <div key={r.mode} className={`flex items-center gap-3 rounded-xl border px-3 py-3 ${r.best ? "border-brand-teal/50 bg-brand-teal/5" : "border-border/60 bg-surface-2"}`}>
+                  <div
+                    key={r.mode}
+                    className={`flex items-center gap-3 rounded-xl border px-3 py-3 ${r.best ? "border-brand-teal/50 bg-brand-teal/5" : "border-border/60 bg-surface-2"}`}
+                  >
                     <span className="grid h-9 w-9 place-items-center rounded-lg bg-background">
                       <Icon className="h-4 w-4" />
                     </span>
                     <div className="flex-1">
                       <p className="text-sm font-semibold">
-                        {r.mode} {r.best && <span className="ml-1 rounded-full bg-brand-teal/20 px-1.5 py-0.5 text-[10px] text-brand-teal">Best route</span>}
+                        {r.mode}{" "}
+                        {r.best && (
+                          <span className="ml-1 rounded-full bg-brand-teal/20 px-1.5 py-0.5 text-[10px] text-brand-teal">
+                            Best route
+                          </span>
+                        )}
                       </p>
-                      <p className="text-xs text-muted-foreground">{r.detail}{r.eta ? ` · ${r.eta}` : ""}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {r.detail}
+                        {r.eta ? ` · ${r.eta}` : ""}
+                      </p>
                     </div>
                     <span className="text-sm font-semibold">{r.time}</span>
                   </div>
                 );
               })}
             </div>
-            <p className="mt-3 text-[10px] text-muted-foreground">ⓘ Routes use real-time data and may change.</p>
+            <p className="mt-3 text-[10px] text-muted-foreground">
+              ⓘ Routes use real-time data and may change.
+            </p>
           </div>
         </div>
       </div>

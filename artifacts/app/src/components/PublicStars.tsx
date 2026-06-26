@@ -17,9 +17,13 @@ export function PublicStars() {
       const dur = (Math.random() * 2.5 + 1.5).toFixed(2);
       const delay = (Math.random() * 5).toFixed(2);
       Object.assign(el.style, {
-        position: "absolute", borderRadius: "50%", pointerEvents: "none",
-        width: `${size}px`, height: `${size}px`,
-        left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
+        position: "absolute",
+        borderRadius: "50%",
+        pointerEvents: "none",
+        width: `${size}px`,
+        height: `${size}px`,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
         backgroundColor: color,
         boxShadow: `0 0 ${size * 3}px ${color}, 0 0 ${size * 5}px ${color}88`,
         animation: `mcn-twinkle ${dur}s ease-in-out infinite`,
@@ -44,7 +48,11 @@ export function PublicStars() {
           transform: translateY(-4px);
         }
       `}</style>
-      <div ref={ref} className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 1 }} />
+      <div
+        ref={ref}
+        className="fixed inset-0 pointer-events-none overflow-hidden"
+        style={{ zIndex: 1 }}
+      />
     </>
   );
 }
@@ -53,11 +61,27 @@ export function PublicFooter() {
   const hanken = { fontFamily: "'Hanken Grotesk', sans-serif" };
   const mono = { fontFamily: "'JetBrains Mono', monospace" };
   return (
-    <footer className="py-8 px-6" style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a", position: "relative", zIndex: 10 }}>
+    <footer
+      className="py-8 px-6"
+      style={{
+        borderTop: "1px solid #1e293b",
+        backgroundColor: "#0f172a",
+        position: "relative",
+        zIndex: 10,
+      }}
+    >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <Link to="/" className="font-bold text-base hover:underline" style={{ color: "#dae2fd", ...hanken }}>MyCommNet</Link>
-          <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>Stay Connected</p>
+          <Link
+            to="/"
+            className="font-bold text-base hover:underline"
+            style={{ color: "#dae2fd", ...hanken }}
+          >
+            MyCommNet
+          </Link>
+          <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>
+            Stay Connected
+          </p>
         </div>
         <div className="flex flex-wrap gap-8">
           {[
@@ -65,7 +89,12 @@ export function PublicFooter() {
             { label: "Terms of Service", to: "/terms-of-service" },
             { label: "Help Center", to: "/help-center" },
           ].map((l) => (
-            <a key={l.label} href={l.to} className="text-xs transition-colors hover:text-white" style={{ color: "#cbc3d7", ...mono }}>
+            <a
+              key={l.label}
+              href={l.to}
+              className="text-xs transition-colors hover:text-white"
+              style={{ color: "#cbc3d7", ...mono }}
+            >
               {l.label}
             </a>
           ))}
