@@ -13,6 +13,7 @@ import { Rocket, Search } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../hooks/useAuth";
+import { PublicNav } from "../components/PublicNav";
 
 function NotFoundComponent() {
   const starFieldRef = useRef<HTMLDivElement>(null);
@@ -42,47 +43,10 @@ function NotFoundComponent() {
       className="flex flex-col min-h-screen"
       style={{ backgroundColor: "#020617", color: "#dae2fd", overflowX: "hidden" }}
     >
-      {/* Nav */}
-      <header
-        className="flex justify-between items-center px-6 w-full z-50 h-[72px] sticky top-0"
-        style={{
-          backgroundColor: "rgba(15,23,42,0.8)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(30,41,59,0.3)",
-        }}
-      >
-        <div className="flex items-center gap-3">
-          <img
-            src="/logo.png"
-            alt="MyCommNet Logo"
-            className="h-10 w-10 rounded-full object-cover"
-            style={{ boxShadow: "0 0 12px rgba(160,120,255,0.5)" }}
-          />
-          <span
-            className="text-xl font-black tracking-tight"
-            style={{ fontFamily: "'Hanken Grotesk', sans-serif" }}
-          >
-            <span style={{ color: "#a078ff" }}>My</span>
-            <span style={{ color: "#0566d9" }}>Comm</span>
-            <span style={{ color: "#4fdbc8" }}>Net</span>
-          </span>
-        </div>
-        <nav className="hidden md:flex items-center gap-8">
-          {["Home", "About", "Features"].map((l) => (
-            <Link
-              key={l}
-              to={l === "Home" ? "/" : (`/${l.toLowerCase()}` as any)}
-              className="text-sm transition-colors hover:text-white"
-              style={{ color: "#cbc3d7" }}
-            >
-              {l}
-            </Link>
-          ))}
-        </nav>
-      </header>
+      <PublicNav />
 
       {/* Main */}
-      <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden px-6 py-24">
+      <main className="flex-grow flex flex-col items-center justify-center relative overflow-hidden px-6 py-24 pt-[calc(72px+6rem)]">
         {/* Background */}
         <div
           ref={starFieldRef}

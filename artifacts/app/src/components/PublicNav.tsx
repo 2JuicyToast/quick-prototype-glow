@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 type ActivePage = "home" | "about" | "features";
 
-export function PublicNav({ activePage }: { activePage: ActivePage }) {
+export function PublicNav({ activePage }: { activePage?: ActivePage }) {
   const hanken = { fontFamily: "'Hanken Grotesk', sans-serif" };
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
