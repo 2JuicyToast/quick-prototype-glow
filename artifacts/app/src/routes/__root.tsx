@@ -4,13 +4,10 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  HeadContent,
-  Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import { Rocket, Search } from "lucide-react";
 
-import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "../hooks/useAuth";
 import { PublicNav } from "../components/PublicNav";
@@ -276,71 +273,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MyCommNet — Your community. Your future." },
-      {
-        name: "description",
-        content:
-          "Discover local resources, opportunities, mentors, groups and events nearby. Built for real community connection.",
-      },
-      { name: "author", content: "MyCommNet" },
-      { property: "og:title", content: "MyCommNet — Your community. Your future." },
-      {
-        property: "og:description",
-        content:
-          "Discover local resources, opportunities, mentors, groups and events nearby. Built for real community connection.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "MyCommNet — Your community. Your future." },
-      {
-        name: "twitter:description",
-        content:
-          "Discover local resources, opportunities, mentors, groups and events nearby. Built for real community connection.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7137c521-b59b-475c-aa52-eb649cf1fad2/id-preview-e027eda4--deaee83c-9693-4674-932e-78f3ad8dc553.lovable.app-1782307396890.png",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7137c521-b59b-475c-aa52-eb649cf1fad2/id-preview-e027eda4--deaee83c-9693-4674-932e-78f3ad8dc553.lovable.app-1782307396890.png",
-      },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@500&display=swap",
-      },
-    ],
-  }),
-  shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
   errorComponent: ErrorComponent,
 });
-
-function RootShell({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
