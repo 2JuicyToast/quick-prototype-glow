@@ -4,6 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
+const port = parseInt(process.env.PORT || "3000", 10);
+
 export default defineConfig({
   plugins: [
     tailwindcss(),
@@ -18,24 +20,18 @@ export default defineConfig({
   },
   environments: {
     ssr: {
-      build: {
-        target: "esnext",
-      },
+      build: { target: "esnext" },
     },
     server: {
-      build: {
-        target: "esnext",
-      },
+      build: { target: "esnext" },
     },
     client: {
-      build: {
-        target: "esnext",
-      },
+      build: { target: "esnext" },
     },
   },
   server: {
     host: "0.0.0.0",
-    port: 5000,
+    port,
     strictPort: true,
     allowedHosts: true,
   },
