@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { AppShell } from "@/components/AppShell";
 import {
   MapPin,
@@ -84,8 +86,40 @@ const saved = [
   { label: "Outreach Coordinator", type: "Job" },
 ];
 
+function parseLocationDisplay(stored: string | null): string {
+  if (!stored) return "";
+  const parts = stored.split("|");
+  if (parts.length === 4) {
+    const [city, state, country, zip] = parts;
+    const countryLabel =
+      country === "US" ? "USA" :
+      country === "CA" ? "Canada" :
+      country === "UK" ? "UK" :
+      country === "AU" ? "Australia" :
+      country === "MX" ? "Mexico" :
+      country;
+    const cityState = [city, state].filter(Boolean).join(", ");
+    const full = [cityState, countryLabel].filter(Boolean).join(", ");
+    return zip ? `${full} ${zip}`.trim() : full.trim();
+  }
+  return stored;
+}
+
 function ProfilePage() {
   const { user, profile } = useAuth();
+  const [userLocation, setUserLocation] = useState<string>("");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("user_preferences")
+      .select("zip_code")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.zip_code) setUserLocation(parseLocationDisplay(data.zip_code));
+      });
+  }, [user]);
 
   const fullName =
     profile?.full_name ??
@@ -97,7 +131,7 @@ function ProfilePage() {
 
   const verifiedHours = profile?.verified_hours ?? 36;
   const eventsAttended = profile?.events_attended ?? 12;
-  const location = profile?.location ?? "Atlanta, GA";
+  const location = userLocation || profile?.location || "";
   const joinYear = user?.created_at ? new Date(user.created_at).getFullYear() : 2025;
   const bio =
     profile?.bio ??

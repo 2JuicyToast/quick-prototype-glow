@@ -196,8 +196,16 @@ function OnboardingPage() {
   const [dataLoading, setDataLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [zipFocused, setZipFocused] = useState(false);
   const [occFocused, setOccFocused] = useState(false);
+  // Location fields — composed into zip_code for DB storage
+  const [locCountry, setLocCountry] = useState("US");
+  const [locState, setLocState] = useState("");
+  const [locCity, setLocCity] = useState("");
+  const [locZip, setLocZip] = useState("");
+  const [autoFilling, setAutoFilling] = useState(false);
+  const [zipFocused, setZipFocused] = useState(false);
+  const [cityFocused, setCityFocused] = useState(false);
+  const [stateFocused, setStateFocused] = useState(false);
 
   // Auth guard
   useEffect(() => {
@@ -229,6 +237,18 @@ function OnboardingPage() {
             content_preference: data.content_preference ?? null,
             engagement_preference: data.engagement_preference ?? null,
           });
+          // Parse stored location string ("city|state|country|zip")
+          if (data.zip_code) {
+            const parts = data.zip_code.split("|");
+            if (parts.length === 4) {
+              setLocCity(parts[0]);
+              setLocState(parts[1]);
+              setLocCountry(parts[2]);
+              setLocZip(parts[3]);
+            } else {
+              setLocZip(data.zip_code);
+            }
+          }
         }
         setDataLoading(false);
       });
@@ -247,6 +267,26 @@ function OnboardingPage() {
     setPrefs((p) => ({ ...p, [key]: p[key] === val ? null : val }));
   }
 
+  // Auto-fill city + state when a US ZIP is entered
+  async function handleZipChange(val: string) {
+    setLocZip(val);
+    if (locCountry === "US" && /^\d{5}$/.test(val)) {
+      setAutoFilling(true);
+      try {
+        const res = await fetch(`https://api.zippopotam.us/us/${val}`);
+        if (res.ok) {
+          const json = await res.json();
+          const place = json.places?.[0];
+          if (place) {
+            setLocCity(place["place name"] ?? "");
+            setLocState(place["state"] ?? "");
+          }
+        }
+      } catch {}
+      setAutoFilling(false);
+    }
+  }
+
   // ── Save ───────────────────────────────────────────────────────────────────
 
   async function handleFinish() {
@@ -255,10 +295,25 @@ function OnboardingPage() {
     setSaveError(null);
 
     try {
+      // Format location into the zip_code column as "city|state|country|zip"
+      const compositeLocation = [locCity, locState, locCountry, locZip].join("|");
+
       const { error: prefErr } = await supabase.from("user_preferences").upsert(
         {
           user_id: user.id,
-          ...prefs,
+          zip_code: compositeLocation,
+          age_range: prefs.age_range,
+          life_status: prefs.life_status,
+          occupation: prefs.occupation,
+          transportation_modes: prefs.transportation_modes,
+          travel_range: prefs.travel_range,
+          low_cost_priority: prefs.low_cost_priority,
+          access_preferences: prefs.access_preferences,
+          resource_interests: prefs.resource_interests,
+          personal_interests: prefs.personal_interests,
+          career_interests: prefs.career_interests,
+          content_preference: prefs.content_preference,
+          engagement_preference: prefs.engagement_preference,
           onboarding_completed: true,
           updated_at: new Date().toISOString(),
         },
@@ -311,39 +366,129 @@ function OnboardingPage() {
       boxShadow: "0 0 0 1px #4fdbc8",
     };
 
+    const labelStyle: React.CSSProperties = { color: "#cbc3d7", ...mono };
+    const selectBase: React.CSSProperties = {
+      ...inputBase,
+      appearance: "none" as const,
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23958ea0' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "right 12px center",
+      paddingRight: "36px",
+    };
+
     switch (step) {
       // Step 0 — Location & Age
       case 0:
         return (
-          <div className="space-y-7">
+          <div className="space-y-5">
+            {/* Country */}
+            <div>
+              <label className="block text-xs uppercase tracking-widest mb-2" style={labelStyle}>
+                Country
+              </label>
+              <select
+                value={locCountry}
+                onChange={(e) => {
+                  setLocCountry(e.target.value);
+                  setLocState("");
+                  setLocCity("");
+                }}
+                className="w-full h-11 px-4 rounded-lg text-sm"
+                style={selectBase}
+              >
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="MX">Mexico</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            {/* ZIP / Postal code — enters first to auto-fill */}
             <div>
               <label
                 className="block text-xs uppercase tracking-widest mb-2"
-                style={{ color: zipFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s", ...mono }}
+                style={{ ...labelStyle, color: zipFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
               >
-                ZIP code or area
+                {locCountry === "CA" ? "Postal code" : locCountry === "UK" ? "Postcode" : "ZIP code"}
+                {locCountry === "US" && (
+                  <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
+                    — we'll auto-fill city & state
+                  </span>
+                )}
+              </label>
+              <div className="relative max-w-xs">
+                <input
+                  type="text"
+                  value={locZip}
+                  onChange={(e) => handleZipChange(e.target.value)}
+                  onFocus={() => setZipFocused(true)}
+                  onBlur={() => setZipFocused(false)}
+                  placeholder={locCountry === "CA" ? "A1A 1A1" : locCountry === "UK" ? "SW1A 1AA" : "e.g. 30301"}
+                  maxLength={10}
+                  className="w-full h-11 px-4 rounded-lg text-sm"
+                  style={{ ...inputBase, ...(zipFocused ? inputFocus : {}) }}
+                />
+                {autoFilling && (
+                  <span
+                    className="absolute right-3 top-3 text-xs"
+                    style={{ color: "#4fdbc8", ...mono }}
+                  >
+                    Looking up…
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* City */}
+            <div>
+              <label
+                className="block text-xs uppercase tracking-widest mb-2"
+                style={{ ...labelStyle, color: cityFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
+              >
+                City
+                {autoFilling && (
+                  <span style={{ color: "#4fdbc8", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
+                    auto-filling…
+                  </span>
+                )}
               </label>
               <input
                 type="text"
-                value={prefs.zip_code ?? ""}
-                onChange={(e) => setPrefs((p) => ({ ...p, zip_code: e.target.value }))}
-                onFocus={() => setZipFocused(true)}
-                onBlur={() => setZipFocused(false)}
-                placeholder="e.g. 30301"
-                maxLength={10}
-                className="w-full max-w-xs h-11 px-4 rounded-lg text-sm"
-                style={{ ...inputBase, ...(zipFocused ? inputFocus : {}) }}
+                value={locCity}
+                onChange={(e) => setLocCity(e.target.value)}
+                onFocus={() => setCityFocused(true)}
+                onBlur={() => setCityFocused(false)}
+                placeholder="e.g. Atlanta"
+                className="w-full h-11 px-4 rounded-lg text-sm"
+                style={{ ...inputBase, ...(cityFocused ? inputFocus : {}) }}
               />
-              <p className="mt-1.5 text-xs" style={{ color: "#958ea0" }}>
-                We use this to find nearby resources. You can leave it blank.
-              </p>
             </div>
 
+            {/* State / Province */}
             <div>
               <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
+                className="block text-xs uppercase tracking-widest mb-2"
+                style={{ ...labelStyle, color: stateFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
               >
+                {locCountry === "CA" ? "Province / Territory" : locCountry === "UK" ? "County / Region" : "State / Province"}
+              </label>
+              <input
+                type="text"
+                value={locState}
+                onChange={(e) => setLocState(e.target.value)}
+                onFocus={() => setStateFocused(true)}
+                onBlur={() => setStateFocused(false)}
+                placeholder={locCountry === "US" ? "e.g. Georgia" : locCountry === "CA" ? "e.g. Ontario" : "e.g. England"}
+                className="w-full h-11 px-4 rounded-lg text-sm"
+                style={{ ...inputBase, ...(stateFocused ? inputFocus : {}) }}
+              />
+            </div>
+
+            {/* Age range */}
+            <div>
+              <label className="block text-xs uppercase tracking-widest mb-3" style={labelStyle}>
                 Age range
               </label>
               <div className="flex flex-wrap gap-2">
