@@ -108,11 +108,15 @@ function LoginPage() {
       else navigate({ to: "/main" });
     } else {
       const fullName = `${firstName.trim()} ${lastName.trim()}`;
-      const { error } = await signUp(email, password, fullName);
+      const { error, session } = await signUp(email, password, fullName);
       if (error) {
         setErrorMsg(error.message);
+      } else if (session) {
+        navigate({ to: "/onboarding" });
       } else {
-        setSuccessMsg("Check your email to confirm your account, then sign in.");
+        setSuccessMsg(
+          "Account created! Check your email to confirm it, then sign in to complete your profile setup.",
+        );
         setTab("login");
         setFirstName("");
         setLastName("");

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RestrictedRouteImport } from './routes/restricted'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as MainRouteImport } from './routes/main'
@@ -35,6 +36,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MessagesRoute = MessagesRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/main': typeof MainRoute
   '/map': typeof MapRoute
   '/messages': typeof MessagesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/restricted': typeof RestrictedRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/main': typeof MainRoute
   '/map': typeof MapRoute
   '/messages': typeof MessagesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/restricted': typeof RestrictedRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/main': typeof MainRoute
   '/map': typeof MapRoute
   '/messages': typeof MessagesRoute
+  '/onboarding': typeof OnboardingRoute
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/restricted': typeof RestrictedRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/main'
     | '/map'
     | '/messages'
+    | '/onboarding'
     | '/profile'
     | '/reset-password'
     | '/restricted'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/main'
     | '/map'
     | '/messages'
+    | '/onboarding'
     | '/profile'
     | '/reset-password'
     | '/restricted'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/main'
     | '/map'
     | '/messages'
+    | '/onboarding'
     | '/profile'
     | '/reset-password'
     | '/restricted'
@@ -181,6 +193,7 @@ export interface RootRouteChildren {
   MainRoute: typeof MainRoute
   MapRoute: typeof MapRoute
   MessagesRoute: typeof MessagesRoute
+  OnboardingRoute: typeof OnboardingRoute
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   RestrictedRoute: typeof RestrictedRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/messages': {
@@ -285,6 +305,7 @@ const rootRouteChildren: RootRouteChildren = {
   MainRoute: MainRoute,
   MapRoute: MapRoute,
   MessagesRoute: MessagesRoute,
+  OnboardingRoute: OnboardingRoute,
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   RestrictedRoute: RestrictedRoute,

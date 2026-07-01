@@ -1,0 +1,164 @@
+Add a user onboarding survey to the account creation flow for this app.
+
+Goal:
+I want the survey to be part of sign-up / account creation so the app can personalize the user experience immediately. I also want all survey answers to be editable later inside the user’s profile/settings page. In addition, based on the user’s answers, I want the system to generate internal demographic / personalization tags that are stored in the database and used for tailored recommendations. These tags should not be directly shown to the user.
+
+Please do all of the following:
+
+Add an onboarding survey immediately after account creation, or as the final step of account creation if that fits the current auth flow better.
+
+Save the user’s answers to their profile in Supabase.
+
+Make the survey answers editable later in the profile/settings area.
+
+Generate internal hidden personalization tags based on the user’s answers. These tags are for recommendation logic only and should not be displayed directly in the UI.
+
+Keep the survey visually consistent with the site theme and current auth/profile styling.
+
+Do not break the existing login, signup, logout, forgot password, or profile flows.
+
+Build the survey with these questions/fields:
+
+Basic location and identity
+ZIP code or area
+
+Age range
+
+Current life status / situation
+examples: high school student, college student, employed full-time, employed part-time, self-employed, looking for work, between jobs, caregiver, retired, volunteer, other
+
+
+Access and mobility
+Transportation methods
+examples: walk, bike, bus, train, car, rides from others, multiple
+
+
+Travel range / how far they are willing to go
+examples: only nearby, within my city, nearby towns, anywhere in the state
+
+
+Whether to prioritize free / low-cost options
+
+Any access preferences or limits
+examples: online options, accessible places, evening hours, teen-friendly, family-friendly
+
+
+What they want help finding
+What kinds of resources/opportunities they want help with
+examples: jobs, job training, certificates, free Wi-Fi, working computers, food, affordable restaurants, transportation, education, mentors, events, groups, networking
+
+
+Interests and community
+Interests / hobbies as multi-select tags
+include examples like cosplay, comics, anime, gaming, books, art, music, sports, volunteering, community service, technology, coding, business, fitness, fashion, content creation
+
+
+Whether they want more:
+community-focused suggestions
+
+service/resource-focused suggestions
+
+both
+
+
+Whether they mainly want to:
+browse resources
+
+join groups/events
+
+both
+
+
+Work and future direction
+Current occupation / work situation
+
+Career interests / fields they want to explore
+examples: healthcare, education, technology, design, trades, business, government, nonprofit, media, hospitality, law, science, entrepreneurship
+
+
+Requirements for UX:
+
+Make the survey feel simple and modern, not overwhelming.
+
+Use multi-step onboarding screens instead of one giant form.
+
+Use chips / pills / multi-select buttons for interests and preference tags where appropriate.
+
+Allow skipping certain optional questions if needed, but collect the most important ones.
+
+Show progress through the onboarding flow.
+
+Allow users to come back and edit this later in profile settings.
+
+Requirements for data/storage:
+
+Extend the user profile storage so these answers are saved in Supabase.
+
+Keep the existing profiles table if possible, but add fields or related tables as needed in a clean way.
+
+Recommend the best schema if arrays, JSON, or related tables make more sense for multi-select answers.
+
+Make sure the authenticated user can read and update only their own onboarding/profile answers.
+
+Requirements for hidden personalization tags:
+Based on survey answers, create internal tags such as examples like:
+
+student
+
+job_seeker
+
+low_cost_priority
+
+public_transit_user
+
+local_explorer
+
+community_oriented
+
+career_growth
+
+volunteer_interest
+
+comics_interest
+
+cosplay_interest
+
+tech_interest
+
+family_friendly_needs
+
+evening_availability
+
+These are just examples — generate tags logically from the user’s selections.
+
+Important:
+
+These internal tags must be stored for recommendation/filtering logic.
+
+The tags should not be directly visible as “demographic tags” in the normal user-facing profile UI.
+
+The recommendation system should be able to use them later for tailored content, groups, map results, and homepage suggestions.
+
+Deliverables:
+
+Build the onboarding survey UI.
+
+Add/update the necessary Supabase schema and policies.
+
+Save survey answers properly.
+
+Generate hidden personalization tags.
+
+Add editing for these answers in profile/settings.
+
+Explain exactly:
+
+which files were changed,
+
+which database changes were made,
+
+how the hidden tags are generated,
+
+and how the onboarding flow works from signup to profile editing.
+
+A small product note: asking for hidden recommendation tags is a strong idea for personalization, but keep them tied to user-selected preferences and practical needs rather than making them feel invasive or overly sensitive. Since your app is meant to tailor opportunities, services, and groups around the user’s situation, using interest, access, and goal-based tags is a good fit.

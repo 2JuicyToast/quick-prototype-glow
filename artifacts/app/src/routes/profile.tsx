@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import {
   MapPin,
@@ -16,6 +16,7 @@ import {
   Shield,
   Settings,
   Edit3,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -235,6 +236,33 @@ function ProfilePage() {
                 </li>
               ))}
             </ul>
+          </section>
+
+          {/* Personalization */}
+          <section className="rounded-2xl border border-border/60 bg-surface p-5">
+            <h3 className="mb-1 flex items-center gap-2 font-display text-base font-semibold">
+              <SlidersHorizontal className="h-4 w-4 text-brand-purple" /> Personalization
+            </h3>
+            {!profile?.onboarding_complete ? (
+              <p className="mb-4 text-xs text-muted-foreground leading-relaxed">
+                Complete your profile survey so we can tailor recommendations, resources, and
+                community matches just for you.
+              </p>
+            ) : (
+              <p className="mb-4 text-xs text-muted-foreground leading-relaxed">
+                Update your interests, situation, and preferences any time to keep your
+                recommendations fresh.
+              </p>
+            )}
+            <Link
+              to="/onboarding"
+              search={{ mode: "edit" }}
+              className="flex items-center justify-center gap-2 w-full rounded-xl py-2.5 text-sm font-bold text-white transition-all hover:brightness-110 active:scale-[0.98]"
+              style={{ background: "linear-gradient(135deg,#a078ff 0%,#0566d9 100%)" }}
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              {profile?.onboarding_complete ? "Edit My Preferences" : "Take the Survey"}
+            </Link>
           </section>
         </div>
 
