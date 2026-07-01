@@ -36,7 +36,7 @@ function ForgotPasswordPage() {
     setSubmitting(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + "/reset-password",
+      redirectTo: "https://my-comm-net--2JuicyToast.replit.app/reset-password",
     });
 
     if (error) {
