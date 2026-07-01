@@ -11,9 +11,12 @@ import {
   Settings,
   Bookmark,
   LogOut,
+  X,
+  SlidersHorizontal,
 } from "lucide-react";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
 
 const logoSrc = "/logo.png";
 
@@ -25,17 +28,54 @@ const navItems: { to: string; label: string; icon: typeof Home; badge?: number }
   { to: "/profile", label: "Profile", icon: User },
 ];
 
+function parseLocationDisplay(stored: string): string {
+  const parts = stored.split("|");
+  if (parts.length === 4) {
+    const [city, state] = parts;
+    return [city, state].filter(Boolean).join(", ");
+  }
+  return stored;
+}
+
 export function AppShell({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
   const { location } = useRouterState();
   const path = location.pathname;
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [headerLocation, setHeaderLocation] = useState<string>("");
+  const notifRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!loading && !user) {
       navigate({ to: "/restricted" });
     }
   }, [user, loading, navigate]);
+
+  // Load location from user_preferences
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("user_preferences")
+      .select("zip_code")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data?.zip_code) setHeaderLocation(parseLocationDisplay(data.zip_code));
+      });
+  }, [user]);
+
+  // Close notification panel on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    }
+    if (notifOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [notifOpen]);
 
   const displayName =
     profile?.full_name?.split(" ")[0] ??
@@ -49,6 +89,19 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
     await signOut();
     navigate({ to: "/login", search: { tab: "signin" } });
   }
+
+  // Build notifications list
+  const notifications: { id: string; icon: typeof Bell; title: string; body: string; to: string }[] = [];
+  if (!profile?.onboarding_complete) {
+    notifications.push({
+      id: "onboarding",
+      icon: SlidersHorizontal,
+      title: "Complete your profile setup",
+      body: "Take the survey to get personalised recommendations.",
+      to: "/onboarding",
+    });
+  }
+  const notifCount = notifications.length;
 
   if (loading) {
     return (
@@ -79,10 +132,12 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
             </span>
           </Link>
 
-          <div className="ml-2 hidden items-center gap-1 rounded-full bg-surface/70 px-3 py-1.5 text-xs text-muted-foreground md:flex">
-            <span className="h-2 w-2 rounded-full bg-brand-teal" />
-            {profile?.location ?? "Atlanta, GA"}
-          </div>
+          {headerLocation && (
+            <div className="ml-2 hidden items-center gap-1 rounded-full bg-surface/70 px-3 py-1.5 text-xs text-muted-foreground md:flex">
+              <span className="h-2 w-2 rounded-full bg-brand-teal" />
+              {headerLocation}
+            </div>
+          )}
 
           <nav className="ml-6 hidden items-center gap-1 lg:flex">
             {navItems.map((it) => {
@@ -114,10 +169,88 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
             <button className="hidden h-10 w-10 place-items-center rounded-lg text-muted-foreground hover:bg-surface hover:text-foreground sm:grid">
               <Search className="h-5 w-5" />
             </button>
-            <button className="relative grid h-10 w-10 place-items-center rounded-lg text-muted-foreground hover:bg-surface hover:text-foreground">
-              <Bell className="h-5 w-5" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-brand-teal" />
-            </button>
+
+            {/* Notification bell */}
+            <div ref={notifRef} className="relative">
+              <button
+                onClick={() => setNotifOpen((o) => !o)}
+                className="relative grid h-10 w-10 place-items-center rounded-lg text-muted-foreground hover:bg-surface hover:text-foreground"
+              >
+                <Bell className="h-5 w-5" />
+                <span
+                  className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[9px] font-bold text-white"
+                  style={{
+                    background: notifCount > 0
+                      ? "linear-gradient(135deg,#a078ff,#0566d9)"
+                      : "#334155",
+                  }}
+                >
+                  {notifCount}
+                </span>
+              </button>
+
+              {notifOpen && (
+                <div
+                  className="absolute right-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl shadow-2xl"
+                  style={{
+                    background: "rgba(11,19,38,0.97)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <div
+                    className="flex items-center justify-between px-4 py-3"
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <h3 className="text-sm font-semibold text-foreground">Notifications</h3>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {notifCount} new
+                      </span>
+                      <button
+                        onClick={() => setNotifOpen(false)}
+                        className="grid h-5 w-5 place-items-center rounded text-muted-foreground hover:text-foreground"
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {notifications.length === 0 ? (
+                    <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                      You're all caught up! 🎉
+                    </div>
+                  ) : (
+                    <ul>
+                      {notifications.map((n) => {
+                        const Icon = n.icon;
+                        return (
+                          <li key={n.id}>
+                            <Link
+                              to={n.to}
+                              onClick={() => setNotifOpen(false)}
+                              className="flex items-start gap-3 px-4 py-3.5 transition-colors hover:bg-white/5"
+                            >
+                              <span
+                                className="mt-0.5 grid h-8 w-8 flex-shrink-0 place-items-center rounded-lg"
+                                style={{ background: "rgba(160,120,255,0.15)" }}
+                              >
+                                <Icon className="h-4 w-4 text-brand-purple" />
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium text-foreground">{n.title}</p>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{n.body}</p>
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="group relative">
               <button className="flex items-center gap-2 rounded-full bg-surface p-1 pr-3">
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-brand text-sm font-semibold text-white">

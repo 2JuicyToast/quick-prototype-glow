@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { PublicFooter } from "@/components/PublicStars";
 import { useAuth } from "@/hooks/useAuth";
@@ -103,6 +103,7 @@ const resourceCards = [
 function MainPage() {
   const { user, profile } = useAuth();
   const [greeting, setGreeting] = useState("Hello");
+  const [showSurveyBanner, setShowSurveyBanner] = useState(true);
 
   useEffect(() => {
     const h = new Date().getHours();
@@ -119,6 +120,49 @@ function MainPage() {
   return (
     <AppShell footer={<PublicFooter />}>
       <div style={{ color: "#ffffff" }}>
+        {/* ── Survey reminder banner ── */}
+        {!profile?.onboarding_complete && showSurveyBanner && (
+          <div
+            className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 mb-4 rounded-2xl"
+            style={{
+              background: "linear-gradient(135deg, rgba(160,120,255,0.12) 0%, rgba(5,102,217,0.12) 100%)",
+              border: "1px solid rgba(160,120,255,0.25)",
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(160,120,255,0.2)" }}
+              >
+                <span className="text-base">✨</span>
+              </div>
+              <div>
+                <p className="font-semibold text-sm text-white">Personalise your experience</p>
+                <p className="text-xs" style={{ color: "#9ca3af" }}>
+                  Complete your profile survey so we can show you the right resources and opportunities.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Link
+                to="/onboarding"
+                className="px-5 py-2 rounded-full text-sm font-semibold transition hover:brightness-110"
+                style={{ background: "linear-gradient(135deg,#a078ff,#0566d9)", color: "#fff" }}
+              >
+                Take the survey →
+              </Link>
+              <button
+                onClick={() => setShowSurveyBanner(false)}
+                className="p-1.5 rounded-lg text-sm transition hover:bg-white/10"
+                style={{ color: "#6b7280" }}
+                aria-label="Dismiss"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* ── Notification bar ── */}
         <div
           className="flex flex-col md:flex-row items-center justify-between p-4 mb-6 rounded-2xl space-y-4 md:space-y-0"

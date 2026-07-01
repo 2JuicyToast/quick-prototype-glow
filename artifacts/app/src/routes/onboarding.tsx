@@ -336,8 +336,15 @@ function OnboardingPage() {
 
       await refreshProfile();
       navigate({ to: mode === "edit" ? "/profile" : "/main" });
-    } catch {
-      setSaveError("Something went wrong saving your answers. Please try again.");
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error
+          ? err.message
+          : typeof err === "object" && err !== null && "message" in err
+            ? String((err as { message: unknown }).message)
+            : "Unknown error";
+      console.error("[Onboarding save error]", err);
+      setSaveError(`Save failed: ${msg}`);
       setSaving(false);
     }
   }
