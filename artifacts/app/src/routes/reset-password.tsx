@@ -55,24 +55,64 @@ function ResetPasswordPage() {
   const [sessionError, setSessionError] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setSessionReady(true);
-      } else {
-        setSessionError(true);
-      }
-    });
+    let settled = false;
 
+    function markReady() {
+      if (settled) return;
+      settled = true;
+      setSessionReady(true);
+    }
+
+    function markError() {
+      if (settled) return;
+      settled = true;
+      setSessionError(true);
+    }
+
+    // 1. Subscribe FIRST so we never miss the PASSWORD_RECOVERY event,
+    //    even if Supabase fires it synchronously during code exchange.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         if (event === "PASSWORD_RECOVERY" && session) {
-          setSessionReady(true);
-          setSessionError(false);
+          markReady();
+        }
+        // SIGNED_IN also fires after a successful PKCE exchange in some versions
+        if (event === "SIGNED_IN" && session && !settled) {
+          // Only treat as ready if we came here via a recovery link
+          const url = new URL(window.location.href);
+          if (url.searchParams.has("code") || url.hash.includes("type=recovery")) {
+            markReady();
+          }
         }
       },
     );
 
-    return () => subscription.unsubscribe();
+    // 2. Inspect the URL to decide whether to wait or fail fast.
+    const url = new URL(window.location.href);
+    const hasPkceCode = url.searchParams.has("code");
+    const hasHashToken =
+      url.hash.includes("access_token") && url.hash.includes("type=recovery");
+
+    if (!hasPkceCode && !hasHashToken) {
+      // Not a recovery link — show the error state immediately.
+      markError();
+      subscription.unsubscribe();
+      return;
+    }
+
+    // 3. Check whether Supabase already exchanged the code before we mounted.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) markReady();
+      // else: wait for PASSWORD_RECOVERY via onAuthStateChange above
+    });
+
+    // 4. Safety timeout — if the event never arrives, tell the user.
+    const timer = setTimeout(markError, 10_000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timer);
+    };
   }, []);
 
   const pwReqs = getPasswordRequirements(password);
