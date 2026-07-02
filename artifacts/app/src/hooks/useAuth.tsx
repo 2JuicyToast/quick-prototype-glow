@@ -11,6 +11,8 @@ export type Profile = {
   location: string | null;
   verified_hours: number | null;
   events_attended: number | null;
+  avatar_url: string | null;
+  banner_url: string | null;
 };
 
 type AuthContextType = {
@@ -18,7 +20,7 @@ type AuthContextType = {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null; session: import("@supabase/supabase-js").Session | null }>;
+  signUp: (email: string, password: string, fullName: string, username?: string) => Promise<{ error: Error | null; session: import("@supabase/supabase-js").Session | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -67,12 +69,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function signUp(email: string, password: string, fullName: string) {
+  async function signUp(email: string, password: string, fullName: string, username?: string) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName, username: username ?? null } },
     });
+
+    if (!error && data.user && username) {
+      await supabase.from("profiles").upsert({
+        id: data.user.id,
+        full_name: fullName,
+        username,
+      }, { onConflict: "id" });
+    }
+
     return { error, session: data.session };
   }
 
