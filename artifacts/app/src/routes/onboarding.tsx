@@ -629,6 +629,11 @@ function OnboardingPage() {
   }
 
   function advance() {
+    if (step === 0 && !locState.trim()) {
+      setSaveError("State / Province is required — please enter it before continuing.");
+      return;
+    }
+    setSaveError(null);
     if (step < STEPS.length - 1) setStep((s) => s + 1);
     else handleFinish();
   }
@@ -691,6 +696,7 @@ function OnboardingPage() {
                 style={{ ...labelStyle, color: stateFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
               >
                 {locCountry === "CA" ? "Province / Territory" : locCountry === "UK" ? "County / Region" : "State / Province"}
+                <span style={{ color: "#ff6b6b", marginLeft: "4px" }}>*</span>
               </label>
               <input
                 type="text"
@@ -1145,7 +1151,7 @@ function OnboardingPage() {
               type="button"
               onClick={() => setShowClearConfirm(true)}
               className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:bg-white/5"
-              style={{ color: "#4a5568", border: "1px solid #1e293b" }}
+              style={{ color: "#ffffff", border: "1px solid #1e293b" }}
             >
               <Trash2 className="h-3 w-3" />
               Clear survey
