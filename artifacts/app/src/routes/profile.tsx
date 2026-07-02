@@ -257,10 +257,12 @@ function ProfilePage() {
     user?.email?.split("@")[0] ??
     "Community Member";
 
-  const username =
+  const rawUsername =
     profile?.username ??
     user?.user_metadata?.username ??
     null;
+
+  const username = rawUsername ?? (user ? `user${user.id.replace(/-/g, "").slice(0, 8)}` : null);
 
   const initial = fullName.charAt(0).toUpperCase();
   const verifiedHours = profile?.verified_hours ?? 36;
