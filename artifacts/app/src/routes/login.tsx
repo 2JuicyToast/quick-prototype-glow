@@ -318,7 +318,7 @@ function LoginPage() {
                     key={t}
                     type="button"
                     onClick={() => switchTab(t)}
-                    className="relative flex-1 h-9 rounded-full text-sm font-semibold z-10"
+                    className="relative flex flex-1 items-center justify-center h-9 rounded-full text-sm font-semibold z-10"
                     style={{ color: tab === t ? "#ffffff" : "#cbc3d7", transition: "color 0.3s ease" }}
                   >
                     {t === "login" ? "Sign In" : "Sign Up"}
