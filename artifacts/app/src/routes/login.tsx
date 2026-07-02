@@ -308,7 +308,7 @@ function LoginPage() {
                   className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full pointer-events-none"
                   style={{
                     background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)",
-                    transform: tab === "login" ? "translateX(0)" : "translateX(calc(100% + 8px))",
+                    transform: tab === "login" ? "translateX(0)" : "translateX(100%)",
                     transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     left: 4,
                   }}
