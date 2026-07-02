@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Check, Sparkles } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, Check, Sparkles, X, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { generateTags, type Prefs } from "@/lib/tags";
@@ -25,6 +25,28 @@ const AGE_OPTIONS = [
   { label: "45–54", value: "45_54" },
   { label: "55–64", value: "55_64" },
   { label: "65+", value: "65_plus" },
+];
+
+const GENDER_OPTIONS = [
+  { label: "Man", value: "man" },
+  { label: "Woman", value: "woman" },
+  { label: "Non-binary", value: "nonbinary" },
+  { label: "Genderfluid", value: "genderfluid" },
+  { label: "Prefer not to say", value: "prefer_not_to_say" },
+  { label: "Other", value: "other" },
+];
+
+const ETHNICITY_OPTIONS = [
+  "American Indian or Alaska Native",
+  "Asian",
+  "Black or African American",
+  "Hispanic or Latino",
+  "Middle Eastern or North African",
+  "Native Hawaiian or Pacific Islander",
+  "White",
+  "Two or more races",
+  "Prefer not to say",
+  "Other",
 ];
 
 const LIFE_OPTIONS = [
@@ -100,6 +122,19 @@ const INTEREST_OPTIONS = [
   { label: "Community service", value: "community_service" },
 ];
 
+const INTEREST_SUGGESTIONS = [
+  "Photography", "Cooking", "Hiking", "Travel", "Painting", "Drawing",
+  "Sculpting", "Theater", "Dance", "Yoga", "Meditation", "Gardening",
+  "Crafts", "DIY", "Writing", "Blogging", "Podcasting", "Swimming",
+  "Cycling", "Rock climbing", "Skateboarding", "Surfing", "Robotics",
+  "3D printing", "Languages", "Film", "Astronomy", "Chess", "Board games",
+  "Tabletop RPG", "Weightlifting", "Martial arts", "Soccer", "Basketball",
+  "Baseball", "Football", "Tennis", "Golf", "Archery", "Bowling",
+  "Fishing", "Camping", "Bird watching", "K-pop", "Poetry", "Debate",
+  "Public speaking", "Cooking", "Baking", "Sewing", "Knitting",
+  "Stand-up comedy", "Esports", "Nature", "History", "Philosophy",
+];
+
 const CAREER_OPTIONS = [
   { label: "Healthcare", value: "healthcare" },
   { label: "Education", value: "education" },
@@ -116,6 +151,18 @@ const CAREER_OPTIONS = [
   { label: "Entrepreneurship", value: "entrepreneurship" },
 ];
 
+const CAREER_SUGGESTIONS = [
+  "Agriculture", "Architecture", "Aviation", "Cybersecurity", "Data Science",
+  "Engineering", "Environmental Science", "Fashion Industry", "Film / TV",
+  "Finance", "Forensics", "Gaming Industry", "Interior Design",
+  "International Relations", "Journalism", "Linguistics", "Marine Biology",
+  "Marketing", "Music Industry", "Nursing", "Pharmacy", "Physical Therapy",
+  "Psychology", "Public Health", "Real Estate", "Social Work",
+  "Sports Management", "Urban Planning", "Veterinary Medicine",
+  "Culinary Arts", "Construction", "Cosmetology", "Criminal Justice",
+  "Dental", "Electrical", "Plumbing", "Welding", "Early Childhood Education",
+];
+
 const CONTENT_OPTIONS = [
   { label: "Community-focused", value: "community" },
   { label: "Service / resource-focused", value: "service" },
@@ -130,11 +177,12 @@ const ENGAGEMENT_OPTIONS = [
 
 const STEPS = [
   { title: "Where are you located?", subtitle: "Only your state/province is required — city and ZIP code are optional but help us find better matches." },
+  { title: "About you", subtitle: "Totally optional — helps us personalise your experience. Skip anything you'd rather not share." },
   { title: "Tell us about yourself", subtitle: "We'll personalise your experience based on your current situation." },
   { title: "Getting around", subtitle: "Help us understand how you travel and what fits your budget." },
   { title: "Access preferences", subtitle: "Any specific needs when accessing resources or programmes?" },
   { title: "What can we help you find?", subtitle: "Select everything you're looking for — pick as many as you like." },
-  { title: "Your interests", subtitle: "Tell us what you're into — personally and career-wise." },
+  { title: "Your interests", subtitle: "Tell us what you're into — personally and career-wise. Add anything we missed!" },
   { title: "Community style", subtitle: "How do you like to engage with your community?" },
 ];
 
@@ -144,10 +192,12 @@ function Chip({
   label,
   selected,
   onClick,
+  onRemove,
 }: {
   label: string;
   selected: boolean;
   onClick: () => void;
+  onRemove?: () => void;
 }) {
   return (
     <button
@@ -162,7 +212,138 @@ function Chip({
     >
       {selected && <Check className="h-3 w-3 flex-shrink-0" style={{ color: "#a078ff" }} />}
       {label}
+      {onRemove && (
+        <span
+          onClick={(e) => { e.stopPropagation(); onRemove(); }}
+          className="ml-0.5 grid h-4 w-4 place-items-center rounded-full hover:bg-white/10"
+        >
+          <X className="h-2.5 w-2.5" />
+        </span>
+      )}
     </button>
+  );
+}
+
+// ── Custom interest input with typeahead ─────────────────────────────────────
+
+function CustomInterestInput({
+  placeholder,
+  suggestions,
+  existingValues,
+  onAdd,
+}: {
+  placeholder: string;
+  suggestions: string[];
+  existingValues: string[];
+  onAdd: (value: string) => void;
+}) {
+  const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const existing = existingValues.map((v) =>
+    v.startsWith("custom:") ? v.slice(7).toLowerCase() : v.toLowerCase()
+  );
+
+  const filtered = input.trim().length > 0
+    ? suggestions.filter(
+        (s) =>
+          s.toLowerCase().includes(input.toLowerCase()) &&
+          !existing.includes(s.toLowerCase())
+      ).slice(0, 6)
+    : [];
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  function add(label: string) {
+    const trimmed = label.trim();
+    if (!trimmed) return;
+    onAdd(`custom:${trimmed}`);
+    setInput("");
+    setOpen(false);
+  }
+
+  function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (filtered.length > 0) add(filtered[0]);
+      else if (input.trim()) add(input.trim());
+    }
+    if (e.key === "Escape") setOpen(false);
+  }
+
+  return (
+    <div ref={ref} className="relative max-w-sm">
+      <div className="relative">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => { setInput(e.target.value); setOpen(true); }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={handleKey}
+          placeholder={placeholder}
+          className="w-full h-10 pl-4 pr-10 rounded-lg text-sm"
+          style={{
+            background: "#0b1326",
+            border: "1px solid #1e293b",
+            color: "#dae2fd",
+            outline: "none",
+          }}
+        />
+        {input && (
+          <button
+            type="button"
+            onClick={() => add(input.trim())}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md px-2 py-0.5 text-xs font-semibold"
+            style={{ background: "rgba(160,120,255,0.2)", color: "#a078ff" }}
+          >
+            Add
+          </button>
+        )}
+      </div>
+
+      {open && filtered.length > 0 && (
+        <ul
+          className="absolute left-0 top-full z-50 mt-1 w-full overflow-hidden rounded-xl py-1 shadow-2xl"
+          style={{
+            background: "rgba(15,23,42,0.97)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          {filtered.map((s) => (
+            <li key={s}>
+              <button
+                type="button"
+                onMouseDown={(e) => { e.preventDefault(); add(s); }}
+                className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-white/5"
+                style={{ color: "#cbc3d7" }}
+              >
+                {s}
+              </button>
+            </li>
+          ))}
+          {input.trim() && !filtered.some((s) => s.toLowerCase() === input.trim().toLowerCase()) && (
+            <li>
+              <button
+                type="button"
+                onMouseDown={(e) => { e.preventDefault(); add(input.trim()); }}
+                className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-white/5"
+                style={{ color: "#4fdbc8" }}
+              >
+                + Add "{input.trim()}"
+              </button>
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -171,6 +352,8 @@ function Chip({
 const EMPTY_PREFS: Prefs = {
   zip_code: "",
   age_range: null,
+  gender: null,
+  ethnicity: null,
   life_status: null,
   occupation: "",
   transportation_modes: [],
@@ -184,6 +367,42 @@ const EMPTY_PREFS: Prefs = {
   engagement_preference: null,
 };
 
+// ── Draft helpers ─────────────────────────────────────────────────────────────
+
+function draftKey(userId: string) {
+  return `mycommnet_onboarding_draft_${userId}`;
+}
+
+type Draft = {
+  step: number;
+  prefs: Prefs;
+  locCountry: string;
+  locState: string;
+  locCity: string;
+  locZip: string;
+};
+
+function saveDraft(userId: string, draft: Draft) {
+  try {
+    localStorage.setItem(draftKey(userId), JSON.stringify(draft));
+  } catch {}
+}
+
+function loadDraft(userId: string): Draft | null {
+  try {
+    const raw = localStorage.getItem(draftKey(userId));
+    return raw ? (JSON.parse(raw) as Draft) : null;
+  } catch {
+    return null;
+  }
+}
+
+function clearDraft(userId: string) {
+  try {
+    localStorage.removeItem(draftKey(userId));
+  } catch {}
+}
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function OnboardingPage() {
@@ -196,8 +415,9 @@ function OnboardingPage() {
   const [dataLoading, setDataLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+
   const [occFocused, setOccFocused] = useState(false);
-  // Location fields — composed into zip_code for DB storage
   const [locCountry, setLocCountry] = useState("US");
   const [locState, setLocState] = useState("");
   const [locCity, setLocCity] = useState("");
@@ -212,19 +432,25 @@ function OnboardingPage() {
     if (!authLoading && !user) navigate({ to: "/login" });
   }, [authLoading, user, navigate]);
 
-  // Load existing preferences
+  // Load from Supabase (or draft if mid-survey)
   useEffect(() => {
     if (!user) return;
+
     supabase
       .from("user_preferences")
       .select("*")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
-        if (data) {
-          setPrefs({
+        const draft = loadDraft(user.id);
+
+        if (data?.onboarding_completed) {
+          // Already completed — load saved prefs (no draft restore)
+          const loaded: Prefs = {
             zip_code: data.zip_code ?? "",
             age_range: data.age_range ?? null,
+            gender: (data as Record<string, unknown>).gender as string ?? null,
+            ethnicity: (data as Record<string, unknown>).ethnicity as string ?? null,
             life_status: data.life_status ?? null,
             occupation: data.occupation ?? "",
             transportation_modes: data.transportation_modes ?? [],
@@ -236,8 +462,8 @@ function OnboardingPage() {
             career_interests: data.career_interests ?? [],
             content_preference: data.content_preference ?? null,
             engagement_preference: data.engagement_preference ?? null,
-          });
-          // Parse stored location string ("city|state|country|zip")
+          };
+          setPrefs(loaded);
           if (data.zip_code) {
             const parts = data.zip_code.split("|");
             if (parts.length === 4) {
@@ -249,10 +475,25 @@ function OnboardingPage() {
               setLocZip(data.zip_code);
             }
           }
+        } else if (draft) {
+          // Restore mid-survey draft
+          setPrefs(draft.prefs);
+          setStep(draft.step);
+          setLocCountry(draft.locCountry);
+          setLocState(draft.locState);
+          setLocCity(draft.locCity);
+          setLocZip(draft.locZip);
         }
+
         setDataLoading(false);
       });
   }, [user]);
+
+  // Auto-save draft on every change
+  useEffect(() => {
+    if (!user || dataLoading) return;
+    saveDraft(user.id, { step, prefs, locCountry, locState, locCity, locZip });
+  }, [step, prefs, locCountry, locState, locCity, locZip, user, dataLoading]);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -267,7 +508,17 @@ function OnboardingPage() {
     setPrefs((p) => ({ ...p, [key]: p[key] === val ? null : val }));
   }
 
-  // Auto-fill city + state when a US ZIP is entered
+  function addCustomInterest(key: "personal_interests" | "career_interests", value: string) {
+    setPrefs((p) => {
+      const arr = (p[key] ?? []).filter((v) => v !== value);
+      return { ...p, [key]: [...arr, value] };
+    });
+  }
+
+  function removeInterest(key: "personal_interests" | "career_interests", value: string) {
+    setPrefs((p) => ({ ...p, [key]: (p[key] ?? []).filter((v) => v !== value) }));
+  }
+
   async function handleZipChange(val: string) {
     setLocZip(val);
     if (locCountry === "US" && /^\d{5}$/.test(val)) {
@@ -287,6 +538,18 @@ function OnboardingPage() {
     }
   }
 
+  function handleClearSurvey() {
+    if (!user) return;
+    setPrefs(EMPTY_PREFS);
+    setLocCountry("US");
+    setLocState("");
+    setLocCity("");
+    setLocZip("");
+    setStep(0);
+    clearDraft(user.id);
+    setShowClearConfirm(false);
+  }
+
   // ── Save ───────────────────────────────────────────────────────────────────
 
   async function handleFinish() {
@@ -295,30 +558,45 @@ function OnboardingPage() {
     setSaveError(null);
 
     try {
-      // Format location into the zip_code column as "city|state|country|zip"
       const compositeLocation = [locCity, locState, locCountry, locZip].join("|");
 
-      const { error: prefErr } = await supabase.from("user_preferences").upsert(
-        {
-          user_id: user.id,
-          zip_code: compositeLocation,
-          age_range: prefs.age_range,
-          life_status: prefs.life_status,
-          occupation: prefs.occupation,
-          transportation_modes: prefs.transportation_modes,
-          travel_range: prefs.travel_range,
-          low_cost_priority: prefs.low_cost_priority,
-          access_preferences: prefs.access_preferences,
-          resource_interests: prefs.resource_interests,
-          personal_interests: prefs.personal_interests,
-          career_interests: prefs.career_interests,
-          content_preference: prefs.content_preference,
-          engagement_preference: prefs.engagement_preference,
-          onboarding_completed: true,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id" },
-      );
+      const upsertData: Record<string, unknown> = {
+        user_id: user.id,
+        zip_code: compositeLocation,
+        age_range: prefs.age_range,
+        gender: prefs.gender,
+        ethnicity: prefs.ethnicity,
+        life_status: prefs.life_status,
+        occupation: prefs.occupation,
+        transportation_modes: prefs.transportation_modes,
+        travel_range: prefs.travel_range,
+        low_cost_priority: prefs.low_cost_priority,
+        access_preferences: prefs.access_preferences,
+        resource_interests: prefs.resource_interests,
+        personal_interests: prefs.personal_interests,
+        career_interests: prefs.career_interests,
+        content_preference: prefs.content_preference,
+        engagement_preference: prefs.engagement_preference,
+        onboarding_completed: true,
+        updated_at: new Date().toISOString(),
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let { error: prefErr } = await (supabase as any)
+        .from("user_preferences")
+        .upsert(upsertData, { onConflict: "user_id" });
+
+      // If gender/ethnicity columns don't exist yet, retry without them
+      if (prefErr && (prefErr.message?.includes("gender") || prefErr.message?.includes("schema cache"))) {
+        delete upsertData.gender;
+        delete upsertData.ethnicity;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const retry = await (supabase as any)
+          .from("user_preferences")
+          .upsert(upsertData, { onConflict: "user_id" });
+        prefErr = retry.error;
+      }
+
       if (prefErr) throw prefErr;
 
       const tags = generateTags(prefs);
@@ -334,6 +612,7 @@ function OnboardingPage() {
         .update({ onboarding_complete: true })
         .eq("id", user.id);
 
+      clearDraft(user.id);
       await refreshProfile();
       navigate({ to: mode === "edit" ? "/profile" : "/main" });
     } catch (err: unknown) {
@@ -372,7 +651,6 @@ function OnboardingPage() {
       borderColor: "#4fdbc8",
       boxShadow: "0 0 0 1px #4fdbc8",
     };
-
     const labelStyle: React.CSSProperties = { color: "#cbc3d7", ...mono };
     const selectBase: React.CSSProperties = {
       ...inputBase,
@@ -384,22 +662,17 @@ function OnboardingPage() {
     };
 
     switch (step) {
-      // Step 0 — Location & Age
+      // Step 0 — Location
       case 0:
         return (
           <div className="space-y-5">
-            {/* Country */}
             <div>
               <label className="block text-xs uppercase tracking-widest mb-2" style={labelStyle}>
                 Country
               </label>
               <select
                 value={locCountry}
-                onChange={(e) => {
-                  setLocCountry(e.target.value);
-                  setLocState("");
-                  setLocCity("");
-                }}
+                onChange={(e) => { setLocCountry(e.target.value); setLocState(""); setLocCity(""); }}
                 className="w-full h-11 px-4 rounded-lg text-sm"
                 style={selectBase}
               >
@@ -412,7 +685,25 @@ function OnboardingPage() {
               </select>
             </div>
 
-            {/* ZIP / Postal code — enters first to auto-fill */}
+            <div>
+              <label
+                className="block text-xs uppercase tracking-widest mb-2"
+                style={{ ...labelStyle, color: stateFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
+              >
+                {locCountry === "CA" ? "Province / Territory" : locCountry === "UK" ? "County / Region" : "State / Province"}
+              </label>
+              <input
+                type="text"
+                value={locState}
+                onChange={(e) => setLocState(e.target.value)}
+                onFocus={() => setStateFocused(true)}
+                onBlur={() => setStateFocused(false)}
+                placeholder={locCountry === "US" ? "e.g. Georgia" : locCountry === "CA" ? "e.g. Ontario" : "e.g. England"}
+                className="w-full h-11 px-4 rounded-lg text-sm"
+                style={{ ...inputBase, ...(stateFocused ? inputFocus : {}) }}
+              />
+            </div>
+
             <div>
               <label
                 className="block text-xs uppercase tracking-widest mb-2"
@@ -438,17 +729,13 @@ function OnboardingPage() {
                   style={{ ...inputBase, ...(zipFocused ? inputFocus : {}) }}
                 />
                 {autoFilling && (
-                  <span
-                    className="absolute right-3 top-3 text-xs"
-                    style={{ color: "#4fdbc8", ...mono }}
-                  >
+                  <span className="absolute right-3 top-3 text-xs" style={{ color: "#4fdbc8", ...mono }}>
                     Looking up…
                   </span>
                 )}
               </div>
             </div>
 
-            {/* City */}
             <div>
               <label
                 className="block text-xs uppercase tracking-widest mb-2"
@@ -476,28 +763,13 @@ function OnboardingPage() {
                 style={{ ...inputBase, ...(cityFocused ? inputFocus : {}) }}
               />
             </div>
+          </div>
+        );
 
-            {/* State / Province */}
-            <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-2"
-                style={{ ...labelStyle, color: stateFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
-              >
-                {locCountry === "CA" ? "Province / Territory" : locCountry === "UK" ? "County / Region" : "State / Province"}
-              </label>
-              <input
-                type="text"
-                value={locState}
-                onChange={(e) => setLocState(e.target.value)}
-                onFocus={() => setStateFocused(true)}
-                onBlur={() => setStateFocused(false)}
-                placeholder={locCountry === "US" ? "e.g. Georgia" : locCountry === "CA" ? "e.g. Ontario" : "e.g. England"}
-                className="w-full h-11 px-4 rounded-lg text-sm"
-                style={{ ...inputBase, ...(stateFocused ? inputFocus : {}) }}
-              />
-            </div>
-
-            {/* Age range */}
+      // Step 1 — Demographics (age, gender, ethnicity)
+      case 1:
+        return (
+          <div className="space-y-7">
             <div>
               <label className="block text-xs uppercase tracking-widest mb-3" style={labelStyle}>
                 Age range
@@ -513,18 +785,51 @@ function OnboardingPage() {
                 ))}
               </div>
             </div>
+
+            <div>
+              <label className="block text-xs uppercase tracking-widest mb-3" style={labelStyle}>
+                Gender
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {GENDER_OPTIONS.map((o) => (
+                  <Chip
+                    key={o.value}
+                    label={o.label}
+                    selected={prefs.gender === o.value}
+                    onClick={() => setSingle("gender", o.value)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs uppercase tracking-widest mb-2" style={labelStyle}>
+                Ethnicity
+                <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
+                  — optional
+                </span>
+              </label>
+              <select
+                value={prefs.ethnicity ?? ""}
+                onChange={(e) => setPrefs((p) => ({ ...p, ethnicity: e.target.value || null }))}
+                className="w-full h-11 px-4 rounded-lg text-sm"
+                style={selectBase}
+              >
+                <option value="">Prefer not to answer</option>
+                {ETHNICITY_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
           </div>
         );
 
-      // Step 1 — Life Status + Occupation
-      case 1:
+      // Step 2 — Life Status + Occupation
+      case 2:
         return (
           <div className="space-y-7">
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 Current life status / situation
               </label>
               <div className="flex flex-wrap gap-2">
@@ -563,15 +868,12 @@ function OnboardingPage() {
           </div>
         );
 
-      // Step 2 — Getting around
-      case 2:
+      // Step 3 — Getting around
+      case 3:
         return (
           <div className="space-y-7">
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 How do you usually get around?
               </label>
               <div className="flex flex-wrap gap-2">
@@ -587,10 +889,7 @@ function OnboardingPage() {
             </div>
 
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 How far are you willing to travel?
               </label>
               <div className="flex flex-wrap gap-2">
@@ -606,10 +905,7 @@ function OnboardingPage() {
             </div>
 
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 Cost preference
               </label>
               <button
@@ -618,25 +914,19 @@ function OnboardingPage() {
                 className="flex items-center gap-4 rounded-xl px-5 py-3.5 w-full max-w-sm transition-all"
                 style={{
                   border: prefs.low_cost_priority ? "1px solid #a078ff" : "1px solid #1e293b",
-                  background: prefs.low_cost_priority
-                    ? "rgba(160,120,255,0.1)"
-                    : "rgba(11,19,38,0.6)",
+                  background: prefs.low_cost_priority ? "rgba(160,120,255,0.1)" : "rgba(11,19,38,0.6)",
                 }}
               >
                 <div
                   className="w-10 h-6 rounded-full flex items-center transition-all flex-shrink-0"
                   style={{
-                    background: prefs.low_cost_priority
-                      ? "linear-gradient(135deg,#a078ff,#0566d9)"
-                      : "#1e293b",
+                    background: prefs.low_cost_priority ? "linear-gradient(135deg,#a078ff,#0566d9)" : "#1e293b",
                     padding: "2px",
                   }}
                 >
                   <div
                     className="w-5 h-5 rounded-full bg-white transition-all"
-                    style={{
-                      transform: prefs.low_cost_priority ? "translateX(16px)" : "translateX(0)",
-                    }}
+                    style={{ transform: prefs.low_cost_priority ? "translateX(16px)" : "translateX(0)" }}
                   />
                 </div>
                 <span className="text-sm" style={{ color: prefs.low_cost_priority ? "#dae2fd" : "#958ea0" }}>
@@ -647,8 +937,8 @@ function OnboardingPage() {
           </div>
         );
 
-      // Step 3 — Access preferences
-      case 3:
+      // Step 4 — Access preferences
+      case 4:
         return (
           <div className="space-y-3">
             <p className="text-sm mb-4" style={{ color: "#cbc3d7" }}>
@@ -667,8 +957,8 @@ function OnboardingPage() {
           </div>
         );
 
-      // Step 4 — Resources
-      case 4:
+      // Step 5 — Resources
+      case 5:
         return (
           <div className="space-y-3">
             <p className="text-sm mb-4" style={{ color: "#cbc3d7" }}>
@@ -687,59 +977,88 @@ function OnboardingPage() {
           </div>
         );
 
-      // Step 5 — Interests + Career
-      case 5:
+      // Step 6 — Interests + Career (with custom + typeahead)
+      case 6: {
+        const personalSelected = prefs.personal_interests ?? [];
+        const careerSelected = prefs.career_interests ?? [];
+        const customPersonal = personalSelected.filter((v) => v.startsWith("custom:"));
+        const customCareer = careerSelected.filter((v) => v.startsWith("custom:"));
+
         return (
-          <div className="space-y-7">
+          <div className="space-y-8">
+            {/* Personal interests */}
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 Personal interests & hobbies
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {INTEREST_OPTIONS.map((o) => (
                   <Chip
                     key={o.value}
                     label={o.label}
-                    selected={(prefs.personal_interests ?? []).includes(o.value)}
+                    selected={personalSelected.includes(o.value)}
                     onClick={() => toggleMulti("personal_interests", o.value)}
                   />
                 ))}
+                {customPersonal.map((v) => (
+                  <Chip
+                    key={v}
+                    label={v.slice(7)}
+                    selected={true}
+                    onClick={() => {}}
+                    onRemove={() => removeInterest("personal_interests", v)}
+                  />
+                ))}
               </div>
+              <CustomInterestInput
+                placeholder="Add your own (e.g. Photography, Dance…)"
+                suggestions={INTEREST_SUGGESTIONS}
+                existingValues={personalSelected}
+                onAdd={(val) => addCustomInterest("personal_interests", val)}
+              />
             </div>
 
+            {/* Career interests */}
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 Career interests / fields to explore
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {CAREER_OPTIONS.map((o) => (
                   <Chip
                     key={o.value}
                     label={o.label}
-                    selected={(prefs.career_interests ?? []).includes(o.value)}
+                    selected={careerSelected.includes(o.value)}
                     onClick={() => toggleMulti("career_interests", o.value)}
                   />
                 ))}
+                {customCareer.map((v) => (
+                  <Chip
+                    key={v}
+                    label={v.slice(7)}
+                    selected={true}
+                    onClick={() => {}}
+                    onRemove={() => removeInterest("career_interests", v)}
+                  />
+                ))}
               </div>
+              <CustomInterestInput
+                placeholder="Add your own (e.g. Data Science, Nursing…)"
+                suggestions={CAREER_SUGGESTIONS}
+                existingValues={careerSelected}
+                onAdd={(val) => addCustomInterest("career_interests", val)}
+              />
             </div>
           </div>
         );
+      }
 
-      // Step 6 — Community style
-      case 6:
+      // Step 7 — Community style
+      case 7:
         return (
           <div className="space-y-7">
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 Would you like more…
               </label>
               <div className="flex flex-wrap gap-2">
@@ -755,10 +1074,7 @@ function OnboardingPage() {
             </div>
 
             <div>
-              <label
-                className="block text-xs uppercase tracking-widest mb-3"
-                style={{ color: "#cbc3d7", ...mono }}
-              >
+              <label className="block text-xs uppercase tracking-widest mb-3" style={{ color: "#cbc3d7", ...mono }}>
                 I mainly want to…
               </label>
               <div className="flex flex-wrap gap-2">
@@ -784,14 +1100,8 @@ function OnboardingPage() {
 
   if (authLoading || dataLoading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "#020617" }}
-      >
-        <div
-          className="w-10 h-10 rounded-full border-2 animate-spin"
-          style={{ borderColor: "#a078ff", borderTopColor: "transparent" }}
-        />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#020617" }}>
+        <div className="w-10 h-10 rounded-full border-2 animate-spin" style={{ borderColor: "#a078ff", borderTopColor: "transparent" }} />
       </div>
     );
   }
@@ -816,12 +1126,7 @@ function OnboardingPage() {
         }}
       >
         <Link to="/" className="flex items-center gap-2.5">
-          <img
-            src={logoSrc}
-            alt="MyCommNet"
-            className="h-8 w-8 rounded-full object-cover"
-            style={{ boxShadow: "0 0 10px rgba(160,120,255,0.4)" }}
-          />
+          <img src={logoSrc} alt="MyCommNet" className="h-8 w-8 rounded-full object-cover" style={{ boxShadow: "0 0 10px rgba(160,120,255,0.4)" }} />
           <span className="text-lg font-black tracking-tight">
             <span style={{ color: "#a078ff" }}>My</span>
             <span style={{ color: "#0566d9" }}>Comm</span>
@@ -829,25 +1134,51 @@ function OnboardingPage() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <span className="text-xs" style={{ color: "#958ea0", ...mono }}>
             Step {step + 1} of {STEPS.length}
           </span>
-          {mode === "setup" && (
-            <Link
-              to="/main"
-              className="text-xs hover:underline"
-              style={{ color: "#4fdbc8" }}
+
+          {/* Clear survey button */}
+          {!showClearConfirm ? (
+            <button
+              type="button"
+              onClick={() => setShowClearConfirm(true)}
+              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg transition-colors hover:bg-white/5"
+              style={{ color: "#4a5568", border: "1px solid #1e293b" }}
             >
+              <Trash2 className="h-3 w-3" />
+              Clear survey
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-xs" style={{ color: "#ffb4ab" }}>Clear everything?</span>
+              <button
+                type="button"
+                onClick={handleClearSurvey}
+                className="text-xs px-2.5 py-1 rounded-lg font-semibold"
+                style={{ background: "rgba(147,0,10,0.3)", color: "#ffb4ab", border: "1px solid rgba(147,0,10,0.4)" }}
+              >
+                Yes, clear
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowClearConfirm(false)}
+                className="text-xs px-2.5 py-1 rounded-lg hover:bg-white/5"
+                style={{ color: "#958ea0", border: "1px solid #1e293b" }}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
+          {mode === "setup" && (
+            <Link to="/main" className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>
               Skip for now →
             </Link>
           )}
           {mode === "edit" && (
-            <Link
-              to="/profile"
-              className="text-xs hover:underline"
-              style={{ color: "#4fdbc8" }}
-            >
+            <Link to="/profile" className="text-xs hover:underline" style={{ color: "#4fdbc8" }}>
               Cancel
             </Link>
           )}
@@ -868,27 +1199,16 @@ function OnboardingPage() {
 
       {/* Main */}
       <main className="flex-grow flex items-start justify-center px-4 py-10 relative">
-        {/* Atmospheric glows */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute -top-48 right-0 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: "rgba(160,120,255,0.07)" }}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px]"
-            style={{ background: "rgba(5,102,217,0.07)" }}
-          />
+          <div className="absolute -top-48 right-0 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: "rgba(160,120,255,0.07)" }} />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px]" style={{ background: "rgba(5,102,217,0.07)" }} />
         </div>
 
         <div className="w-full max-w-xl relative z-10">
-          {/* Step heading */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-4 w-4" style={{ color: "#a078ff" }} />
-              <span
-                className="text-xs uppercase tracking-widest"
-                style={{ color: "#a078ff", ...mono }}
-              >
+              <span className="text-xs uppercase tracking-widest" style={{ color: "#a078ff", ...mono }}>
                 {mode === "edit" ? "Edit preferences" : "Personalise your experience"}
               </span>
             </div>
@@ -903,7 +1223,6 @@ function OnboardingPage() {
             </p>
           </div>
 
-          {/* Step card */}
           <div
             className="rounded-2xl p-6 md:p-8 mb-6"
             style={{
@@ -915,21 +1234,15 @@ function OnboardingPage() {
             {renderStep()}
           </div>
 
-          {/* Error */}
           {saveError && (
             <div
               className="rounded-lg px-4 py-2.5 text-xs mb-4"
-              style={{
-                background: "rgba(147,0,10,0.2)",
-                color: "#ffb4ab",
-                border: "1px solid rgba(147,0,10,0.4)",
-              }}
+              style={{ background: "rgba(147,0,10,0.2)", color: "#ffb4ab", border: "1px solid rgba(147,0,10,0.4)" }}
             >
               {saveError}
             </div>
           )}
 
-          {/* Navigation */}
           <div className="flex items-center gap-3">
             {step > 0 && (
               <button
@@ -947,22 +1260,11 @@ function OnboardingPage() {
               onClick={advance}
               disabled={saving}
               className="flex-1 h-11 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
-              style={{
-                background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)",
-                color: "#fff",
-              }}
+              style={{ background: "linear-gradient(135deg, #a078ff 0%, #0566d9 100%)", color: "#fff" }}
             >
-              {saving
-                ? "Saving…"
-                : isLast
-                  ? mode === "edit"
-                    ? "Save changes"
-                    : "Finish & explore"
-                  : (
-                    <>
-                      Continue <ChevronRight className="h-4 w-4" />
-                    </>
-                  )}
+              {saving ? "Saving…" : isLast ? (mode === "edit" ? "Save changes" : "Finish & explore") : (
+                <><span>Continue</span><ChevronRight className="h-4 w-4" /></>
+              )}
             </button>
 
             {!isLast && (
@@ -977,7 +1279,6 @@ function OnboardingPage() {
             )}
           </div>
 
-          {/* Step dots */}
           <div className="flex justify-center gap-1.5 mt-6">
             {STEPS.map((_, i) => (
               <div
@@ -988,9 +1289,7 @@ function OnboardingPage() {
                   height: "6px",
                   background: i === step
                     ? "linear-gradient(90deg,#a078ff,#0566d9)"
-                    : i < step
-                      ? "rgba(160,120,255,0.4)"
-                      : "#1e293b",
+                    : i < step ? "rgba(160,120,255,0.4)" : "#1e293b",
                 }}
               />
             ))}

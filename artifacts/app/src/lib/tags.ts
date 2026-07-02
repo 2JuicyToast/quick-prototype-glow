@@ -1,6 +1,8 @@
 export interface Prefs {
   zip_code?: string | null;
   age_range?: string | null;
+  gender?: string | null;
+  ethnicity?: string | null;
   life_status?: string | null;
   occupation?: string | null;
   transportation_modes?: string[] | null;
@@ -76,7 +78,8 @@ export function generateTags(prefs: Prefs): string[] {
     community_service: "volunteer_interest",
   };
   for (const i of prefs.personal_interests ?? []) {
-    if (interestMap[i]) tags.add(interestMap[i]);
+    const key = i.startsWith("custom:") ? i.slice(7) : i;
+    if (interestMap[key]) tags.add(interestMap[key]);
   }
 
   const careerMap: Record<string, string> = {
@@ -95,7 +98,8 @@ export function generateTags(prefs: Prefs): string[] {
     entrepreneurship: "entrepreneur",
   };
   for (const c of prefs.career_interests ?? []) {
-    if (careerMap[c]) tags.add(careerMap[c]);
+    const key = c.startsWith("custom:") ? c.slice(7) : c;
+    if (careerMap[key]) tags.add(careerMap[key]);
   }
 
   const cp = prefs.content_preference ?? "";
