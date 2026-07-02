@@ -637,9 +637,10 @@ function LoginPage() {
 
         {/* Right — Brand visual */}
         <section
-          className="hidden lg:flex lg:w-1/2 relative items-center justify-center overflow-hidden sticky top-[72px] h-[calc(100vh-72px)]"
+          className="hidden lg:block lg:w-1/2 relative"
           style={{ backgroundColor: "#020617" }}
         >
+          {/* Background glows — cover full section height including when footer is far */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
               className="absolute -top-48 -right-48 w-96 h-96 rounded-full blur-[120px]"
@@ -651,12 +652,14 @@ function LoginPage() {
             />
           </div>
 
-          <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-8">
+          {/* Sticky content — sits below navbar, stays in view while left side scrolls */}
+          <div className="sticky top-[72px] h-[calc(100vh-72px)] flex items-center justify-center overflow-hidden">
+          <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-xl px-8 py-10">
             <div
               className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50"
               style={{ background: "rgba(160,120,255,0.05)" }}
             />
-            <div className="relative w-full transition-transform duration-700 ease-out hover:scale-[1.02]">
+            <div className="relative w-full max-w-[300px] mx-auto transition-transform duration-700 ease-out hover:scale-[1.02]">
               <div
                 className="rounded-full overflow-hidden aspect-square"
                 style={{ boxShadow: "0 0 80px rgba(160,120,255,0.3)" }}
@@ -725,7 +728,7 @@ function LoginPage() {
               </div>
             </div>
 
-            <div className="mt-8 mb-12 text-center">
+            <div className="mt-6 text-center">
               <h2
                 className="text-4xl font-bold mb-4 leading-tight"
                 style={{ letterSpacing: "-0.02em", fontFamily: "'Hanken Grotesk', sans-serif" }}
@@ -746,6 +749,7 @@ function LoginPage() {
                 create opportunities that move your community forward.
               </p>
             </div>
+          </div>
           </div>
         </section>
       </main>
