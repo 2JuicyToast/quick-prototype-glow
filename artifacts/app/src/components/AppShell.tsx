@@ -177,16 +177,14 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
                 className="relative grid h-10 w-10 place-items-center rounded-lg text-muted-foreground hover:bg-surface hover:text-foreground"
               >
                 <Bell className="h-5 w-5" />
-                <span
-                  className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[9px] font-bold text-white"
-                  style={{
-                    background: notifCount > 0
-                      ? "linear-gradient(135deg,#a078ff,#0566d9)"
-                      : "#334155",
-                  }}
-                >
-                  {notifCount}
-                </span>
+                {notifCount > 0 && (
+                  <span
+                    className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[9px] font-bold text-white"
+                    style={{ background: "linear-gradient(135deg,#a078ff,#0566d9)" }}
+                  >
+                    {notifCount}
+                  </span>
+                )}
               </button>
 
               {notifOpen && (

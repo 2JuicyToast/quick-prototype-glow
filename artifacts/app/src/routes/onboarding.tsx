@@ -129,7 +129,7 @@ const ENGAGEMENT_OPTIONS = [
 ];
 
 const STEPS = [
-  { title: "Where are you located?", subtitle: "Help us find opportunities and resources near you." },
+  { title: "Where are you located?", subtitle: "Only your state/province is required — city and ZIP code are optional but help us find better matches." },
   { title: "Tell us about yourself", subtitle: "We'll personalise your experience based on your current situation." },
   { title: "Getting around", subtitle: "Help us understand how you travel and what fits your budget." },
   { title: "Access preferences", subtitle: "Any specific needs when accessing resources or programmes?" },
@@ -419,11 +419,9 @@ function OnboardingPage() {
                 style={{ ...labelStyle, color: zipFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
               >
                 {locCountry === "CA" ? "Postal code" : locCountry === "UK" ? "Postcode" : "ZIP code"}
-                {locCountry === "US" && (
-                  <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
-                    — we'll auto-fill city & state
-                  </span>
-                )}
+                <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
+                  {locCountry === "US" ? "— optional, helps find better matches" : "— optional, for better matches"}
+                </span>
               </label>
               <div className="relative max-w-xs">
                 <input
@@ -455,9 +453,13 @@ function OnboardingPage() {
                 style={{ ...labelStyle, color: cityFocused ? "#4fdbc8" : "#cbc3d7", transition: "color 0.2s" }}
               >
                 City
-                {autoFilling && (
+                {autoFilling ? (
                   <span style={{ color: "#4fdbc8", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
                     auto-filling…
+                  </span>
+                ) : (
+                  <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
+                    — optional, for better matches
                   </span>
                 )}
               </label>
