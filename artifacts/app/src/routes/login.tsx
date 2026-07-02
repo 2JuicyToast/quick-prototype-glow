@@ -658,9 +658,9 @@ function LoginPage() {
             />
           </div>
 
-          {/* Sticky wrapper — items-start + pt-8 aligns content with the left form
-              and guarantees whitespace between image and navbar */}
-          <div className="sticky top-[72px] h-[calc(100vh-72px)] w-full flex flex-col items-center justify-start pt-8 overflow-hidden">
+          {/* Sticky wrapper — no fixed height so text is never clipped, no overflow-hidden
+              pt-40 aligns the circle with the card on the left (past the heading) */}
+          <div className="sticky top-[72px] w-full flex flex-col items-center pt-40 pb-16">
             <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-8">
               <div
                 className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50"
