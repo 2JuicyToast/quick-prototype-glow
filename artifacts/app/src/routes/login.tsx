@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { Mail, Lock, Eye, EyeOff, LogIn, Check, X, AtSign, RefreshCw } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, LogIn, Check, X, AtSign, RefreshCw, Users, Zap } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 const logoSrc = "/logo.png";
