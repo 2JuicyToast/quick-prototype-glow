@@ -216,14 +216,14 @@ function ProfilePage() {
     setUploadingAvatar(true);
     setUploadErr(null);
     try {
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const path = `${user.id}/avatar.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, { upsert: true });
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file);
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      const url = `${data.publicUrl}?t=${Date.now()}`;
+      const url = data.publicUrl;
       setAvatarUrl(url);
-      await supabase.from("profiles").upsert({ id: user.id, avatar_url: url }, { onConflict: "id" });
+      await supabase.from("profiles").update({ avatar_url: url }).eq("id", user.id);
       await refreshProfile();
     } catch (e: any) {
       setUploadErr(e?.message ?? "Upload failed. Make sure the 'avatars' bucket exists in Supabase Storage.");
@@ -236,14 +236,14 @@ function ProfilePage() {
     setUploadingBanner(true);
     setUploadErr(null);
     try {
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const path = `${user.id}/banner.${ext}`;
-      const { error: upErr } = await supabase.storage.from("banners").upload(path, file, { upsert: true });
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+      const path = `${user.id}/banner-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("banners").upload(path, file);
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("banners").getPublicUrl(path);
-      const url = `${data.publicUrl}?t=${Date.now()}`;
+      const url = data.publicUrl;
       setBannerUrl(url);
-      await supabase.from("profiles").upsert({ id: user.id, banner_url: url }, { onConflict: "id" });
+      await supabase.from("profiles").update({ banner_url: url }).eq("id", user.id);
       await refreshProfile();
     } catch (e: any) {
       setUploadErr(e?.message ?? "Upload failed. Make sure the 'banners' bucket exists in Supabase Storage.");
