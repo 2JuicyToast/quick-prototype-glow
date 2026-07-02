@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 export type Profile = {
   id: string;
   full_name: string | null;
-  zip_code: string | null;
+  username: string | null;
   onboarding_complete: boolean | null;
   bio: string | null;
   location: string | null;
