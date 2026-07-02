@@ -189,12 +189,16 @@ function ProfilePage() {
   const [userLocation, setUserLocation] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [uploadErr, setUploadErr] = useState<string | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropMode, setCropMode] = useState<"avatar" | "banner" | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  // Pending (local-only) previews — not uploaded until Done is pressed
+  const [pendingAvatarBlob, setPendingAvatarBlob] = useState<Blob | null>(null);
+  const [pendingAvatarPreview, setPendingAvatarPreview] = useState<string | null>(null);
+  const [pendingBannerBlob, setPendingBannerBlob] = useState<Blob | null>(null);
+  const [pendingBannerPreview, setPendingBannerPreview] = useState<string | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -225,46 +229,66 @@ function ProfilePage() {
     setCropMode("banner");
   }
 
-  async function uploadAvatarBlob(blob: Blob) {
-    if (!user) return;
+  // Store crop result as a local preview — nothing is uploaded until Done is pressed
+  function handleAvatarCropDone(blob: Blob) {
+    if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
+    setPendingAvatarBlob(blob);
+    setPendingAvatarPreview(URL.createObjectURL(blob));
     setCropFile(null);
     setCropMode(null);
-    setUploadingAvatar(true);
-    setUploadErr(null);
-    try {
-      const path = `${user.id}/avatar-${Date.now()}.jpg`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, { contentType: "image/jpeg" });
-      if (upErr) throw upErr;
-      const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-      const url = data.publicUrl;
-      setAvatarUrl(url);
-      await supabase.from("profiles").update({ avatar_url: url }).eq("id", user.id);
-      await refreshProfile();
-    } catch (e: any) {
-      setUploadErr(e?.message ?? "Upload failed. Make sure the 'avatars' bucket exists in Supabase Storage.");
-    }
-    setUploadingAvatar(false);
   }
 
-  async function uploadBannerBlob(blob: Blob) {
-    if (!user) return;
+  function handleBannerCropDone(blob: Blob) {
+    if (pendingBannerPreview) URL.revokeObjectURL(pendingBannerPreview);
+    setPendingBannerBlob(blob);
+    setPendingBannerPreview(URL.createObjectURL(blob));
     setCropFile(null);
     setCropMode(null);
-    setUploadingBanner(true);
+  }
+
+  // Upload everything on Done
+  async function handleDone() {
+    if (!user) { setIsEditing(false); return; }
+    setSaving(true);
     setUploadErr(null);
     try {
-      const path = `${user.id}/banner-${Date.now()}.jpg`;
-      const { error: upErr } = await supabase.storage.from("banners").upload(path, blob, { contentType: "image/jpeg" });
-      if (upErr) throw upErr;
-      const { data } = supabase.storage.from("banners").getPublicUrl(path);
-      const url = data.publicUrl;
-      setBannerUrl(url);
-      await supabase.from("profiles").update({ banner_url: url }).eq("id", user.id);
-      await refreshProfile();
+      if (pendingAvatarBlob) {
+        const path = `${user.id}/avatar-${Date.now()}.jpg`;
+        const { error: upErr } = await supabase.storage.from("avatars").upload(path, pendingAvatarBlob, { contentType: "image/jpeg" });
+        if (upErr) throw upErr;
+        const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+        const url = data.publicUrl;
+        setAvatarUrl(url);
+        await supabase.from("profiles").update({ avatar_url: url }).eq("id", user.id);
+      }
+      if (pendingBannerBlob) {
+        const path = `${user.id}/banner-${Date.now()}.jpg`;
+        const { error: upErr } = await supabase.storage.from("banners").upload(path, pendingBannerBlob, { contentType: "image/jpeg" });
+        if (upErr) throw upErr;
+        const { data } = supabase.storage.from("banners").getPublicUrl(path);
+        const url = data.publicUrl;
+        setBannerUrl(url);
+        await supabase.from("profiles").update({ banner_url: url }).eq("id", user.id);
+      }
+      if (pendingAvatarBlob || pendingBannerBlob) await refreshProfile();
     } catch (e: any) {
-      setUploadErr(e?.message ?? "Upload failed. Make sure the 'banners' bucket exists in Supabase Storage.");
+      setUploadErr(e?.message ?? "Upload failed. Check your Supabase Storage buckets.");
     }
-    setUploadingBanner(false);
+    if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
+    if (pendingBannerPreview) URL.revokeObjectURL(pendingBannerPreview);
+    setPendingAvatarBlob(null); setPendingAvatarPreview(null);
+    setPendingBannerBlob(null); setPendingBannerPreview(null);
+    setSaving(false);
+    setIsEditing(false);
+  }
+
+  // Discard local previews on Cancel
+  function handleCancelEdit() {
+    if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
+    if (pendingBannerPreview) URL.revokeObjectURL(pendingBannerPreview);
+    setPendingAvatarBlob(null); setPendingAvatarPreview(null);
+    setPendingBannerBlob(null); setPendingBannerPreview(null);
+    setIsEditing(false);
   }
 
   const fullName =
@@ -314,7 +338,7 @@ function ProfilePage() {
           aspect={1}
           shape="rect"
           title="Crop profile picture"
-          onDone={uploadAvatarBlob}
+          onDone={handleAvatarCropDone}
           onCancel={() => { setCropFile(null); setCropMode(null); }}
         />
       )}
@@ -324,7 +348,7 @@ function ProfilePage() {
           aspect={16 / 6}
           shape="rect"
           title="Crop cover photo"
-          onDone={uploadBannerBlob}
+          onDone={handleBannerCropDone}
           onCancel={() => { setCropFile(null); setCropMode(null); }}
         />
       )}
@@ -342,15 +366,15 @@ function ProfilePage() {
           className={`relative h-44 md:h-56 ${isEditing ? "group cursor-pointer" : ""}`}
           onClick={() => isEditing && bannerInputRef.current?.click()}
         >
-          {bannerUrl
-            ? <img src={bannerUrl} alt="Profile banner" className="w-full h-full object-cover" />
+          {(pendingBannerPreview ?? bannerUrl)
+            ? <img src={pendingBannerPreview ?? bannerUrl!} alt="Profile banner" className="w-full h-full object-cover" />
             : <div className="w-full h-full bg-gradient-brand bg-hero-glow" />
           }
           <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_100%_0%,oklch(0.72_0.13_185/0.35),transparent_60%)]" />
           {isEditing && (
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.35)" }}>
               <div className="flex items-center gap-2 text-white text-sm font-medium">
-                {uploadingBanner ? "Uploading…" : <><ImageIcon className="h-4 w-4" /> Change cover photo</>}
+                <ImageIcon className="h-4 w-4" /> Change cover photo
               </div>
             </div>
           )}
@@ -361,13 +385,13 @@ function ProfilePage() {
             <div className="flex items-end gap-4">
               {/* Avatar */}
               <div
-                className={`relative ${isEditing ? "group cursor-pointer" : ""}`}
+                className={`relative shrink-0 ${isEditing ? "group cursor-pointer" : ""}`}
                 onClick={() => isEditing && avatarInputRef.current?.click()}
               >
-                {avatarUrl
+                {(pendingAvatarPreview ?? avatarUrl)
                   ? (
                     <img
-                      src={avatarUrl}
+                      src={pendingAvatarPreview ?? avatarUrl!}
                       alt={fullName}
                       className="h-28 w-28 md:h-32 md:w-32 rounded-3xl border-4 object-cover shadow-glow-purple"
                       style={{ borderColor: "var(--background)" }}
@@ -384,20 +408,18 @@ function ProfilePage() {
                     className="absolute inset-0 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ background: "rgba(0,0,0,0.5)" }}
                   >
-                    {uploadingAvatar
-                      ? <span className="text-white text-[10px]">Uploading…</span>
-                      : <Camera className="h-6 w-6 text-white" />
-                    }
+                    <Camera className="h-6 w-6 text-white" />
                   </div>
                 )}
               </div>
 
-              <div className="pb-2">
+              {/* Identity */}
+              <div className="min-w-0 pb-1">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+                  <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">
                     {fullName}
                   </h1>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-brand-teal/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-teal/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
                     <Shield className="h-3 w-3" /> Verified
                   </span>
                 </div>
@@ -406,24 +428,48 @@ function ProfilePage() {
                     <AtSign className="h-3.5 w-3.5" />{username}
                   </p>
                 )}
-                <p className="mt-0.5 text-sm text-muted-foreground">Community Member</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" /> {location || "Location not set"} · joined {joinYear}
+                <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                  <span>Community Member</span>
+                  <span className="opacity-40">·</span>
+                  <span>Joined {joinYear}</span>
                 </p>
+                {location && (
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 shrink-0" />{location}
+                  </p>
+                )}
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setIsEditing((v) => !v)}
-                className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
-                  isEditing
-                    ? "border-brand-purple text-white"
-                    : "border-border bg-surface hover:bg-surface-2"
-                }`}
-                style={isEditing ? { background: "linear-gradient(135deg,#a078ff 0%,#0566d9 100%)" } : {}}
-              >
-                <Edit3 className="h-4 w-4" /> {isEditing ? "Done" : "Edit Profile"}
-              </button>
+
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-2 shrink-0">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleDone}
+                    disabled={saving}
+                    className="flex items-center gap-2 rounded-xl border border-brand-purple px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
+                    style={{ background: "linear-gradient(135deg,#a078ff 0%,#0566d9 100%)" }}
+                  >
+                    <Edit3 className="h-4 w-4" />
+                    {saving ? "Saving…" : "Done"}
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    disabled={saving}
+                    className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2 disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2"
+                >
+                  <Edit3 className="h-4 w-4" /> Edit Profile
+                </button>
+              )}
               <button className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2">
                 <Settings className="h-4 w-4" /> Settings
               </button>
