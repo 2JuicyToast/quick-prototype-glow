@@ -194,6 +194,7 @@ function ProfilePage() {
   const [uploadErr, setUploadErr] = useState<string | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropMode, setCropMode] = useState<"avatar" | "banner" | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -213,9 +214,6 @@ function ProfilePage() {
     if (profile?.avatar_url) setAvatarUrl(profile.avatar_url);
     if (profile?.banner_url) setBannerUrl(profile.banner_url);
   }, [profile]);
-
-  function openAvatarPicker() { avatarInputRef.current?.click(); }
-  function openBannerPicker() { bannerInputRef.current?.click(); }
 
   function handleAvatarFileSelected(file: File) {
     setCropFile(file);
@@ -314,7 +312,7 @@ function ProfilePage() {
         <ImageCropper
           file={cropFile}
           aspect={1}
-          shape="round"
+          shape="rect"
           title="Crop profile picture"
           onDone={uploadAvatarBlob}
           onCancel={() => { setCropFile(null); setCropMode(null); }}
@@ -340,24 +338,32 @@ function ProfilePage() {
       {/* Cover + identity */}
       <section className="relative mb-6 overflow-hidden rounded-3xl border border-border/60">
         {/* Banner */}
-        <div className="relative h-44 md:h-56 group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
+        <div
+          className={`relative h-44 md:h-56 ${isEditing ? "group cursor-pointer" : ""}`}
+          onClick={() => isEditing && bannerInputRef.current?.click()}
+        >
           {bannerUrl
             ? <img src={bannerUrl} alt="Profile banner" className="w-full h-full object-cover" />
             : <div className="w-full h-full bg-gradient-brand bg-hero-glow" />
           }
           <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_100%_0%,oklch(0.72_0.13_185/0.35),transparent_60%)]" />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.35)" }}>
-            <div className="flex items-center gap-2 text-white text-sm font-medium">
-              {uploadingBanner ? "Uploading…" : <><ImageIcon className="h-4 w-4" /> Change cover photo</>}
+          {isEditing && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.35)" }}>
+              <div className="flex items-center gap-2 text-white text-sm font-medium">
+                {uploadingBanner ? "Uploading…" : <><ImageIcon className="h-4 w-4" /> Change cover photo</>}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="-mt-16 px-6 pb-6 md:-mt-20 md:px-10 md:pb-8">
           <div className="flex flex-col items-start gap-5 md:flex-row md:items-end md:justify-between">
             <div className="flex items-end gap-4">
               {/* Avatar */}
-              <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
+              <div
+                className={`relative ${isEditing ? "group cursor-pointer" : ""}`}
+                onClick={() => isEditing && avatarInputRef.current?.click()}
+              >
                 {avatarUrl
                   ? (
                     <img
@@ -373,15 +379,17 @@ function ProfilePage() {
                     </span>
                   )
                 }
-                <div
-                  className="absolute inset-0 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ background: "rgba(0,0,0,0.5)" }}
-                >
-                  {uploadingAvatar
-                    ? <span className="text-white text-[10px]">Uploading…</span>
-                    : <Camera className="h-6 w-6 text-white" />
-                  }
-                </div>
+                {isEditing && (
+                  <div
+                    className="absolute inset-0 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ background: "rgba(0,0,0,0.5)" }}
+                  >
+                    {uploadingAvatar
+                      ? <span className="text-white text-[10px]">Uploading…</span>
+                      : <Camera className="h-6 w-6 text-white" />
+                    }
+                  </div>
+                )}
               </div>
 
               <div className="pb-2">
@@ -405,8 +413,16 @@ function ProfilePage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
-              <button className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2">
-                <Edit3 className="h-4 w-4" /> Edit Profile
+              <button
+                onClick={() => setIsEditing((v) => !v)}
+                className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
+                  isEditing
+                    ? "border-brand-purple text-white"
+                    : "border-border bg-surface hover:bg-surface-2"
+                }`}
+                style={isEditing ? { background: "linear-gradient(135deg,#a078ff 0%,#0566d9 100%)" } : {}}
+              >
+                <Edit3 className="h-4 w-4" /> {isEditing ? "Done" : "Edit Profile"}
               </button>
               <button className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2">
                 <Settings className="h-4 w-4" /> Settings

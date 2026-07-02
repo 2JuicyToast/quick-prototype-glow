@@ -251,9 +251,17 @@ export function AppShell({ children, footer }: { children: ReactNode; footer?: R
 
             <div className="group relative">
               <button className="flex items-center gap-2 rounded-full bg-surface p-1 pr-3">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-brand text-sm font-semibold text-white">
-                  {initial}
-                </span>
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={displayName}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-brand text-sm font-semibold text-white">
+                    {initial}
+                  </span>
+                )}
                 <span className="hidden text-sm font-medium sm:inline">{displayName}</span>
               </button>
               <div className="invisible absolute right-0 top-full mt-1 w-36 origin-top-right scale-95 rounded-xl border border-border/60 bg-surface p-1 opacity-0 shadow-card-soft transition group-hover:visible group-hover:scale-100 group-hover:opacity-100">
