@@ -643,37 +643,144 @@ function LoginPage() {
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
               className="absolute -top-48 -right-48 w-96 h-96 rounded-full blur-[120px]"
-              style={{ background: "rgba(160,120,255,0.15)" }}
+              style={{ background: "rgba(160,120,255,0.1)" }}
             />
             <div
               className="absolute -bottom-48 -left-48 w-96 h-96 rounded-full blur-[120px]"
-              style={{ background: "rgba(5,102,217,0.15)" }}
+              style={{ background: "rgba(5,102,217,0.1)" }}
             />
           </div>
-          <img
-            src={COMET_SRC}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
-          />
-          <div className="relative z-10 text-center px-12 max-w-lg">
-            <div className="mb-8 flex justify-center">
-              <img src={logoSrc} alt="" className="h-24 w-24 rounded-3xl object-cover shadow-glow-purple" />
+
+          <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-8">
+            <div
+              className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50"
+              style={{ background: "rgba(160,120,255,0.05)" }}
+            />
+            <div className="relative w-full transition-transform duration-700 ease-out hover:scale-[1.02]">
+              <div
+                className="rounded-full overflow-hidden aspect-square"
+                style={{ boxShadow: "0 0 80px rgba(160,120,255,0.3)" }}
+              >
+                <img
+                  alt="Celestial Brand Asset"
+                  src={COMET_SRC}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div
+                className="absolute top-10 left-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce"
+                style={{
+                  animationDuration: "4s",
+                  background: "rgba(15,23,42,0.7)",
+                  backdropFilter: "blur(16px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(0,163,146,0.2)" }}
+                >
+                  <Users className="h-4 w-4" style={{ color: "#4fdbc8" }} />
+                </div>
+                <div>
+                  <p
+                    className="text-[10px] uppercase tracking-widest"
+                    style={{ color: "#cbc3d7", ...mono }}
+                  >
+                    Community
+                  </p>
+                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>
+                    Growing Every Day
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className="absolute bottom-20 right-0 px-4 py-2 rounded-lg flex items-center gap-3 animate-bounce"
+                style={{
+                  animationDuration: "5s",
+                  background: "rgba(15,23,42,0.7)",
+                  backdropFilter: "blur(16px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(5,102,217,0.2)" }}
+                >
+                  <Zap className="h-4 w-4" style={{ color: "#adc6ff" }} />
+                </div>
+                <div>
+                  <p
+                    className="text-[10px] uppercase tracking-widest"
+                    style={{ color: "#cbc3d7", ...mono }}
+                  >
+                    Opportunities
+                  </p>
+                  <p className="text-sm font-bold" style={{ color: "#dae2fd" }}>
+                    Personalized for You
+                  </p>
+                </div>
+              </div>
             </div>
-            <h2
-              className="text-4xl font-black tracking-tight mb-4"
-              style={{ fontFamily: "'Hanken Grotesk', sans-serif", color: "#dae2fd" }}
-            >
-              Your community,<br />
-              <span style={{ background: "linear-gradient(135deg,#a078ff,#4fdbc8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                connected.
-              </span>
-            </h2>
-            <p className="text-base leading-relaxed" style={{ color: "#cbc3d7" }}>
-              Find local resources, meet your neighbors, and unlock opportunities — all in one place built for real community.
-            </p>
+
+            <div className="mt-8 mb-12 text-center">
+              <h2
+                className="text-4xl font-bold mb-4 leading-tight"
+                style={{ letterSpacing: "-0.02em", fontFamily: "'Hanken Grotesk', sans-serif" }}
+              >
+                Connect. Access. <br />
+                <span
+                  style={{
+                    background: "linear-gradient(90deg, #a078ff 0%, #0566d9 50%, #4fdbc8 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  Grow—Together.
+                </span>
+              </h2>
+              <p className="text-base leading-relaxed" style={{ color: "rgba(203,195,215,0.8)" }}>
+                MyCommNet helps you discover local resources, build meaningful connections, and
+                create opportunities that move your community forward.
+              </p>
+            </div>
           </div>
         </section>
       </main>
+
+      {/* ── Footer ── */}
+      <footer
+        className="py-8 px-6 mt-auto"
+        style={{ borderTop: "1px solid #1e293b", backgroundColor: "#0f172a" }}
+      >
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <p
+              className="font-bold text-base"
+              style={{ color: "#dae2fd", fontFamily: "'Hanken Grotesk', sans-serif" }}
+            >
+              MyCommNet
+            </p>
+            <p className="text-sm mt-0.5" style={{ color: "#cbc3d7" }}>
+              Stay Connected
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-8">
+            {["Privacy Policy", "Terms of Service", "Help Center"].map((l) => (
+              <Link
+                key={l}
+                to={`/${l.toLowerCase().replace(/ /g, "-")}` as any}
+                className="text-xs transition-colors hover:text-white"
+                style={{ color: "#cbc3d7", ...mono }}
+              >
+                {l}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
