@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { AppShell } from "@/components/AppShell";
+import { ImageCropper } from "@/components/ImageCropper";
 import {
   MapPin,
   Link as LinkIcon,
@@ -191,6 +192,8 @@ function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [uploadErr, setUploadErr] = useState<string | null>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropMode, setCropMode] = useState<"avatar" | "banner" | null>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
@@ -211,14 +214,28 @@ function ProfilePage() {
     if (profile?.banner_url) setBannerUrl(profile.banner_url);
   }, [profile]);
 
-  async function uploadAvatar(file: File) {
+  function openAvatarPicker() { avatarInputRef.current?.click(); }
+  function openBannerPicker() { bannerInputRef.current?.click(); }
+
+  function handleAvatarFileSelected(file: File) {
+    setCropFile(file);
+    setCropMode("avatar");
+  }
+
+  function handleBannerFileSelected(file: File) {
+    setCropFile(file);
+    setCropMode("banner");
+  }
+
+  async function uploadAvatarBlob(blob: Blob) {
     if (!user) return;
+    setCropFile(null);
+    setCropMode(null);
     setUploadingAvatar(true);
     setUploadErr(null);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file);
+      const path = `${user.id}/avatar-${Date.now()}.jpg`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, blob, { contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("avatars").getPublicUrl(path);
       const url = data.publicUrl;
@@ -231,14 +248,15 @@ function ProfilePage() {
     setUploadingAvatar(false);
   }
 
-  async function uploadBanner(file: File) {
+  async function uploadBannerBlob(blob: Blob) {
     if (!user) return;
+    setCropFile(null);
+    setCropMode(null);
     setUploadingBanner(true);
     setUploadErr(null);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-      const path = `${user.id}/banner-${Date.now()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("banners").upload(path, file);
+      const path = `${user.id}/banner-${Date.now()}.jpg`;
+      const { error: upErr } = await supabase.storage.from("banners").upload(path, blob, { contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from("banners").getPublicUrl(path);
       const url = data.publicUrl;
@@ -281,15 +299,37 @@ function ProfilePage() {
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadAvatar(f); e.target.value = ""; }}
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleAvatarFileSelected(f); e.target.value = ""; }}
       />
       <input
         ref={bannerInputRef}
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadBanner(f); e.target.value = ""; }}
+        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleBannerFileSelected(f); e.target.value = ""; }}
       />
+
+      {/* Crop modal */}
+      {cropFile && cropMode === "avatar" && (
+        <ImageCropper
+          file={cropFile}
+          aspect={1}
+          shape="round"
+          title="Crop profile picture"
+          onDone={uploadAvatarBlob}
+          onCancel={() => { setCropFile(null); setCropMode(null); }}
+        />
+      )}
+      {cropFile && cropMode === "banner" && (
+        <ImageCropper
+          file={cropFile}
+          aspect={16 / 6}
+          shape="rect"
+          title="Crop cover photo"
+          onDone={uploadBannerBlob}
+          onCancel={() => { setCropFile(null); setCropMode(null); }}
+        />
+      )}
 
       {uploadErr && (
         <div className="mb-4 rounded-xl px-4 py-3 text-xs" style={{ background: "rgba(147,0,10,0.2)", color: "#ffb4ab", border: "1px solid rgba(147,0,10,0.4)" }}>
