@@ -308,7 +308,9 @@ function ProfilePage() {
   const verifiedHours = profile?.verified_hours ?? 36;
   const eventsAttended = profile?.events_attended ?? 12;
   const location = userLocation || profile?.location || "";
-  const joinYear = user?.created_at ? new Date(user.created_at).getFullYear() : 2025;
+  const joinDate = user?.created_at ? new Date(user.created_at) : null;
+  const joinMonth = joinDate ? joinDate.toLocaleString("default", { month: "long" }) : "January";
+  const joinYear = joinDate ? joinDate.getFullYear() : 2025;
   const bio =
     profile?.bio ??
     "Atlanta-based community member passionate about closing local access gaps to Wi-Fi, mentorship, and first jobs. Always looking for new volunteer opportunities, study spaces, and friendly mentors who've walked the road before.";
@@ -360,10 +362,10 @@ function ProfilePage() {
       )}
 
       {/* Cover + identity */}
-      <section className="relative mb-6 overflow-hidden rounded-3xl border border-border/60">
-        {/* Banner */}
+      <section className="relative mb-6 rounded-3xl border border-border/60 overflow-visible">
+        {/* Banner — name overlays the bottom edge */}
         <div
-          className={`relative h-44 md:h-56 ${isEditing ? "group cursor-pointer" : ""}`}
+          className={`relative h-44 md:h-56 rounded-t-3xl overflow-hidden ${isEditing ? "group cursor-pointer" : ""}`}
           onClick={() => isEditing && bannerInputRef.current?.click()}
         >
           {(pendingBannerPreview ?? bannerUrl)
@@ -371,6 +373,8 @@ function ProfilePage() {
             : <div className="w-full h-full bg-gradient-brand bg-hero-glow" />
           }
           <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_100%_0%,oklch(0.72_0.13_185/0.35),transparent_60%)]" />
+          {/* Gradient fade at the bottom so name is legible */}
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
           {isEditing && (
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "rgba(0,0,0,0.35)" }}>
               <div className="flex items-center gap-2 text-white text-sm font-medium">
@@ -378,86 +382,89 @@ function ProfilePage() {
               </div>
             </div>
           )}
+          {/* Name sits at the bottom of the banner with breathing room above the bar */}
+          <div className="absolute bottom-0 left-6 md:left-8 pb-3 pointer-events-none">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight drop-shadow">
+                {fullName}
+              </h1>
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-teal/20 border border-brand-teal/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
+                <Shield className="h-3 w-3" /> Verified
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="-mt-16 px-6 pb-6 md:-mt-20 md:px-10 md:pb-8">
-          <div className="flex flex-col items-start gap-5 md:flex-row md:items-end md:justify-between">
-            <div className="flex items-end gap-4">
-              {/* Avatar */}
+        {/* Bar — avatar floats up, everything else centered */}
+        <div className="relative rounded-b-3xl overflow-hidden flex items-center justify-center px-6 py-4 md:px-8 md:py-5 min-h-[5.5rem]" style={{ background: "var(--background)" }}>
+          {/* Avatar — absolutely left, protrudes into banner */}
+          <div
+            className={`absolute left-6 md:left-8 -top-14 md:-top-16 ${isEditing ? "group cursor-pointer" : ""}`}
+            onClick={() => isEditing && avatarInputRef.current?.click()}
+          >
+            {(pendingAvatarPreview ?? avatarUrl)
+              ? (
+                <img
+                  src={pendingAvatarPreview ?? avatarUrl!}
+                  alt={fullName}
+                  className="h-24 w-24 md:h-28 md:w-28 rounded-3xl border-4 object-cover shadow-glow-purple"
+                  style={{ borderColor: "var(--background)" }}
+                />
+              )
+              : (
+                <span className="grid h-24 w-24 place-items-center rounded-3xl border-4 border-background bg-gradient-brand font-display text-3xl font-bold text-white shadow-glow-purple md:h-28 md:w-28">
+                  {initial}
+                </span>
+              )
+            }
+            {isEditing && (
               <div
-                className={`relative shrink-0 ${isEditing ? "group cursor-pointer" : ""}`}
-                onClick={() => isEditing && avatarInputRef.current?.click()}
+                className="absolute inset-0 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                style={{ background: "rgba(0,0,0,0.5)" }}
               >
-                {(pendingAvatarPreview ?? avatarUrl)
-                  ? (
-                    <img
-                      src={pendingAvatarPreview ?? avatarUrl!}
-                      alt={fullName}
-                      className="h-28 w-28 md:h-32 md:w-32 rounded-3xl border-4 object-cover shadow-glow-purple"
-                      style={{ borderColor: "var(--background)" }}
-                    />
-                  )
-                  : (
-                    <span className="grid h-28 w-28 place-items-center rounded-3xl border-4 border-background bg-gradient-brand font-display text-4xl font-bold text-white shadow-glow-purple md:h-32 md:w-32">
-                      {initial}
-                    </span>
-                  )
-                }
-                {isEditing && (
-                  <div
-                    className="absolute inset-0 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: "rgba(0,0,0,0.5)" }}
-                  >
-                    <Camera className="h-6 w-6 text-white" />
-                  </div>
-                )}
+                <Camera className="h-6 w-6 text-white" />
               </div>
+            )}
+          </div>
 
-              {/* Identity */}
-              <div className="min-w-0 pb-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight leading-tight">
-                    {fullName}
-                  </h1>
-                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-teal/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-teal">
-                    <Shield className="h-3 w-3" /> Verified
-                  </span>
-                </div>
-                {username && (
-                  <p className="mt-0.5 flex items-center gap-1 text-sm font-medium" style={{ color: "#a078ff" }}>
-                    <AtSign className="h-3.5 w-3.5" />{username}
-                  </p>
-                )}
-                <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                  <span>Community Member</span>
-                  <span className="opacity-40">·</span>
-                  <span>Joined {joinYear}</span>
+          {/* Centered identity + actions */}
+          <div className="flex flex-col items-center gap-2 text-center sm:flex-row sm:gap-6">
+            {/* Meta */}
+            <div className="flex flex-col items-center gap-0.5">
+              {username && (
+                <p className="flex items-center gap-1 text-sm font-medium" style={{ color: "#a078ff" }}>
+                  <AtSign className="h-3.5 w-3.5" />{username}
                 </p>
-                {location && (
-                  <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-                    <MapPin className="h-3 w-3 shrink-0" />{location}
-                  </p>
-                )}
-              </div>
+              )}
+              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span>Community Member</span>
+                <span className="opacity-40">·</span>
+                <span>Joined {joinMonth} {joinYear}</span>
+              </p>
+              {location && (
+                <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                  <MapPin className="h-3 w-3 shrink-0" />{location}
+                </p>
+              )}
             </div>
 
-            {/* Action buttons */}
-            <div className="flex flex-wrap gap-2 shrink-0">
+            {/* Buttons */}
+            <div className="flex gap-2">
               {isEditing ? (
                 <>
                   <button
                     onClick={handleDone}
                     disabled={saving}
-                    className="flex items-center gap-2 rounded-xl border border-brand-purple px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-xl border border-brand-purple px-3.5 py-1.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
                     style={{ background: "linear-gradient(135deg,#a078ff 0%,#0566d9 100%)" }}
                   >
-                    <Edit3 className="h-4 w-4" />
+                    <Edit3 className="h-3.5 w-3.5" />
                     {saving ? "Saving…" : "Done"}
                   </button>
                   <button
                     onClick={handleCancelEdit}
                     disabled={saving}
-                    className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2 disabled:opacity-60"
+                    className="flex items-center gap-1.5 rounded-xl border border-border bg-surface px-3.5 py-1.5 text-sm font-medium hover:bg-surface-2 disabled:opacity-60"
                   >
                     Cancel
                   </button>
@@ -465,13 +472,13 @@ function ProfilePage() {
               ) : (
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2"
+                  className="flex items-center gap-1.5 rounded-xl border border-border bg-surface px-3.5 py-1.5 text-sm font-medium hover:bg-surface-2"
                 >
-                  <Edit3 className="h-4 w-4" /> Edit Profile
+                  <Edit3 className="h-3.5 w-3.5" /> Edit Profile
                 </button>
               )}
-              <button className="flex items-center gap-2 rounded-xl border border-border bg-surface px-4 py-2 text-sm font-medium hover:bg-surface-2">
-                <Settings className="h-4 w-4" /> Settings
+              <button className="flex items-center gap-1.5 rounded-xl border border-border bg-surface px-3.5 py-1.5 text-sm font-medium hover:bg-surface-2">
+                <Settings className="h-3.5 w-3.5" /> Settings
               </button>
             </div>
           </div>
