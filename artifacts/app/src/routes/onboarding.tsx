@@ -1285,7 +1285,20 @@ function OnboardingPage() {
             )}
           </div>
 
-          <div className="flex justify-center gap-1.5 mt-6">
+          {/* Save now */}
+          <div className="flex justify-center mt-4">
+            <button
+              type="button"
+              onClick={handleFinish}
+              disabled={saving}
+              className="text-xs px-4 py-2 rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50"
+              style={{ color: "#4fdbc8", border: "1px solid rgba(79,219,200,0.25)" }}
+            >
+              {saving ? "Saving…" : "💾 Save progress now"}
+            </button>
+          </div>
+
+          <div className="flex justify-center gap-1.5 mt-4">
             {STEPS.map((_, i) => (
               <div
                 key={i}
