@@ -420,7 +420,9 @@ function OnboardingPage() {
               >
                 {locCountry === "CA" ? "Postal code" : locCountry === "UK" ? "Postcode" : "ZIP code"}
                 <span style={{ color: "#4a5568", marginLeft: "8px", textTransform: "none", letterSpacing: "normal" }}>
-                  {locCountry === "US" ? "— optional, helps find better matches" : "— optional, for better matches"}
+                  {locCountry === "US"
+                    ? "— optional · auto-fills city & state · helps find better matches"
+                    : "— optional, for better matches"}
                 </span>
               </label>
               <div className="relative max-w-xs">
