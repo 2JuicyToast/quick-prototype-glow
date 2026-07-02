@@ -78,12 +78,20 @@ export function PublicNav({ activePage }: { activePage?: ActivePage }) {
               className="flex items-center gap-2 rounded-full px-3 py-1.5 transition hover:bg-white/10"
               style={{ border: "1px solid rgba(255,255,255,0.1)" }}
             >
-              <span
-                className="grid h-8 w-8 place-items-center rounded-full text-sm font-semibold text-white"
-                style={{ background: "linear-gradient(135deg,#8b5cf6,#3b82f6)" }}
-              >
-                {initial}
-              </span>
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={displayName}
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              ) : (
+                <span
+                  className="grid h-8 w-8 place-items-center rounded-full text-sm font-semibold text-white"
+                  style={{ background: "linear-gradient(135deg,#8b5cf6,#3b82f6)" }}
+                >
+                  {initial}
+                </span>
+              )}
               <span className="hidden sm:inline text-sm font-medium" style={{ color: "#dae2fd" }}>
                 {displayName}
               </span>
