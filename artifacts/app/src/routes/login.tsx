@@ -636,12 +636,17 @@ function LoginPage() {
         </section>
 
         {/* Right — Brand visual */}
-        {/* section stretches to match left side height so background always reaches the footer */}
         <section
           className="hidden lg:flex lg:w-1/2 relative"
           style={{ backgroundColor: "#020617" }}
         >
-          {/* Glows cover the full section — including any extra height on signup */}
+          {/* Bleed background upward behind the sticky navbar so there's no seam */}
+          <div
+            className="absolute left-0 right-0 h-[72px] pointer-events-none"
+            style={{ top: "-72px", backgroundColor: "#020617" }}
+          />
+
+          {/* Glows cover the full section height */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div
               className="absolute -top-48 -right-48 w-96 h-96 rounded-full blur-[120px]"
@@ -653,14 +658,16 @@ function LoginPage() {
             />
           </div>
 
-          {/* Sticky inner wrapper — py-8 guarantees whitespace from navbar at top */}
-          <div className="sticky top-[72px] h-[calc(100vh-72px)] w-full flex items-center justify-center overflow-hidden py-8">
-            <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-2xl px-8">
+          {/* Sticky wrapper — items-start + pt-8 aligns content with the left form
+              and guarantees whitespace between image and navbar */}
+          <div className="sticky top-[72px] h-[calc(100vh-72px)] w-full flex flex-col items-center justify-start pt-8 overflow-hidden">
+            <div className="relative z-10 flex flex-col items-center w-full max-w-2xl px-8">
               <div
                 className="absolute w-[120%] h-[120%] rounded-full blur-[150px] opacity-50"
                 style={{ background: "rgba(160,120,255,0.05)" }}
               />
-              <div className="relative w-full mx-auto transition-transform duration-700 ease-out hover:scale-[1.02]" style={{ maxWidth: "min(100%, calc(100vh - 380px))" }}>
+              {/* Circle capped so image + text both fit in the viewport window */}
+              <div className="relative w-full mx-auto transition-transform duration-700 ease-out hover:scale-[1.02]" style={{ maxWidth: "min(100%, 460px)" }}>
                 <div
                   className="rounded-full overflow-hidden aspect-square"
                   style={{ boxShadow: "0 0 80px rgba(160,120,255,0.3)" }}
